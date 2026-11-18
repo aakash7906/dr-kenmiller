@@ -35,14 +35,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
       {/* Center Logo & Branding */}
       <div className="flex flex-col items-center text-center z-10 my-auto space-y-6">
-        {/* Animated Tooth Logo Icon with Luminous Glow */}
+        {/* Official Dr. Ken Miller Logo with Luminous Glow */}
         <div className="relative">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/12 backdrop-blur-xl border border-white/25 shadow-2xl flex items-center justify-center relative overflow-hidden group">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white p-2.5 shadow-2xl flex items-center justify-center relative overflow-hidden group border border-white/40">
             {/* Shimmer light sweep */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]" />
 
-            {/* Authentic Anatomical Molar Tooth Icon */}
-            <ToothIcon className="w-14 h-14 sm:w-16 sm:h-16 text-white drop-shadow-[0_4px_16px_rgba(255,255,255,0.45)]" />
+            {/* Official Logo */}
+            <img
+              src="/logo-square.png"
+              alt="Dr. Ken Miller Logo"
+              className="w-full h-full object-contain rounded-2xl"
+            />
           </div>
 
           {/* Pulse ring */}

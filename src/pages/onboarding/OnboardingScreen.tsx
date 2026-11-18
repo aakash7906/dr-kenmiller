@@ -56,11 +56,22 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
       {showRoleModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 animate-in zoom-in-95 duration-200">
-            <div className="text-center space-y-1">
-              <h3 className="text-lg font-black text-slate-900">
-                Welcome to Dr. Ken Miller Dental
-              </h3>
-            
+            <div className="text-center space-y-2">
+              <div className="w-14 h-14 mx-auto rounded-2xl overflow-hidden shadow-xs border border-slate-200/90 bg-[#65a9c0] flex items-center justify-center p-1">
+                <img
+                  src="/logo-square.png"
+                  alt="Dr. Ken Miller Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900">
+                  Welcome to Dr. Ken Miller Dental
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Choose your portal to continue
+                </p>
+              </div>
             </div>
 
             <div className="space-y-2.5 pt-1">

@@ -31,35 +31,11 @@ import { DoctorLabAndPostOp } from '@/pages/doctor/DoctorLabAndPostOp'
  * all media queries, touches, and layouts run in genuine 1:1 mobile mode.
  */
 function MobileDentalApp() {
-  // Query param helper to preserve route state on refresh
-  const getInitialParam = (param: string) => {
-    if (typeof window === 'undefined') return null
-    const params = new URLSearchParams(window.location.search)
-    return params.get(param)
-  }
-
-  const [appState, setAppState] = useState<'splash' | 'onboarding' | 'portal'>(() => {
-    const s = getInitialParam('state')
-    if (s === 'portal' || s === 'onboarding' || s === 'splash') return s
-    return 'splash'
-  })
-
-  const [role, setRole] = useState<UserRole>(() => {
-    const r = getInitialParam('role')
-    return r === 'doctor' ? 'doctor' : 'patient'
-  })
-
-  const [patientTab, setPatientTab] = useState<PatientTab>(() => {
-    const t = getInitialParam('tab') as PatientTab
-    if (['home', 'appointments', 'services', 'mycare', 'emergency'].includes(t)) return t
-    return 'home'
-  })
-
-  const [doctorTab, setDoctorTab] = useState<DoctorTab>(() => {
-    const t = getInitialParam('tab') as DoctorTab
-    if (['overview', 'charting', 'schedule', 'triage', 'lab'].includes(t)) return t
-    return 'overview'
-  })
+  // Always start from splash screen on browser refresh / new session
+  const [appState, setAppState] = useState<'splash' | 'onboarding' | 'portal'>('splash')
+  const [role, setRole] = useState<UserRole>('patient')
+  const [patientTab, setPatientTab] = useState<PatientTab>('home')
+  const [doctorTab, setDoctorTab] = useState<DoctorTab>('overview')
 
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [receptionModalOpen, setReceptionModalOpen] = useState(false)
@@ -75,34 +51,19 @@ function MobileDentalApp() {
 
   const isDoctor = role === 'doctor'
 
-  // Bi-Directional URL Synchronization with Desktop Parent Frame
+  // Clean URL query params on refresh so every reload starts cleanly from splash
   useEffect(() => {
-    const currentTab = role === 'doctor' ? doctorTab : patientTab
-    const params = new URLSearchParams()
-    if (appState !== 'splash') params.set('state', appState)
-    if (role === 'doctor') params.set('role', 'doctor')
-    if (currentTab !== 'home' && currentTab !== 'overview') params.set('tab', currentTab)
-
-    const searchStr = params.toString() ? `?${params.toString()}` : ''
-    const newRelativePathQuery = window.location.pathname + searchStr + window.location.hash
-
-    window.history.replaceState(null, '', newRelativePathQuery)
-
-    // Sync to parent window if inside iframe
-    if (typeof window !== 'undefined' && window.self !== window.top) {
-      try {
-        if (
-          window.top &&
-          window.top.location.pathname + window.top.location.search + window.top.location.hash !==
-            newRelativePathQuery
-        ) {
-          window.top.history.replaceState(null, '', newRelativePathQuery)
+    if (typeof window !== 'undefined' && window.location.search) {
+      window.history.replaceState(null, '', window.location.pathname)
+      if (window.self !== window.top && window.top) {
+        try {
+          window.top.history.replaceState(null, '', window.top.location.pathname)
+        } catch {
+          // Cross-origin safety
         }
-      } catch {
-        // Cross-origin safety
       }
     }
-  }, [appState, role, patientTab, doctorTab])
+  }, [])
 
   // 1. Splash Screen Mode
   if (appState === 'splash') {
@@ -209,7 +170,6 @@ function MobileDentalApp() {
         isOpen={profileModalOpen}
         onClose={() => setProfileModalOpen(false)}
         title={isDoctor ? 'Dr. Ken Miller, DDS' : CURRENT_PATIENT.name}
-        subtitle={isDoctor ? 'Lead Dental Surgeon (Lic. #ALB-4921)' : `Chart ${CURRENT_PATIENT.chartNumber}`}
       >
         <div className="space-y-3 text-xs sm:text-sm text-slate-700">
           <div className="flex items-center gap-3">
@@ -248,7 +208,7 @@ function MobileDentalApp() {
             </div>
           </div>
 
-          <div className="pt-2 space-y-2">
+          <div className="pt-2">
             <button
               onClick={() => {
                 toggleRole()
@@ -257,15 +217,6 @@ function MobileDentalApp() {
               className="w-full py-2.5 px-3 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               Switch Role to {isDoctor ? 'Patient View' : 'Doctor View'}
-            </button>
-            <button
-              onClick={() => {
-                setProfileModalOpen(false)
-                setAppState('splash')
-              }}
-              className="w-full py-2 px-3 rounded-xl bg-purple-50 text-purple-900 font-bold text-xs hover:bg-purple-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <span> Replay Splash & Onboarding</span>
             </button>
           </div>
         </div>

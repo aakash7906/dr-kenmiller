@@ -61,12 +61,12 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
         {/* Clinic Identity */}
         <div>
           <div className="flex items-center gap-2.5">
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-xs ${
-                isDoctor ? 'bg-doctor-primary' : 'bg-patient-primary'
-              }`}
-            >
-              <ToothIcon className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-2xs border border-slate-200/90 bg-[#65a9c0] shrink-0 flex items-center justify-center p-0.5">
+              <img
+                src="/logo-square.png"
+                alt="Dr. Ken Miller Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h2 className="text-xs font-black text-slate-900 leading-tight">

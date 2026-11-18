@@ -303,7 +303,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
           <div>
             <strong className="text-slate-900 block">Direct Insurance Billing:</strong>
             <p className="text-[11px] text-slate-600 mt-0.5">
-              We bill directly to all major Canadian dental plans (Alberta Blue Cross, Sun Life, Canada Life, Manulife).
+              We bill directly to all major Canadian dental plans.
             </p>
           </div>
         </div>

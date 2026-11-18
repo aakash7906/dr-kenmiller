@@ -36,19 +36,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
   const upcomingApt = PATIENT_APPOINTMENTS[0]
 
   return (
-    <div className="space-y-4 pb-20">
-      {/* Welcome Back & Patient Status Header */}
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-patient-primary animate-pulse" />
-          <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-            Welcome Back
-          </span>
-        </div>
-        <Badge variant="amber" size="sm" className="font-semibold">
-          Patient since {CURRENT_PATIENT.since}
-        </Badge>
-      </div>
+    <div className="space-y-4 pb-2">
 
       {/* Greeting card */}
       <div className="flex items-center justify-between">
@@ -56,15 +44,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Good morning, {CURRENT_PATIENT.name.split(' ')[0]}
           </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Primary Provider: <span className="font-semibold text-slate-700">{CURRENT_PATIENT.primaryDentist}</span>
-          </p>
         </div>
-        <img
-          src={CURRENT_PATIENT.avatar}
-          alt={CURRENT_PATIENT.name}
-          className="w-12 h-12 rounded-full ring-2 ring-white shadow-md object-cover"
-        />
       </div>
 
       {/* Hygiene Recall Due Banner */}
@@ -91,13 +71,10 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         {/* Top Badges */}
         <div className="flex items-center justify-between mb-3">
           <span className="inline-flex items-center gap-1.5 bg-patient-primary-light text-patient-primary text-xs font-bold px-2.5 py-1 rounded-full border border-patient-primary-border">
-            <span className="w-1.5 h-1.5 rounded-full bg-patient-primary" />
             Confirmed Visit
           </span>
           <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
             <span>{upcomingApt.duration}</span>
-            <span className="text-slate-300">•</span>
-            <span className="cursor-pointer hover:text-slate-800" title="Visit details">ⓘ</span>
           </div>
         </div>
 
@@ -110,7 +87,9 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         <div className="mt-3 space-y-2 text-xs text-slate-600">
           <div className="flex items-start gap-2.5">
             <Calendar className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
-            <span className="font-semibold text-slate-800">{upcomingApt.date} at {upcomingApt.time.split('–')[0]}</span>
+            <span className="font-semibold text-slate-800">
+              {upcomingApt.date.replace(/,\s*\d{4}/, '')} at {upcomingApt.time.split('–')[0].trim()}
+            </span>
           </div>
           <div className="flex items-start gap-2.5">
             <span className="text-slate-400 shrink-0 text-sm">👤</span>
@@ -169,7 +148,6 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Quick Care Actions
           </h3>
-          <span className="text-[11px] text-slate-400 font-medium">St. Paul Clinic</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2.5">
@@ -196,9 +174,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
               <div className="w-8 h-8 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-2xs">
                 <AlertTriangle className="w-4 h-4" />
               </div>
-              <span className="bg-red-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider">
-                Urgent
-              </span>
+              
             </div>
             <div>
               <h4 className="text-xs font-bold text-red-950 leading-snug">Emergency Care</h4>
@@ -229,7 +205,6 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
               <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
                 <FileCheck className="w-4 h-4 text-patient-primary" />
               </div>
-              <span className="w-2 h-2 rounded-full bg-emerald-500" title="Ready to submit" />
             </div>
             <div>
               <h4 className="text-xs font-bold text-slate-900 leading-snug">Pre-Visit Forms</h4>
@@ -248,21 +223,21 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             </span>
             <span className="text-xs font-bold text-slate-900">Active Care Plan</span>
           </div>
-          <span className="text-[11px] font-mono text-slate-400">Plan #{ACTIVE_CARE_PLAN.id}</span>
+          <span className="text-[11px] font-mono text-slate-400">Plan {ACTIVE_CARE_PLAN.id}</span>
         </div>
 
         <h3 className="text-sm sm:text-base font-bold text-slate-900">
           {ACTIVE_CARE_PLAN.title}
         </h3>
         <p className="text-[11px] text-slate-500 mt-0.5">
-          {ACTIVE_CARE_PLAN.tooth} • Osseointegration complete
+           Osseointegration complete
         </p>
 
         {/* Progress header & tracker */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs mb-1.5">
             <span className="font-bold text-patient-primary">Step {ACTIVE_CARE_PLAN.currentStep} of {ACTIVE_CARE_PLAN.totalSteps}</span>
-            <span className="text-slate-500 text-[11px]">Final Step: Crown Delivery</span>
+            <span className="text-slate-500 text-[11px]"> Crown Delivery</span>
           </div>
 
           {/* Stepper bar */}
@@ -313,13 +288,8 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-bold text-sm leading-tight text-white">{CLINIC_INFO.name}</h4>
-                <p className="text-[11px] text-slate-200 mt-0.5">
-                  Compassionate family care in St. Paul since {CLINIC_INFO.sinceYear}.
-                </p>
               </div>
-              <Badge variant="amber" size="sm" className="font-bold shrink-0">
-                 {CLINIC_INFO.yearsOfCare}
-              </Badge>
+             
             </div>
           </div>
         </div>
@@ -327,11 +297,11 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
 
       {/* Daily Care & Reminders */}
       <div>
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 px-1">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5 px-1 pb-1.5 pt-2">
           Daily Care & Reminders
         </h3>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {/* Toothbrush Replacement */}
           <div className="bg-white p-3 rounded-xl border border-slate-200/90 flex items-start gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
@@ -339,14 +309,11 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-900">Toothbrush Replacement</h4>
+                <h4 className="text-sm font-bold text-slate-900 pt-2">Toothbrush Replacement</h4>
                 <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">
                   90 Days Elapsed
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                Bristle flare reduces plaque removal efficacy by 40%.
-              </p>
             </div>
           </div>
 
@@ -356,10 +323,10 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
               <Droplet className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="text-xs font-bold text-slate-900">Night Guard Hygiene</h4>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+              <h4 className="text-sm font-bold text-slate-900">Night Guard Hygiene</h4>
+              {/* <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                 Clean with cool water & mild crystal cleanser; avoid hot water warping.
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -370,12 +337,9 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-900">Direct Billing On File</h4>
+                <h4 className="text-sm font-bold text-slate-900">Direct Billing On File</h4>
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
-                {CURRENT_PATIENT.insurancePlan} assigned. Zero paper claims needed.
-              </p>
             </div>
           </div>
         </div>
@@ -389,7 +353,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
               URGENT DENTAL SUPPORT
             </span>
             <h3 className="text-sm sm:text-base font-bold leading-snug mt-0.5 text-white">
-              Experiencing acute toothache or trauma?
+              Sudden tooth pain or trauma?
             </h3>
           </div>
           <div className="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
@@ -406,7 +370,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           className="mt-3.5 w-full bg-white text-patient-primary hover:bg-teal-50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
         >
           <PhoneCall className="w-4 h-4 text-patient-primary" />
-          <span>Call Emergency Triage: {CLINIC_INFO.phone}</span>
+          <span>Call Emergency : {CLINIC_INFO.phone}</span>
         </a>
       </div>
 

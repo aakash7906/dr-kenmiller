@@ -42,16 +42,9 @@ export const PatientMyCare: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4 pb-20">
-      {/* Toast alert */}
-      {toastMessage && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs px-4 py-2 rounded-xl shadow-lg animate-in fade-in slide-in-from-top-2">
-          {toastMessage}
-        </div>
-      )}
-
+    <div className="space-y-4 pb-20 pt-2">
       {/* Patient Profile & Insurance Header */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3">
+      <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs  space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
@@ -60,12 +53,10 @@ export const PatientMyCare: React.FC = () => {
               className="w-12 h-12 rounded-full object-cover ring-2 ring-teal-100"
             />
             <div>
-              <h2 className="text-base font-bold text-slate-900 leading-tight">
+              <h2 className="text-base font-bold text-slate-900  leading-tight">
                 {CURRENT_PATIENT.name}
               </h2>
-              <p className="text-xs text-slate-500 font-mono mt-0.5">
-                Chart {CURRENT_PATIENT.chartNumber}
-              </p>
+            
             </div>
           </div>
           <Badge variant="teal" size="sm" className="font-semibold">
@@ -105,26 +96,22 @@ export const PatientMyCare: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-2.5 px-1">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-patient-primary animate-pulse" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
               Ongoing Treatment
             </h3>
           </div>
-          <Badge variant="blue" size="sm">In Progress</Badge>
         </div>
 
         <Card className="p-4 sm:p-5 border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-patient-primary-light text-patient-primary flex items-center justify-center font-bold text-xs">
-                #19
-              </span>
+              
               <div>
                 <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                   Implant Restoration
                 </h4>
                 <p className="text-[11px] text-slate-500">
-                  Tooth #19 (Lower Left First Molar)
+                  Tooth 19 (Lower Left First Molar)
                 </p>
               </div>
             </div>
@@ -142,9 +129,6 @@ export const PatientMyCare: React.FC = () => {
                 <h5 className="text-xs font-bold text-slate-900">Phase 1: 3D Cone Beam Imaging</h5>
                 <span className="text-[10px] text-slate-400 font-medium">Oct 4</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Full bone density scan & surgical template verified.
-              </p>
             </div>
 
             {/* Phase 2 */}
@@ -156,9 +140,6 @@ export const PatientMyCare: React.FC = () => {
                 <h5 className="text-xs font-bold text-slate-900">Phase 2: Implant Post Placement</h5>
                 <span className="text-[10px] text-slate-400 font-medium">Nov 1</span>
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Titanium fixture placed with sterile tissue stitch. Healing well.
-              </p>
             </div>
 
             {/* Phase 3 */}
@@ -171,10 +152,7 @@ export const PatientMyCare: React.FC = () => {
                 <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.2 rounded">
                   Nov 15, 10:30 AM
                 </span>
-              </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Permanent abutment seating and natural shade matching.
-              </p>
+              </div>              
             </div>
           </div>
 

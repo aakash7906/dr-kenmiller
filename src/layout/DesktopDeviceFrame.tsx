@@ -64,9 +64,9 @@ export const DesktopDeviceFrame: React.FC<DesktopDeviceFrameProps> = ({ children
     return <>{children}</>
   }
 
-  // Initial path for iframe source
+  // Initial path for iframe source (always start cleanly without stale query params)
   const initialPath = typeof window !== 'undefined'
-    ? `${window.location.pathname}${window.location.search}${window.location.hash}`
+    ? window.location.pathname
     : '/'
 
   return (

@@ -21,7 +21,7 @@ export const CLINIC_INFO = {
   weekend: 'Saturday – Sunday: Closed (Pager Monitored)',
   sinceYear: 1986,
   yearsOfCare: '38+ Yrs',
-  emergencyBackup: 'St. Therese Healthcare Centre (4713 48 Ave) is available 24/7 for severe unmanageable head trauma.'
+  emergencyBackup: 'St. Therese Healthcare Centre is available 24/7 for unmanageable head trauma.'
 }
 
 export const CURRENT_PATIENT: PatientProfile = {

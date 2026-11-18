@@ -89,14 +89,8 @@ export const PatientAppointments: React.FC = () => {
           <Card className="p-4 sm:p-5 border-slate-200 shadow-sm relative overflow-hidden">
             {/* Top Badges */}
             <div className="flex items-center justify-between mb-3.5">
-              <span className="inline-flex items-center gap-1.5 bg-patient-primary-light text-patient-primary text-xs font-bold px-2.5 py-1 rounded-full border border-patient-primary-border">
-                <span className="w-1.5 h-1.5 rounded-full bg-patient-primary" />
-                CONFIRMED VISIT
-              </span>
-              <span className="inline-flex items-center gap-1 text-slate-700 text-xs font-semibold">
-                <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
-                Ready for Check-in
-              </span>
+             
+              
             </div>
 
             {/* Main Visit Header with Date Box */}
@@ -117,7 +111,7 @@ export const PatientAppointments: React.FC = () => {
                 </h3>
                 <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
                   <Clock className="w-3.5 h-3.5 text-patient-primary" />
-                  <span>{upcomingApt.date} • {upcomingApt.time}</span>
+                  <span>{upcomingApt.time}</span>
                 </div>
               </div>
             </div>
@@ -143,7 +137,6 @@ export const PatientAppointments: React.FC = () => {
               <MapPin className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold text-slate-800">St. Paul Clinic • 2nd Floor</span>
-                <p className="text-[11px] text-slate-500">{CLINIC_INFO.fullAddress}</p>
               </div>
             </div>
 
@@ -217,7 +210,7 @@ export const PatientAppointments: React.FC = () => {
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Request New Appointment</h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Select your treatment reason and preferred time with Dr. Miller's clinical team.
+                  Select your treatment reason and preferred time.
                 </p>
               </div>
 
@@ -309,7 +302,6 @@ export const PatientAppointments: React.FC = () => {
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Completed Visits & Records
             </h3>
-            <span className="text-[11px] text-slate-400 font-mono">Chart {CURRENT_PATIENT.chartNumber}</span>
           </div>
 
           {PAST_APPOINTMENTS.map((apt) => (

@@ -12,6 +12,12 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   /* --------------------------------------------------------------------------
+     CLINIC BRAND LOGO SPECIFICATION
+     -------------------------------------------------------------------------- */
+  --clinic-logo: url('/logo-square.png');
+  --clinic-logo-full: url('/logo.png');
+
+  /* --------------------------------------------------------------------------
      1. PATIENT THEME: DENTAL WELLNESS & CALMING REASSURANCE
      Inspired by Google Stitch Design & Dr. Ken Miller Dental Clinic (St. Paul)
      -------------------------------------------------------------------------- */
@@ -147,6 +153,7 @@
    (e.g., bg-patient-primary, text-patient-primary, bg-doctor-primary, etc.)
    -------------------------------------------------------------------------- */
 @theme {
+  --image-clinic-logo: var(--clinic-logo);
   --color-patient-primary: var(--patient-primary);
   --color-patient-primary-hover: var(--patient-primary-hover);
   --color-patient-primary-dark: var(--patient-primary-dark);

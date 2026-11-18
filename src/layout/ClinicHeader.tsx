@@ -26,33 +26,23 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
 
         {/* Left: Brand Identity & Location */}
         <div className="flex items-center gap-2.5">
-          {/* Logo icon */}
-          <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${isDoctor
-                ? 'bg-doctor-primary text-white shadow-xs'
-                : 'bg-patient-primary text-white shadow-xs'
-              }`}
-          >
-            {isDoctor ? (
-              <Stethoscope className="w-5 h-5" />
-            ) : (
-              <ToothIcon className="w-5 h-5" />
-            )}
+          {/* Clinic Official Logo */}
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-2xs border border-slate-200/90 bg-[#65a9c0] shrink-0 flex items-center justify-center p-0.5">
+            <img
+              src="/logo-square.png"
+              alt="Dr. Ken Miller Dental Logo"
+              className="w-full h-full object-contain"
+            />
           </div>
 
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-xs font-bold tracking-tight text-slate-900 leading-tight">
-                {isDoctor ? 'DR. KEN MILLER, DDS' : CLINIC_INFO.name}
+                {isDoctor ? 'DR. KEN MILLER' : 'DR. KEN MILLER'}
               </h1>
-              {isDoctor && (
-                <span className="text-[10px] font-bold uppercase bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded">
-                  Clinical Portal
-                </span>
-              )}
             </div>
             <p className="text-[11px] text-slate-500 font-medium">
-              {isDoctor ? 'Lead Dental Surgeon • St. Paul' : CLINIC_INFO.location}
+              {isDoctor ? 'Lead Dental Surgeon' : CLINIC_INFO.location}
             </p>
           </div>
         </div>

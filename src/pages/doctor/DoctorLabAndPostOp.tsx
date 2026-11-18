@@ -56,11 +56,11 @@ export const DoctorLabAndPostOp: React.FC = () => {
   ])
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-6 pb-28 pt-2">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Prosthetics & Patient Recovery
           </span>
           <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
@@ -69,26 +69,26 @@ export const DoctorLabAndPostOp: React.FC = () => {
         </div>
 
         {/* Tab Toggle */}
-        <div className="bg-slate-200/80 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
+        <div className="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 text-xs font-bold">
           <button
             onClick={() => setActiveSubTab('labs')}
-            className={`py-1.5 px-3 rounded-lg transition-all ${
+            className={`py-2 px-3.5 rounded-xl transition-all cursor-pointer ${
               activeSubTab === 'labs'
                 ? 'bg-doctor-primary text-white shadow-xs'
                 : 'text-slate-700 hover:text-slate-900'
             }`}
           >
-            Dental Lab Prosthetics (3)
+            Dental Lab Orders (3)
           </button>
           <button
             onClick={() => setActiveSubTab('postOp')}
-            className={`py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer ${
               activeSubTab === 'postOp'
                 ? 'bg-doctor-primary text-white shadow-xs'
                 : 'text-slate-700 hover:text-slate-900'
             }`}
           >
-            <span>Remote Recovery Feed</span>
+            <span>Recovery Feed</span>
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
           </button>
         </div>
@@ -96,72 +96,75 @@ export const DoctorLabAndPostOp: React.FC = () => {
 
       {/* SUBTAB 1: DENTAL LAB PROSTHETICS */}
       {activeSubTab === 'labs' && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Active Dental Laboratory Orders
             </h3>
-            <span className="text-xs text-slate-500">Aurum & Precision Craft</span>
+            {/* <span className="text-xs text-slate-400">Aurum & Precision Craft</span> */}
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {labCases.map((lab) => {
               const isDelivered = lab.status === 'delivered_at_clinic'
               const isShipped = lab.status === 'shipped'
 
               return (
-                <Card
+                <div
                   key={lab.id}
-                  className={`p-4 border transition-all ${
-                    isDelivered ? 'bg-emerald-50/30 border-emerald-300' : 'border-slate-200'
+                  className={`p-4.5 sm:p-5.5 rounded-2xl border transition-all shadow-2xs space-y-3 ${
+                    isDelivered ? 'bg-emerald-50/20 border-emerald-300' : 'bg-white border-slate-200/90'
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-lg bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <span className="w-8 h-8 rounded-xl bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs shadow-2xs">
                           {lab.toothNumber}
                         </span>
-                        <h4 className="text-sm font-bold text-slate-900">
+                        <h4 className="text-sm sm:text-base font-bold text-slate-900">
                           {lab.patientName}
                         </h4>
-                        <span className="text-xs font-mono text-slate-500">#{lab.chartNumber}</span>
                         <Badge
                           variant={isDelivered ? 'emerald' : isShipped ? 'blue' : 'amber'}
                           size="sm"
+                          className="font-bold"
                         >
                           {isDelivered
-                            ? 'Delivered at Clinic (In Lab Box)'
+                            ? 'Delivered at Clinic'
                             : isShipped
-                            ? 'Shipped (In Transit)'
+                            ? 'In Transit'
                             : 'In Fabrication'}
                         </Badge>
                       </div>
 
-                      <p className="text-xs font-semibold text-slate-800 mt-1">
+                      <p className="text-xs sm:text-sm font-semibold text-slate-800">
                         {lab.type}
                       </p>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Lab: <strong className="text-slate-700">{lab.labName}</strong> • Shade:{' '}
-                        <span className="font-semibold text-teal-800">{lab.shade}</span>
-                      </p>
+                      <div className="flex items-center gap-2 text-xs text-slate-500 flex-wrap">
+                        <span>Lab: <strong className="text-slate-700">{lab.labName}</strong></span>
+                        <span>•</span>
+                        <span className="bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-semibold">
+                          Shade: {lab.shade}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="text-right sm:self-center">
+                    <div className="text-left sm:text-right space-y-1 shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                       <span className="text-[10px] uppercase font-bold text-slate-400 block">
                         Target Seating Date
                       </span>
-                      <span className="text-xs font-bold text-slate-900 block">
+                      <span className="text-xs sm:text-sm font-bold text-slate-900 block">
                         {lab.expectedDelivery}
                       </span>
                       {isDelivered && (
-                        <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded-full inline-block mt-1">
-                          ✓ Ready for Operatory 1
+                        <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2.5 py-0.5 rounded-full inline-block">
+                          ✓ In Clinic Lab Box
                         </span>
                       )}
                     </div>
                   </div>
-                </Card>
+                </div>
               )
             })}
           </div>
@@ -170,18 +173,18 @@ export const DoctorLabAndPostOp: React.FC = () => {
 
       {/* SUBTAB 2: REMOTE POST-OP RECOVERY FEED */}
       {activeSubTab === 'postOp' && (
-        <div className="space-y-3">
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-blue-950 flex items-start gap-2.5">
-            <HeartPulse className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
-            <div>
-              <strong className="block font-bold">Tele-Dentistry & Recovery Monitoring</strong>
-              <p className="text-[11px] text-blue-900 mt-0.5">
+        <div className="space-y-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-xs text-blue-950 flex items-start gap-3 shadow-2xs">
+            <HeartPulse className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
+            <div className="space-y-0.5">
+              <strong className="block font-bold text-xs uppercase tracking-wide">Tele-Dentistry & Recovery Monitoring</strong>
+              <p className="text-[11px] text-blue-900 leading-relaxed">
                 Patients log daily pain levels and healing symptoms directly through the patient portal. Staff are notified immediately if pain scores spike.
               </p>
             </div>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-3.5">
             {patientLogs.map((log) => {
               const isAlert = log.status === 'alert'
               const isComfortable = log.status === 'comfortable'
@@ -189,18 +192,18 @@ export const DoctorLabAndPostOp: React.FC = () => {
               return (
                 <div
                   key={log.id}
-                  className={`p-3.5 rounded-2xl border transition-all ${
+                  className={`p-4.5 sm:p-5 rounded-2xl border transition-all shadow-2xs space-y-3 ${
                     isAlert
-                      ? 'bg-rose-50 border-rose-300'
+                      ? 'bg-rose-50/70 border-rose-300'
                       : isComfortable
-                      ? 'bg-white border-slate-200'
-                      : 'bg-amber-50/50 border-amber-200'
+                      ? 'bg-white border-slate-200/90'
+                      : 'bg-amber-50/40 border-amber-200'
                   }`}
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-start gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-3.5">
                       <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-base ${
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-lg shadow-2xs ${
                           isAlert
                             ? 'bg-red-100 text-red-700'
                             : isComfortable
@@ -211,18 +214,15 @@ export const DoctorLabAndPostOp: React.FC = () => {
                         {isAlert ? '😣' : isComfortable ? '😊' : '😐'}
                       </div>
 
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <h4 className="text-sm font-bold text-slate-900">
                             {log.patientName}
                           </h4>
-                          <span className="text-[10px] font-mono text-slate-500">
-                            #{log.chartNumber}
-                          </span>
                           <span className="text-[10px] text-slate-400">({log.time})</span>
                         </div>
 
-                        <p className="text-xs font-semibold text-slate-800 mt-0.5">
+                        <p className="text-xs font-semibold text-slate-800">
                           {log.procedure} •{' '}
                           <span
                             className={`font-bold ${
@@ -233,24 +233,24 @@ export const DoctorLabAndPostOp: React.FC = () => {
                           </span>
                         </p>
 
-                        <p className="text-[11px] text-slate-600 mt-1 italic">
+                        <p className="text-xs text-slate-600 italic bg-black/5 p-2 rounded-lg mt-1">
                           "{log.notes}"
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 self-end sm:self-center">
+                    <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                       {isAlert && (
                         <button
                           onClick={() => alert(`Dialing ${log.patientName}...`)}
-                          className="text-xs font-bold bg-red-600 hover:bg-red-700 text-white py-1.5 px-3 rounded-xl flex items-center gap-1.5 shadow-xs"
+                          className="text-xs font-bold bg-red-600 hover:bg-red-700 text-white py-2 px-3.5 rounded-xl flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-98"
                         >
                           <PhoneCall className="w-3.5 h-3.5" />
                           <span>Call Patient</span>
                         </button>
                       )}
                       {isComfortable && (
-                        <span className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
+                        <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-xl">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Healing Normal</span>
                         </span>

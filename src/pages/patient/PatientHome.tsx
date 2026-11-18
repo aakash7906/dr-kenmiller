@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import {
-  Calendar,
+  Calendar as CalendarIcon,
   Clock,
   MapPin,
   CalendarPlus,
@@ -12,13 +12,15 @@ import {
   CheckCircle2,
   Brush,
   CreditCard,
-  Droplet
+  Droplet,
+  Check
 } from 'lucide-react'
 import { ToothIcon } from '@/components/ui/ToothIcon'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
+import { Calendar } from '@/components/ui/Calendar'
 import { CURRENT_PATIENT, PATIENT_APPOINTMENTS, ACTIVE_CARE_PLAN, CLINIC_INFO } from '@/data/mockData'
 import { PatientTab } from '@/types'
 
@@ -50,6 +52,8 @@ const FEATURED_SERVICES_CAROUSEL = [
 export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
   const [showCheckInModal, setShowCheckInModal] = useState(false)
   const [showRescheduleModal, setShowRescheduleModal] = useState(false)
+  const [showCalendarModal, setShowCalendarModal] = useState(false)
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(new Date(2024, 10, 15))
   const [showProtocolModal, setShowProtocolModal] = useState(false)
   const [showPreVisitModal, setShowPreVisitModal] = useState(false)
   const [checkInDone, setCheckInDone] = useState(false)
@@ -101,7 +105,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
       <div className="bg-patient-primary-light border border-patient-primary-border rounded-2xl p-4 sm:p-4.5 flex items-center justify-between gap-3 shadow-2xs">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-patient-primary text-white flex items-center justify-center shrink-0 shadow-2xs">
-            <Calendar className="w-5 h-5" />
+            <CalendarIcon className="w-5 h-5" />
           </div>
           <div className="min-w-0">
             <h4 className="text-xs font-bold text-patient-primary truncate">Hygiene Recall Due</h4>
@@ -109,7 +113,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           </div>
         </div>
         <button
-          onClick={() => onNavigate('appointments')}
+          onClick={() => setShowCalendarModal(true)}
           className="shrink-0 bg-patient-primary hover:bg-patient-primary-hover text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-all shadow-2xs cursor-pointer active:scale-98"
         >
           Reserve Slot
@@ -155,12 +159,16 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
 
         {/* Details list */}
         <div className="mt-3.5 space-y-2.5 text-xs text-slate-600">
-          <div className="flex items-start gap-2.5">
-            <Calendar className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
-            <span className="font-semibold text-slate-800">
+          <button
+            type="button"
+            onClick={() => setShowCalendarModal(true)}
+            className="flex items-start gap-2.5 text-left w-full hover:text-patient-primary transition-colors cursor-pointer group"
+          >
+            <CalendarIcon className="w-4 h-4 text-patient-primary shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+            <span className="font-semibold text-slate-800 group-hover:text-patient-primary">
               {upcomingApt.date.replace(/,\s*\d{4}/, '')} at {upcomingApt.time.split('–')[0].trim()}
             </span>
-          </div>
+          </button>
           <div className="flex items-start gap-2.5">
             <span className="text-slate-400 shrink-0 text-sm">👤</span>
             <span>{upcomingApt.provider}</span>
@@ -174,11 +182,11 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         {/* Action Buttons row */}
         <div className="grid grid-cols-2 gap-2.5 mt-4.5 pt-1">
           <button
-            onClick={() => alert(`Added "${upcomingApt.type}" to your device calendar for ${upcomingApt.date}.`)}
+            onClick={() => setShowCalendarModal(true)}
             className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer active:scale-98"
           >
-            <CalendarPlus className="w-4 h-4 text-patient-primary" />
-            <span>Add to Calendar</span>
+            <CalendarIcon className="w-4 h-4 text-patient-primary" />
+            <span>Calendar</span>
           </button>
           <button
             onClick={() => setShowRescheduleModal(true)}
@@ -552,6 +560,72 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           >
             I Have Arrived at Clinic Lobby
           </button>
+        </div>
+      </Dialog>
+
+      {/* Shadcn Responsive Calendar Modal */}
+      <Dialog
+        isOpen={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        title="Appointment Calendar"
+        subtitle="Dr. Ken Miller Dental Clinic • Select visit date"
+      >
+        <div className="space-y-4 text-xs sm:text-sm">
+          <Calendar
+            selectedDate={selectedCalendarDate}
+            onSelectDate={(d) => setSelectedCalendarDate(d)}
+            highlightDates={[new Date(2024, 10, 15)]}
+          />
+
+          <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-patient-primary">
+                Selected Date:
+              </span>
+              <span className="font-bold text-xs text-slate-900">
+                {selectedCalendarDate.toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-slate-700 pt-1 border-t border-patient-primary-border/40">
+              <Clock className="w-3.5 h-3.5 text-patient-primary shrink-0" />
+              <span>Reserved Window: 10:00 AM – 10:45 AM</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <MapPin className="w-3.5 h-3.5 text-patient-primary shrink-0" />
+              <span>4703 – 50 Ave (2nd Floor), St. Paul, AB</span>
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                alert(`Appointment confirmed for ${selectedCalendarDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}! Synced to device calendar.`)
+                setShowCalendarModal(false)
+              }}
+              className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save & Sync to Device Calendar</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShowCalendarModal(false)
+                setShowRescheduleModal(true)
+              }}
+              className="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 transition-colors cursor-pointer"
+            >
+              Request Custom Time Slot
+            </button>
+          </div>
         </div>
       </Dialog>
 

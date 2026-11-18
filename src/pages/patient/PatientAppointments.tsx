@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  Calendar,
   Clock,
   MapPin,
   CalendarDays,
@@ -11,18 +10,24 @@ import {
   ChevronRight,
   PlusCircle,
   FileText,
-  UserCheck
+  UserCheck,
+  Check
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
+import { Calendar } from '@/components/ui/Calendar'
 import { PATIENT_APPOINTMENTS, PAST_APPOINTMENTS, CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
 
 export const PatientAppointments: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'request' | 'history'>('upcoming')
   const [showDirectionsModal, setShowDirectionsModal] = useState(false)
   const [showModifyModal, setShowModifyModal] = useState(false)
+  const [showCalendarModal, setShowCalendarModal] = useState(false)
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(new Date(2024, 10, 15))
+  const [requestDate, setRequestDate] = useState<Date>(new Date(2024, 10, 20))
+  const [showRequestCalendarModal, setShowRequestCalendarModal] = useState(false)
   const [requestSubmitted, setRequestSubmitted] = useState(false)
 
   // Booking Form State
@@ -96,14 +101,19 @@ export const PatientAppointments: React.FC = () => {
             {/* Main Visit Header with Date Box */}
             <div className="flex items-start gap-3.5">
               {/* Date Block */}
-              <div className="w-14 h-16 rounded-2xl bg-patient-secondary-light border border-patient-secondary-border flex flex-col items-center justify-center text-center shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowCalendarModal(true)}
+                className="w-14 h-16 rounded-2xl bg-patient-secondary-light border border-patient-secondary-border flex flex-col items-center justify-center text-center shrink-0 cursor-pointer hover:opacity-90 active:scale-95 transition-all shadow-2xs"
+                title="View Calendar"
+              >
                 <span className="text-[10px] font-bold text-patient-secondary-text uppercase tracking-wider">
                   NOV
                 </span>
                 <span className="text-xl font-extrabold text-slate-900 leading-tight">
                   15
                 </span>
-              </div>
+              </button>
 
               <div className="min-w-0">
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-snug">
@@ -143,8 +153,9 @@ export const PatientAppointments: React.FC = () => {
             {/* Action Buttons: Calendar, Modify, Directions */}
             <div className="grid grid-cols-3 gap-2 mt-4 pt-1">
               <button
-                onClick={() => alert('Appointment synced to your calendar!')}
-                className="flex items-center justify-center gap-1 py-2 px-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+                type="button"
+                onClick={() => setShowCalendarModal(true)}
+                className="flex items-center justify-center gap-1 py-2 px-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer active:scale-98"
               >
                 <CalendarDays className="w-3.5 h-3.5 text-patient-primary" />
                 <span>Calendar</span>
@@ -193,7 +204,7 @@ export const PatientAppointments: React.FC = () => {
               </div>
               <h3 className="text-base font-bold text-slate-900">Appointment Request Sent!</h3>
               <p className="text-xs text-slate-600 max-w-sm mx-auto">
-                Thank you, {CURRENT_PATIENT.name.split(' ')[0]}. Our front-desk coordinator will review your requested time for <strong>{selectedService}</strong> and notify you shortly.
+                Thank you, {CURRENT_PATIENT.name.split(' ')[0]}. Our front-desk coordinator will review your requested appointment for <strong>{selectedService}</strong> on <strong>{requestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</strong> and notify you shortly.
               </p>
               <Button
                 variant="primary"
@@ -248,6 +259,31 @@ export const PatientAppointments: React.FC = () => {
                   <option>Elena (Registered Dental Hygienist)</option>
                   <option>First Available Provider</option>
                 </select>
+              </div>
+
+              {/* Preferred Date with Shadcn Calendar trigger */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                  Preferred Date:
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowRequestCalendarModal(true)}
+                  className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 flex items-center justify-between transition-colors cursor-pointer active:scale-98"
+                >
+                  <div className="flex items-center gap-2">
+                    <CalendarDays className="w-4 h-4 text-patient-primary shrink-0" />
+                    <span className="font-semibold">
+                      {requestDate.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-patient-primary font-bold">Pick Date</span>
+                </button>
               </div>
 
               {/* Timing */}
@@ -395,6 +431,97 @@ export const PatientAppointments: React.FC = () => {
           >
             Call Front Desk ({CLINIC_INFO.phone})
           </a>
+        </div>
+      </Dialog>
+
+      {/* Shadcn Responsive Calendar Modal for Upcoming Appointment */}
+      <Dialog
+        isOpen={showCalendarModal}
+        onClose={() => setShowCalendarModal(false)}
+        title="Appointment Calendar"
+        subtitle="Dr. Ken Miller Dental Clinic • Select or sync visit date"
+      >
+        <div className="space-y-4 text-xs sm:text-sm">
+          <Calendar
+            selectedDate={selectedCalendarDate}
+            onSelectDate={(d) => setSelectedCalendarDate(d)}
+            highlightDates={[new Date(2024, 10, 15)]}
+          />
+
+          <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-xl p-3.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-patient-primary">
+                Selected Date:
+              </span>
+              <span className="font-bold text-xs text-slate-900">
+                {selectedCalendarDate.toLocaleDateString('en-US', {
+                  weekday: 'short',
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs text-slate-700 pt-1 border-t border-patient-primary-border/40">
+              <Clock className="w-3.5 h-3.5 text-patient-primary shrink-0" />
+              <span>Reserved Window: 10:00 AM – 10:45 AM</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <MapPin className="w-3.5 h-3.5 text-patient-primary shrink-0" />
+              <span>4703 – 50 Ave (2nd Floor), St. Paul, AB</span>
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                alert(`Appointment confirmed for ${selectedCalendarDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}! Synced to device calendar.`)
+                setShowCalendarModal(false)
+              }}
+              className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
+            >
+              <Check className="w-4 h-4" />
+              <span>Save & Sync to Device Calendar</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShowCalendarModal(false)
+                setShowModifyModal(true)
+              }}
+              className="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 py-2.5 rounded-xl text-xs font-semibold border border-slate-200 transition-colors cursor-pointer"
+            >
+              Modify or Request Reschedule
+            </button>
+          </div>
+        </div>
+      </Dialog>
+
+      {/* Date Picker Modal for Request Form */}
+      <Dialog
+        isOpen={showRequestCalendarModal}
+        onClose={() => setShowRequestCalendarModal(false)}
+        title="Select Preferred Date"
+        subtitle="Dr. Ken Miller Dental Clinic"
+      >
+        <div className="space-y-4 text-xs sm:text-sm">
+          <Calendar
+            selectedDate={requestDate}
+            onSelectDate={(d) => {
+              setRequestDate(d)
+              setShowRequestCalendarModal(false)
+            }}
+          />
+          <Button
+            variant="primary"
+            fullWidth
+            onClick={() => setShowRequestCalendarModal(false)}
+          >
+            Confirm Date: {requestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </Button>
         </div>
       </Dialog>
     </div>

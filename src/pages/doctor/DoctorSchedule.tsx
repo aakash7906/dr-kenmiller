@@ -38,7 +38,7 @@ export const DoctorSchedule: React.FC = () => {
       chartNumber: 'KM-5102',
       provider: 'Dr. Ken Miller',
       operatory: 'Operatory 1',
-      procedure: 'Post-Op Suture Removal #30',
+      procedure: 'Post-Op Suture Removal 30',
       status: 'completed'
     },
     {
@@ -69,7 +69,7 @@ export const DoctorSchedule: React.FC = () => {
       chartNumber: 'KM-5819',
       provider: 'Dr. Ken Miller',
       operatory: 'Operatory 2',
-      procedure: 'Crown Prep & Temp Placement #14',
+      procedure: 'Crown Prep & Temp Placement 14',
       status: 'upcoming'
     },
     {
@@ -118,34 +118,31 @@ export const DoctorSchedule: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-6 pb-28 pt-2">
       {/* Schedule Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+      <div className="flex items-center justify-between gap-3 pt-1">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
-            Operatory Flow Coordination
-          </span>
           <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
-            Daily Chair Schedule
+            Daily Schedule
           </h2>
         </div>
 
         <button
           onClick={() => setShowAddBufferModal(true)}
-          className="self-start sm:self-auto bg-doctor-primary hover:bg-doctor-primary-hover text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 shadow-xs cursor-pointer"
+          className="shrink-0 bg-doctor-primary hover:bg-doctor-primary-hover text-white text-xs font-bold py-2 px-3 sm:py-2.5 sm:px-3.5 rounded-xl flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-98"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Insert Emergency Buffer</span>
+          <Plus className="w-4 h-4" />
+          <span>Insert Buffer</span>
         </button>
       </div>
 
       {/* Provider Filter Chips */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar-none">
         {['All', 'Dr. Ken Miller', 'Lisa', 'Elena'].map((prov) => (
           <button
             key={prov}
             onClick={() => setProviderFilter(prov)}
-            className={`py-1.5 px-3 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer select-none active:scale-98 ${
               providerFilter === prov
                 ? 'bg-doctor-primary text-white shadow-xs'
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -157,7 +154,7 @@ export const DoctorSchedule: React.FC = () => {
       </div>
 
       {/* Schedule Timeline Slots */}
-      <div className="space-y-2.5">
+      <div className="space-y-3.5">
         {filtered.map((slot) => {
           const isBuffer = slot.status === 'buffer'
           const isSeated = slot.status === 'seated'
@@ -166,56 +163,52 @@ export const DoctorSchedule: React.FC = () => {
           return (
             <div
               key={slot.id}
-              className={`p-3.5 rounded-2xl border transition-all ${
+              className={`p-4 sm:p-4.5 rounded-2xl border transition-all shadow-2xs ${
                 isBuffer
                   ? 'bg-amber-50/80 border-amber-300'
                   : isSeated
                   ? 'bg-blue-50/50 border-blue-300 shadow-xs'
                   : isCompleted
-                  ? 'bg-slate-50 border-slate-200 opacity-75'
+                  ? 'bg-slate-50/80 border-slate-200 opacity-75'
                   : 'bg-white border-slate-200/90'
               }`}
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-start gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-start gap-3.5">
                   {/* Time pill */}
-                  <div className="bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-center shrink-0">
-                    <span className="text-[11px] font-bold text-slate-800 block">
-                      {slot.time.split('–')[0]}
+                  <div className="bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-center shrink-0 shadow-2xs min-w-[76px]">
+                    <span className="text-xs font-bold text-slate-800 block">
+                      {slot.time.split('–')[0].trim()}
                     </span>
-                    <span className="text-[9px] text-slate-400 block">
+                    <span className="text-[10px] text-slate-400 block font-semibold mt-0.5">
                       {slot.operatory}
                     </span>
                   </div>
 
-                  <div>
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <h4 className="text-sm font-bold text-slate-900">
                         {slot.patientName}
                       </h4>
-                      {!isBuffer && (
-                        <span className="text-[10px] font-mono text-slate-500">
-                          #{slot.chartNumber}
-                        </span>
-                      )}
                       <Badge
                         variant={
                           isSeated ? 'emerald' : isCompleted ? 'gray' : isBuffer ? 'amber' : 'navy'
                         }
                         size="sm"
+                        className="font-bold"
                       >
                         {isSeated ? 'In Chair' : isCompleted ? 'Completed' : isBuffer ? 'Buffer Slot' : 'Scheduled'}
                       </Badge>
                     </div>
 
-                    <p className="text-xs font-medium text-slate-700 mt-0.5">
+                    <p className="text-xs font-semibold text-slate-800">
                       {slot.procedure}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
+                    <p className="text-[11px] text-slate-500">
                       Provider: <strong className="text-slate-700">{slot.provider}</strong>
                     </p>
                     {slot.notes && (
-                      <p className="text-[10px] text-amber-900 bg-amber-100/70 px-2 py-0.5 rounded mt-1 inline-block">
+                      <p className="text-[10px] text-amber-900 bg-amber-100/70 px-2 py-0.5 rounded-md mt-1 inline-block font-medium">
                         {slot.notes}
                       </p>
                     )}
@@ -223,20 +216,20 @@ export const DoctorSchedule: React.FC = () => {
                 </div>
 
                 {/* Slot Actions */}
-                <div className="flex items-center gap-1.5 self-end sm:self-center">
+                <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                   {!isCompleted && !isBuffer && (
                     <>
                       {!isSeated ? (
                         <button
                           onClick={() => markSlotSeated(slot.id)}
-                          className="text-xs font-bold text-blue-900 bg-white border border-blue-200 px-2.5 py-1 rounded-xl hover:bg-blue-50"
+                          className="text-xs font-bold text-blue-900 bg-white border border-blue-200 px-3 py-1.5 rounded-xl hover:bg-blue-50 transition-all cursor-pointer active:scale-98 shadow-2xs"
                         >
                           Seat in Chair
                         </button>
                       ) : (
                         <button
                           onClick={() => markSlotCompleted(slot.id)}
-                          className="text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 rounded-xl flex items-center gap-1"
+                          className="text-xs font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-1 transition-all cursor-pointer active:scale-98 shadow-2xs"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Complete</span>
@@ -245,7 +238,9 @@ export const DoctorSchedule: React.FC = () => {
                     </>
                   )}
                   {isCompleted && (
-                    <span className="text-[11px] text-slate-400 font-medium">✓ Finalized</span>
+                    <span className="text-xs text-slate-400 font-semibold bg-slate-100 px-2.5 py-1 rounded-xl">
+                      ✓ Finalized
+                    </span>
                   )}
                 </div>
               </div>

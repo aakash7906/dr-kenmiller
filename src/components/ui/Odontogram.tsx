@@ -2,12 +2,71 @@ import React, { useState } from 'react'
 import { ToothData } from '@/types'
 import { DOCTOR_ODONTOGRAM_TEETH } from '@/data/mockData'
 import { Badge } from '@/components/ui/Badge'
-import { Info, Check, AlertTriangle, ShieldCheck } from 'lucide-react'
+import { Check, X, Shield, Sparkles, Filter } from 'lucide-react'
 
 interface OdontogramProps {
   onSelectTooth?: (tooth: ToothData) => void
   selectedToothNumber?: number | null
   interactive?: boolean
+}
+
+type ArchView = 'both' | 'upper' | 'lower'
+type TreatmentFilter = 'all' | 'treatments'
+
+// Universal Numbering order for anatomical arches
+// Upper Arch (viewed from occlusal): #1 on patient right (viewer left) to #16 on patient left (viewer right)
+const UPPER_TEETH_ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
+// Lower Arch: #32 on patient right (viewer left) to #17 on patient left (viewer right)
+const LOWER_TEETH_ORDER = [32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17]
+
+interface ToothCoordinate {
+  number: number
+  x: number
+  y: number
+  rot: number
+  type: 'molar' | 'premolar' | 'canine' | 'incisor'
+}
+
+// Wider, larger arches maximizing full viewport width
+function getUpperArchCoordinates(centerX = 190, apexY = 46, width = 145, height = 115): ToothCoordinate[] {
+  return UPPER_TEETH_ORDER.map((num, i) => {
+    const k = i - 7.5
+    const u = k / 7.5 // -1 to 1
+    const x = centerX + u * (width * 0.82 + width * 0.18 * u * u)
+    const y = apexY + height * u * u - 8 * Math.pow(u, 4)
+
+    const dx = width * 0.82 + 3 * width * 0.18 * u * u
+    const dy = 2 * height * u - 32 * Math.pow(u, 3)
+    const rot = Math.round((Math.atan2(dy, dx) * 180) / Math.PI)
+
+    let type: ToothCoordinate['type'] = 'molar'
+    if (num === 8 || num === 9 || num === 7 || num === 10) type = 'incisor'
+    else if (num === 6 || num === 11) type = 'canine'
+    else if (num === 4 || num === 5 || num === 12 || num === 13) type = 'premolar'
+
+    return { number: num, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10, rot, type }
+  })
+}
+
+function getLowerArchCoordinates(centerX = 190, apexY = 328, width = 142, height = 115): ToothCoordinate[] {
+  return LOWER_TEETH_ORDER.map((num, i) => {
+    const k = i - 7.5
+    const u = k / 7.5 // -1 to 1
+    const x = centerX + u * (width * 0.82 + width * 0.18 * u * u)
+    const y = apexY - (height * u * u - 8 * Math.pow(u, 4))
+
+    const dx = width * 0.82 + 3 * width * 0.18 * u * u
+    const dy = -(2 * height * u - 32 * Math.pow(u, 3))
+    const rot = Math.round((Math.atan2(dy, dx) * 180) / Math.PI)
+
+    let type: ToothCoordinate['type'] = 'molar'
+    if (num === 24 || num === 25 || num === 23 || num === 26) type = 'incisor'
+    else if (num === 22 || num === 27) type = 'canine'
+    else if (num === 20 || num === 21 || num === 28 || num === 29) type = 'premolar'
+
+    return { number: num, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10, rot, type }
+  })
 }
 
 export const Odontogram: React.FC<OdontogramProps> = ({
@@ -16,166 +75,491 @@ export const Odontogram: React.FC<OdontogramProps> = ({
   interactive = true
 }) => {
   const [activeTooth, setActiveTooth] = useState<ToothData | null>(
-    DOCTOR_ODONTOGRAM_TEETH.find(t => t.number === 19) || null
+    DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === 19) || null
   )
-
-  const upperTeeth = DOCTOR_ODONTOGRAM_TEETH.filter(t => t.number >= 1 && t.number <= 16)
-  const lowerTeeth = DOCTOR_ODONTOGRAM_TEETH.filter(t => t.number >= 17 && t.number <= 32)
-
-  const handleToothClick = (tooth: ToothData) => {
-    setActiveTooth(tooth)
-    if (onSelectTooth) {
-      onSelectTooth(tooth)
-    }
-  }
-
-  const getConditionColor = (condition: ToothData['condition'], isSelected: boolean) => {
-    if (isSelected) return 'ring-2 ring-offset-2 ring-indigo-600 font-bold'
-    switch (condition) {
-      case 'implant':
-        return 'bg-teal-500 text-white border-teal-600 shadow-xs'
-      case 'crown':
-        return 'bg-amber-400 text-amber-950 border-amber-500'
-      case 'decay':
-        return 'bg-rose-500 text-white border-rose-600 animate-pulse'
-      case 'rootcanal':
-        return 'bg-purple-600 text-white border-purple-700'
-      case 'missing':
-        return 'bg-slate-100 text-slate-400 border-dashed border-slate-300'
-      case 'healthy':
-      default:
-        return 'bg-white text-slate-800 border-slate-200 hover:border-slate-400'
-    }
-  }
+  const [archView, setArchView] = useState<ArchView>('both')
+  const [filterMode, setFilterMode] = useState<TreatmentFilter>('all')
+  const [showCallout, setShowCallout] = useState(true)
 
   const current = selectedToothNumber
-    ? DOCTOR_ODONTOGRAM_TEETH.find(t => t.number === selectedToothNumber) || activeTooth
+    ? DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === selectedToothNumber) || activeTooth
     : activeTooth
 
-  return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs">
-      <div className="flex items-center justify-between mb-3">
-        <div>
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-            Adult Dentition Odontogram (Universal #1–32)
-          </h4>
-          <p className="text-[11px] text-slate-400">Click any tooth for chart history & procedure notes</p>
-        </div>
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <Badge variant="teal" size="sm">Implant (#19)</Badge>
-          <Badge variant="amber" size="sm">Crown (#3)</Badge>
-          <Badge variant="red" size="sm">Decay (#14)</Badge>
-        </div>
-      </div>
+  const handleToothClick = (toothNum: number) => {
+    if (!interactive) return
+    const toothData = DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === toothNum)
+    if (toothData) {
+      setActiveTooth(toothData)
+      setShowCallout(true)
+      if (onSelectTooth) {
+        onSelectTooth(toothData)
+      }
+    }
+  }
 
-      {/* Odontogram Grid */}
-      <div className="space-y-3 bg-slate-50/70 p-3 rounded-xl border border-slate-100 overflow-x-auto">
-        {/* Upper Arch */}
-        <div>
-          <div className="flex items-center justify-between text-[10px] font-semibold text-slate-400 mb-1 px-1">
-            <span>UPPER RIGHT (MAXILLARY)</span>
-            <span>MIDLINE</span>
-            <span>UPPER LEFT (MAXILLARY)</span>
-          </div>
-          <div className="grid grid-cols-16 gap-1 min-w-[500px]">
-            {upperTeeth.map((tooth) => {
-              const isSelected = current?.number === tooth.number
-              return (
-                <button
-                  key={tooth.number}
-                  type="button"
-                  disabled={!interactive}
-                  onClick={() => handleToothClick(tooth)}
-                  title={`Tooth #${tooth.number}: ${tooth.name} (${tooth.condition})`}
-                  className={`h-9 flex flex-col items-center justify-center rounded-lg border text-xs transition-all ${getConditionColor(
-                    tooth.condition,
-                    isSelected
-                  )}`}
-                >
-                  <span className="text-[11px] font-bold leading-none">{tooth.number}</span>
-                  <span className="text-[8px] opacity-75 capitalize mt-0.5 scale-90">
-                    {tooth.condition === 'healthy' ? 'H' : tooth.condition.slice(0, 3)}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
+  // Pre-calculated coordinates for views (wider & much larger)
+  const upperCoordsBoth = getUpperArchCoordinates(190, 48, 146, 115)
+  const lowerCoordsBoth = getLowerArchCoordinates(190, 332, 142, 115)
 
-        {/* Occlusal Midline separator */}
-        <div className="relative py-0.5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-dashed border-slate-300" />
-          </div>
-          <div className="relative flex justify-center">
-            <span className="bg-slate-200 text-slate-600 text-[9px] font-mono px-2 py-0.5 rounded-full uppercase">
-              Occlusal Plane
-            </span>
-          </div>
-        </div>
+  // Zoomed views when user clicks Upper or Lower arch
+  const upperCoordsSingle = getUpperArchCoordinates(190, 52, 158, 155)
+  const lowerCoordsSingle = getLowerArchCoordinates(190, 238, 158, 155)
 
-        {/* Lower Arch */}
-        <div>
-          <div className="grid grid-cols-16 gap-1 min-w-[500px]">
-            {lowerTeeth.map((tooth) => {
-              const isSelected = current?.number === tooth.number
-              return (
-                <button
-                  key={tooth.number}
-                  type="button"
-                  disabled={!interactive}
-                  onClick={() => handleToothClick(tooth)}
-                  title={`Tooth #${tooth.number}: ${tooth.name} (${tooth.condition})`}
-                  className={`h-9 flex flex-col items-center justify-center rounded-lg border text-xs transition-all ${getConditionColor(
-                    tooth.condition,
-                    isSelected
-                  )}`}
-                >
-                  <span className="text-[11px] font-bold leading-none">{tooth.number}</span>
-                  <span className="text-[8px] opacity-75 capitalize mt-0.5 scale-90">
-                    {tooth.condition === 'healthy' ? 'H' : tooth.condition.slice(0, 3)}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-          <div className="flex items-center justify-between text-[10px] font-semibold text-slate-400 mt-1 px-1">
-            <span>LOWER RIGHT (MANDIBULAR)</span>
-            <span>MIDLINE</span>
-            <span>LOWER LEFT (MANDIBULAR)</span>
-          </div>
-        </div>
-      </div>
+  // Tooth vector rendering with ~50% larger dimensions & enhanced clarity
+  const renderToothVector = (
+    coord: ToothCoordinate,
+    tooth: ToothData,
+    isSelected: boolean,
+    isDimmed: boolean
+  ) => {
+    const { number, x, y, rot, type } = coord
+    const isImplant = tooth.condition === 'implant'
+    const isCrown = tooth.condition === 'crown'
+    const isDecay = tooth.condition === 'decay'
+    const isRootCanal = tooth.condition === 'rootcanal'
+    const isMissing = tooth.condition === 'missing'
 
-      {/* Selected Tooth Detail Banner */}
-      {current && (
-        <div className="mt-3 bg-white p-3 rounded-xl border border-slate-200/90 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg bg-slate-900 text-white font-bold flex items-center justify-center text-xs">
-              #{current.number}
-            </span>
-            <div>
-              <div className="font-semibold text-slate-800 flex items-center gap-2">
-                <span>{current.name}</span>
-                <span className="uppercase text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-slate-100 text-slate-700">
-                  {current.condition}
-                </span>
-              </div>
-              <p className="text-slate-500 text-[11px] mt-0.5">
-                {current.notes || 'No active pathology recorded. Regular prophylactic hygiene indicated.'}
-              </p>
-            </div>
-          </div>
-          {current.plannedProcedure && (
-            <div className="sm:text-right shrink-0">
-              <span className="text-[10px] uppercase font-bold text-teal-700 bg-teal-50 px-2 py-1 rounded-md border border-teal-200 flex items-center gap-1">
-                <Check className="w-3 h-3 text-teal-600" />
-                Plan: {current.plannedProcedure}
-              </span>
-            </div>
+    let fill = '#FFFFFF'
+    let stroke = '#94A3B8'
+    let strokeWidth = '1.6'
+    let fissureStroke = '#CBD5E1'
+
+    if (isImplant) {
+      fill = '#0D9488'
+      stroke = '#115E59'
+      fissureStroke = '#99F6E4'
+    } else if (isCrown) {
+      fill = '#F59E0B'
+      stroke = '#D97706'
+      fissureStroke = '#FEF3C7'
+    } else if (isDecay) {
+      fill = '#F43F5E'
+      stroke = '#BE123C'
+      fissureStroke = '#FFE4E6'
+    } else if (isRootCanal) {
+      fill = '#8B5CF6'
+      stroke = '#6D28D9'
+      fissureStroke = '#EDE9FE'
+    } else if (isMissing) {
+      fill = '#F8FAFC'
+      stroke = '#CBD5E1'
+    }
+
+    if (isSelected) {
+      stroke = '#2563EB'
+      strokeWidth = '2.6'
+    }
+
+    return (
+      <g
+        key={number}
+        onClick={() => handleToothClick(number)}
+        className={`cursor-pointer transition-all duration-200 select-none ${
+          isDimmed ? 'opacity-20' : 'opacity-100 hover:scale-108'
+        }`}
+      >
+        {/* Generous touch target */}
+        <circle cx={x} cy={y} r="20" fill="transparent" />
+
+        {/* Selected glowing halo ring (like in reference image 2) */}
+        {isSelected && (
+          <circle
+            cx={x}
+            cy={y}
+            r="20.5"
+            fill="none"
+            stroke="#2563EB"
+            strokeWidth="3"
+            strokeDasharray="5 3"
+            className="animate-spin-slow opacity-95"
+          />
+        )}
+
+        {/* Tooth anatomical crown vector - Scaled up by 1.4x for high visibility */}
+        <g transform={`translate(${x}, ${y}) rotate(${rot}) scale(1.38)`}>
+          {type === 'molar' && (
+            <>
+              {/* Rounded 4-cusped molar occlusal anatomy */}
+              <path
+                d="M -9.5,-8 C -9.5,-10.5 -7,-10.5 -3.5,-10 C -1,-10.5 1,-10.5 3.5,-10 C 7,-10.5 9.5,-10.5 9.5,-8 C 10,-5 10,-2 9.5,1 C 10,4 10,7 9.5,9 C 7.5,10.5 5,10 0,10.5 C -5,10 -7.5,10.5 -9.5,9 C -10,7 -10,4 -9.5,1 C -10,-2 -10,-5 -9.5,-8 Z"
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={isMissing ? '2 2' : 'none'}
+              />
+              {!isMissing && (
+                <>
+                  <path
+                    d="M -5.5,-1 Q 0,0 5.5,-1 M 0,-5.5 Q 0,0 0,6"
+                    fill="none"
+                    stroke={fissureStroke}
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  {isImplant && (
+                    <circle cx="0" cy="0" r="3" fill="#CCFBF1" stroke="#0F766E" strokeWidth="1" />
+                  )}
+                  {isDecay && (
+                    <circle cx="2" cy="-1.5" r="2.4" fill="#881337" />
+                  )}
+                </>
+              )}
+            </>
           )}
+
+          {type === 'premolar' && (
+            <>
+              {/* Rounded bicuspid oval crown */}
+              <path
+                d="M -7.5,-6 C -7.5,-8 0,-8.5 7.5,-6 C 9,-2 9,2 7.5,6 C 0,8.5 -7.5,8 -7.5,6 C -9,2 -9,-2 -7.5,-6 Z"
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={isMissing ? '2 2' : 'none'}
+              />
+              {!isMissing && (
+                <path
+                  d="M -4.5,0 Q 0,0.6 4.5,0"
+                  fill="none"
+                  stroke={fissureStroke}
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                />
+              )}
+            </>
+          )}
+
+          {type === 'canine' && (
+            <>
+              {/* Pointed cusp canine contour */}
+              <path
+                d="M 0,-7.5 C 3,-6 6.5,-3 6.5,1 C 6.5,5 3.5,7 0,7.5 C -3.5,7 -6.5,5 -6.5,1 C -6.5,-3 -3,-6 0,-7.5 Z"
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={isMissing ? '2 2' : 'none'}
+              />
+              {!isMissing && (
+                <path
+                  d="M 0,-4.5 L 0,4.5"
+                  fill="none"
+                  stroke={fissureStroke}
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                />
+              )}
+            </>
+          )}
+
+          {type === 'incisor' && (
+            <>
+              {/* Elegant curved incisor wedge */}
+              <path
+                d="M -6.5,-5 C -6.5,-6.2 6.5,-6.2 6.5,-5 C 7,-1 6.5,3 5.5,5.5 C 2,6.5 -2,6.5 -5.5,5.5 C -6.5,3 -7,-1 -6.5,-5 Z"
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+                strokeDasharray={isMissing ? '2 2' : 'none'}
+              />
+              {!isMissing && (
+                <path
+                  d="M -4,2.5 Q 0,3 4,2.5"
+                  fill="none"
+                  stroke={fissureStroke}
+                  strokeWidth="0.9"
+                />
+              )}
+            </>
+          )}
+        </g>
+
+        {/* Tooth number label directly along outer perimeter - Bigger & clearer */}
+        <text
+          x={x}
+          y={coord.number <= 16 ? y - 16 : y + 20}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className={`select-none transition-colors ${
+            isSelected
+              ? 'fill-blue-600 font-black text-[12px]'
+              : isMissing
+              ? 'fill-slate-300 font-bold text-[9px]'
+              : 'fill-slate-600 font-bold text-[10px]'
+          }`}
+        >
+          {number}
+        </text>
+      </g>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* 1. Header with View Controls & Treatment Mode - Outside of Card */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse" />
+            <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-900">
+              Anatomical Dental Arch Odontogram
+            </h3>
+          </div>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Universal 1–32 • Tap any tooth to inspect surfaces & records
+          </p>
         </div>
-      )}
+
+        {/* Arch Switcher: Both / Upper / Lower */}
+        <div className="bg-slate-200/90 p-1 rounded-xl flex items-center gap-1 text-xs font-bold shrink-0 self-start sm:self-auto shadow-2xs">
+          <button
+            type="button"
+            onClick={() => setArchView('both')}
+            className={`py-1.5 px-3.5 rounded-lg transition-all cursor-pointer ${
+              archView === 'both'
+                ? 'bg-doctor-primary text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900'
+            }`}
+          >
+            Both Arches
+          </button>
+          <button
+            type="button"
+            onClick={() => setArchView('upper')}
+            className={`py-1.5 px-3.5 rounded-lg transition-all cursor-pointer ${
+              archView === 'upper'
+                ? 'bg-doctor-primary text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900'
+            }`}
+          >
+            Upper (1–16)
+          </button>
+          <button
+            type="button"
+            onClick={() => setArchView('lower')}
+            className={`py-1.5 px-3.5 rounded-lg transition-all cursor-pointer ${
+              archView === 'lower'
+                ? 'bg-doctor-primary text-white shadow-xs'
+                : 'text-slate-700 hover:text-slate-900'
+            }`}
+          >
+            Lower (17–32)
+          </button>
+        </div>
+      </div>
+
+      {/* 2. Visual Clinical Legend & Filter Pill */}
+      <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-xs">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 bg-teal-50 text-teal-800 border border-teal-200 px-3 py-1 rounded-full text-xs font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-teal-600" />
+            Implant (19)
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1 rounded-full text-xs font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+            Crown (3)
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-rose-50 text-rose-800 border border-rose-200 px-3 py-1 rounded-full text-xs font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+            Decay (14)
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-purple-50 text-purple-800 border border-purple-200 px-3 py-1 rounded-full text-xs font-bold">
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-600" />
+            Endo (30)
+          </span>
+          <span className="inline-flex items-center gap-1.5 bg-white text-slate-600 border border-slate-200 px-3 py-1 rounded-full text-xs font-semibold shadow-2xs">
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            Healthy Enamel
+          </span>
+        </div>
+
+        {/* Toggle Treatment View Filter */}
+        <div className="flex items-center gap-1 bg-slate-200/80 p-0.5 rounded-lg text-xs font-semibold">
+          <button
+            type="button"
+            onClick={() => setFilterMode('all')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              filterMode === 'all' ? 'bg-white text-slate-900 shadow-2xs font-bold' : 'text-slate-600'
+            }`}
+          >
+            All Teeth
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterMode('treatments')}
+            className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              filterMode === 'treatments' ? 'bg-white text-blue-900 shadow-2xs font-bold' : 'text-slate-600'
+            }`}
+          >
+            Treatments Only
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Main Anatomical Dental Arch - Displayed Out of Card taking Full Viewport Width */}
+      <div className="w-full flex flex-col items-center justify-center py-2 relative select-none">
+        {/* VIEW 1: BOTH ARCHES (Full Mouth View matching Reference Image 3) */}
+        {archView === 'both' && (
+          <div className="w-full max-w-[460px] aspect-[380/380] relative">
+            <svg
+              viewBox="0 0 380 380"
+              className="w-full h-full drop-shadow-sm overflow-visible"
+            >
+              {/* Subtle Dental Crosshair / Midline Axis (from Reference Image 3) */}
+              <line x1="190" y1="18" x2="190" y2="362" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+              <line x1="20" y1="190" x2="360" y2="190" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+
+              {/* Arch Headings */}
+              <text x="190" y="16" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
+                Upper Dental Arch (Maxillary)
+              </text>
+              <text x="24" y="112" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
+                RIGHT
+              </text>
+              <text x="356" y="112" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
+                LEFT
+              </text>
+
+              {/* Center Occlusal Plane Badge */}
+              <g transform="translate(190, 190)">
+                <rect x="-46" y="-10" width="92" height="20" rx="10" fill="#F1F5F9" stroke="#E2E8F0" />
+                <text x="0" y="1" textAnchor="middle" dominantBaseline="central" className="text-[9px] font-black fill-slate-500 uppercase tracking-wider">
+                  Occlusal Plane
+                </text>
+              </g>
+
+              {/* Lower Arch Heading */}
+              <text x="190" y="370" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
+                Lower Dental Arch (Mandibular)
+              </text>
+
+              {/* Render Upper Arch Teeth */}
+              {upperCoordsBoth.map((coord) => {
+                const tooth = DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === coord.number)!
+                const isSelected = current?.number === coord.number
+                const isDimmed = filterMode === 'treatments' && tooth.condition === 'healthy'
+                return renderToothVector(coord, tooth, isSelected, isDimmed)
+              })}
+
+              {/* Render Lower Arch Teeth */}
+              {lowerCoordsBoth.map((coord) => {
+                const tooth = DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === coord.number)!
+                const isSelected = current?.number === coord.number
+                const isDimmed = filterMode === 'treatments' && tooth.condition === 'healthy'
+                return renderToothVector(coord, tooth, isSelected, isDimmed)
+              })}
+            </svg>
+          </div>
+        )}
+
+        {/* VIEW 2: UPPER ARCH (Zoomed High Detail matching Reference Image 2) */}
+        {archView === 'upper' && (
+          <div className="w-full max-w-[460px] aspect-[380/280] relative">
+            <svg viewBox="0 0 380 275" className="w-full h-full drop-shadow-sm overflow-visible">
+              <line x1="190" y1="20" x2="190" y2="260" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+              <text x="190" y="18" textAnchor="middle" className="text-[11px] font-bold fill-slate-400 uppercase tracking-widest">
+                Upper Maxillary Arch (1–16)
+              </text>
+              <text x="24" y="145" textAnchor="middle" className="text-[10px] font-bold fill-slate-400">
+                RIGHT
+              </text>
+              <text x="356" y="145" textAnchor="middle" className="text-[10px] font-bold fill-slate-400">
+                LEFT
+              </text>
+
+              {upperCoordsSingle.map((coord) => {
+                const tooth = DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === coord.number)!
+                const isSelected = current?.number === coord.number
+                const isDimmed = filterMode === 'treatments' && tooth.condition === 'healthy'
+                return renderToothVector(coord, tooth, isSelected, isDimmed)
+              })}
+            </svg>
+          </div>
+        )}
+
+        {/* VIEW 3: LOWER ARCH (Zoomed High Detail with Tooth 19) */}
+        {archView === 'lower' && (
+          <div className="w-full max-w-[460px] aspect-[380/280] relative">
+            <svg viewBox="0 0 380 275" className="w-full h-full drop-shadow-sm overflow-visible">
+              <line x1="190" y1="15" x2="190" y2="255" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+              <text x="190" y="18" textAnchor="middle" className="text-[11px] font-bold fill-slate-400 uppercase tracking-widest">
+                Lower Mandibular Arch (17–32)
+              </text>
+              <text x="24" y="140" textAnchor="middle" className="text-[10px] font-bold fill-slate-400">
+                RIGHT
+              </text>
+              <text x="356" y="140" textAnchor="middle" className="text-[10px] font-bold fill-slate-400">
+                LEFT
+              </text>
+
+              {lowerCoordsSingle.map((coord) => {
+                const tooth = DOCTOR_ODONTOGRAM_TEETH.find((t) => t.number === coord.number)!
+                const isSelected = current?.number === coord.number
+                const isDimmed = filterMode === 'treatments' && tooth.condition === 'healthy'
+                return renderToothVector(coord, tooth, isSelected, isDimmed)
+              })}
+            </svg>
+          </div>
+        )}
+
+        {/* 4. Interactive Floating Speech Bubble / Callout Card */}
+        {showCallout && current && (
+          <div className="mt-4 w-full bg-white border border-slate-200/90 shadow-sm rounded-2xl p-4 animate-in fade-in slide-in-from-bottom-2 space-y-2.5">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-xl bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs shadow-2xs">
+                  {current.number}
+                </span>
+                <div>
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                    {current.name}
+                  </h4>
+                  <span
+                    className={`inline-block text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-0.5 rounded-full mt-0.5 ${
+                      current.condition === 'implant'
+                        ? 'bg-teal-100 text-teal-800'
+                        : current.condition === 'crown'
+                        ? 'bg-amber-100 text-amber-900'
+                        : current.condition === 'decay'
+                        ? 'bg-rose-100 text-rose-800'
+                        : current.condition === 'rootcanal'
+                        ? 'bg-purple-100 text-purple-900'
+                        : current.condition === 'missing'
+                        ? 'bg-slate-100 text-slate-500'
+                        : 'bg-emerald-100 text-emerald-800'
+                    }`}
+                  >
+                    {current.condition.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowCallout(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg cursor-pointer"
+                title="Dismiss Callout"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+              {current.notes ||
+                'Enamel surface intact with healthy periodontal margin. No decay or active pathology identified during recall cycle.'}
+            </p>
+
+            {current.plannedProcedure && (
+              <div className="flex items-center justify-between pt-1 text-xs">
+                <span className="text-xs font-bold text-teal-800 bg-teal-50 px-3 py-1 rounded-lg border border-teal-200 flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-teal-600" />
+                  <span>Clinical Plan: {current.plannedProcedure}</span>
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">Dr. Ken Miller</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

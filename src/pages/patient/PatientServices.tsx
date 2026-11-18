@@ -455,9 +455,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
         <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
           Our Dental Services
         </h1>
-        <p className="text-xs text-slate-500 leading-relaxed">
-          Over 38+ years of comprehensive dental care tailored for every generation of your family.
-        </p>
+
       </div>
 
       {/* 2. Interactive Search Bar */}

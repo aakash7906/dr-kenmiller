@@ -24,7 +24,7 @@ export const DoctorCharting: React.FC = () => {
     DOCTOR_ODONTOGRAM_TEETH.find(t => t.number === 19)!
   )
   const [activeTab, setActiveTab] = useState<'odontogram' | 'treatmentPlan' | 'soapNotes'>('odontogram')
-  const [soapSubjective, setSoapSubjective] = useState('Patient arrives for stage 2 check on implant #19. Reports no spontaneous pain or tenderness.')
+  const [soapSubjective, setSoapSubjective] = useState('Patient arrives for stage 2 check on implant 19. Reports no spontaneous pain or tenderness.')
   const [soapObjective, setSoapObjective] = useState('Healing abutment intact. Gingival tissue pink and well-keratinized with no erythema or exudate. Torque test 35 Ncm stable.')
   const [soapAssessment, setSoapAssessment] = useState('Osseointegrated lower left first molar implant fixture. Ready for custom monolithic zirconia crown delivery.')
   const [soapPlan, setSoapPlan] = useState('Crown seating appointment confirmed for Nov 15. Aurum lab case verified shade A2.')
@@ -36,114 +36,109 @@ export const DoctorCharting: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4 pb-20">
+    <div className="space-y-6 pb-28 pt-2">
       {/* Charting Header & Patient Selector */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
-            Electronic Health Record (EHR)
-          </span>
+        
           <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
-            Patient Odontogram & Charting
+            Odontogram & Charting
           </h2>
         </div>
 
         {/* Search / Patient Switcher */}
         <div className="flex items-center gap-2">
-          <div className="relative">
-            <select
-              value={selectedPatientId}
-              onChange={(e) => setSelectedPatientId(e.target.value)}
-              className="bg-white border border-slate-300 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-800 shadow-2xs focus:ring-2 focus:ring-blue-600 focus:outline-none"
-            >
-              <option value="pt-001">Sarah Tremblay (#KM-6421)</option>
-              <option value="pt-002">Marcus Vance (#KM-5819)</option>
-              <option value="pt-003">David Chen (#KM-7244)</option>
-              <option value="pt-004">Liam O'Connor (Emergency Triage)</option>
-            </select>
-          </div>
+          <select
+            value={selectedPatientId}
+            onChange={(e) => setSelectedPatientId(e.target.value)}
+            className="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-800 shadow-2xs focus:ring-2 focus:ring-doctor-primary focus:outline-none cursor-pointer"
+          >
+            <option value="pt-001">Sarah Tremblay</option>
+            <option value="pt-002">Marcus Vance</option>
+            <option value="pt-003">David Chen</option>
+            <option value="pt-004">Liam O'Connor (Emergency Triage)</option>
+          </select>
         </div>
       </div>
 
       {/* Patient Vital Info Strip */}
-      <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-3.5">
+        <div className="flex items-center gap-3.5">
           <img
             src={CURRENT_PATIENT.avatar}
             alt="Sarah"
-            className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-100"
+            className="w-11 h-11 rounded-xl object-cover ring-2 ring-blue-100 shrink-0"
           />
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-slate-900">{CURRENT_PATIENT.name}</h3>
-              <span className="text-xs font-mono text-slate-500">Chart {CURRENT_PATIENT.chartNumber}</span>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">{CURRENT_PATIENT.name}</h3>
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
                 Active
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              DOB: Apr 14, 1988 • Insurance: <strong className="text-slate-700">{CURRENT_PATIENT.insurancePlan}</strong> (80% / 50%)
+            <p className="text-xs text-slate-500 mt-0.5">
+              <strong className="text-slate-700">{CURRENT_PATIENT.insurancePlan}</strong> (80% / 50%)
             </p>
           </div>
         </div>
 
         {/* Medical alerts banner */}
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-xl flex items-center gap-1.5">
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
-            <span>Penicillin Allergy (High Alert)</span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+            <span>Penicillin Allergy</span>
           </span>
-          <span className="text-[11px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-2 py-1 rounded-xl">
+          <span className="text-[11px] font-bold text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl">
             Latex Safe
           </span>
         </div>
       </div>
 
       {/* Mode Subtabs */}
-      <div className="bg-slate-200/80 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
+      <div className="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 text-xs font-bold">
         <button
           onClick={() => setActiveTab('odontogram')}
-          className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
             activeTab === 'odontogram' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
-          Adult Odontogram (#1–32)
+          Odontogram (1–32)
         </button>
         <button
           onClick={() => setActiveTab('treatmentPlan')}
-          className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
             activeTab === 'treatmentPlan' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
-          Treatment Plan & Fees
+          Treatment & Fees
         </button>
         <button
           onClick={() => setActiveTab('soapNotes')}
-          className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
             activeTab === 'soapNotes' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
-          Clinical SOAP Notes
+          SOAP Notes
         </button>
       </div>
 
       {/* TAB 1: ODONTOGRAM */}
       {activeTab === 'odontogram' && (
-        <div className="space-y-4">
+        <div className="space-y-5">
           <Odontogram
             selectedToothNumber={selectedTooth.number}
             onSelectTooth={(tooth) => setSelectedTooth(tooth)}
           />
 
           {/* Tooth Diagnostics & Quick Actions Card */}
-          <Card className="p-4 border-slate-200 shadow-2xs space-y-3">
+          <Card className="p-4.5 sm:p-5.5 border-slate-200 shadow-2xs space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs">
-                  #{selectedTooth.number}
+              <div className="flex items-center gap-2.5">
+                <span className="w-8 h-8 rounded-xl bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs shadow-2xs">
+                  {selectedTooth.number}
                 </span>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900">
                     {selectedTooth.name}
                   </h4>
                   <p className="text-[11px] text-slate-500">
@@ -151,206 +146,213 @@ export const DoctorCharting: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <Badge variant="teal" size="sm">
-                Condition: {selectedTooth.condition.toUpperCase()}
+              <Badge variant="teal" size="sm" className="font-bold">
+                {selectedTooth.condition.toUpperCase()}
               </Badge>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700">
-              <strong className="text-slate-900 block mb-1">Chairside Historical Record:</strong>
-              <p>
+            <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1">
+              <strong className="text-slate-900 block text-[11px] uppercase tracking-wide">Chairside Historical Record:</strong>
+              <p className="leading-relaxed">
                 {selectedTooth.notes || 'No active pathology recorded on this tooth during previous recall cycle.'}
               </p>
             </div>
 
             {/* Quick Procedure Action Buttons for this tooth */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
               <button
-                onClick={() => alert(`Marked Tooth #${selectedTooth.number} for Crown Prep.`)}
-                className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center"
+                onClick={() => alert(`Marked Tooth ${selectedTooth.number} for Crown Prep.`)}
+                className="p-2.5 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center transition-all cursor-pointer active:scale-98 shadow-2xs"
               >
                 + Plan Crown
               </button>
               <button
-                onClick={() => alert(`Marked Tooth #${selectedTooth.number} for Resin Restoration.`)}
-                className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center"
+                onClick={() => alert(`Marked Tooth ${selectedTooth.number} for Resin Restoration.`)}
+                className="p-2.5 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center transition-all cursor-pointer active:scale-98 shadow-2xs"
               >
                 + Composite MOD
               </button>
               <button
-                onClick={() => alert(`Marked Tooth #${selectedTooth.number} for Endodontic Evaluation.`)}
-                className="p-2 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center"
+                onClick={() => alert(`Marked Tooth ${selectedTooth.number} for Endodontic Evaluation.`)}
+                className="p-2.5 rounded-xl border border-slate-200 hover:border-blue-400 bg-white font-semibold text-slate-700 hover:bg-blue-50 text-center transition-all cursor-pointer active:scale-98 shadow-2xs"
               >
                 + Endo / Pulp Test
               </button>
               <button
-                onClick={() => alert(`Tooth #${selectedTooth.number} flagged as Healthy / WNL.`)}
-                className="p-2 rounded-xl border border-slate-200 hover:border-emerald-400 bg-white font-semibold text-emerald-700 hover:bg-emerald-50 text-center"
+                onClick={() => alert(`Tooth ${selectedTooth.number} flagged as Healthy / WNL.`)}
+                className="p-2.5 rounded-xl border border-emerald-200 hover:border-emerald-400 bg-emerald-50/60 font-semibold text-emerald-800 hover:bg-emerald-100 text-center transition-all cursor-pointer active:scale-98 shadow-2xs"
               >
-                ✓ Mark Healthy (WNL)
+                ✓ Mark Healthy
               </button>
             </div>
           </Card>
         </div>
       )}
 
-      {/* TAB 2: TREATMENT PLAN & FEES */}
+      {/* TAB 2: TREATMENT PLAN & FEES (Redesigned as clean visual cards) */}
       {activeTab === 'treatmentPlan' && (
-        <Card className="p-4 sm:p-5 border-slate-200 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                Active Treatment Plan: {ACTIVE_CARE_PLAN.title}
-              </h3>
-              <p className="text-xs text-slate-500">Plan ID: #{ACTIVE_CARE_PLAN.id} • Dr. Ken Miller, DDS</p>
+        <div className="space-y-4">
+          <div className="bg-white p-4.5 sm:p-5.5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                  {ACTIVE_CARE_PLAN.title}
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">Plan #{ACTIVE_CARE_PLAN.id} • Dr. Ken Miller, DDS</p>
+              </div>
+              <Badge variant="teal" size="sm">Phase 2 Active</Badge>
             </div>
-            <Badge variant="teal" size="sm">Phase 2 Active</Badge>
-          </div>
 
-          {/* Procedures Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-slate-200 text-slate-400 font-bold uppercase text-[10px]">
-                  <th className="py-2 px-2">Code</th>
-                  <th className="py-2 px-2">Tooth</th>
-                  <th className="py-2 px-2">Description</th>
-                  <th className="py-2 px-2 text-right">Fee</th>
-                  <th className="py-2 px-2 text-right">Ins. Est</th>
-                  <th className="py-2 px-2 text-right">Patient Copay</th>
-                  <th className="py-2 px-2 text-center">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                <tr>
-                  <td className="py-2.5 px-2 font-mono font-bold text-blue-900">02601</td>
-                  <td className="py-2.5 px-2 font-bold">#19</td>
-                  <td className="py-2.5 px-2">3D CBCT Cone Beam Scan</td>
-                  <td className="py-2.5 px-2 text-right font-medium">$350.00</td>
-                  <td className="py-2.5 px-2 text-right text-emerald-700">$280.00</td>
-                  <td className="py-2.5 px-2 text-right font-bold">$70.00</td>
-                  <td className="py-2.5 px-2 text-center">
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">Paid</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-2.5 px-2 font-mono font-bold text-blue-900">79931</td>
-                  <td className="py-2.5 px-2 font-bold">#19</td>
-                  <td className="py-2.5 px-2">Titanium Implant Fixture Surgery</td>
-                  <td className="py-2.5 px-2 text-right font-medium">$1,350.00</td>
-                  <td className="py-2.5 px-2 text-right text-emerald-700">$1,000.00</td>
-                  <td className="py-2.5 px-2 text-right font-bold">$350.00</td>
-                  <td className="py-2.5 px-2 text-center">
-                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">Done</span>
-                  </td>
-                </tr>
-                <tr className="bg-blue-50/40">
-                  <td className="py-2.5 px-2 font-mono font-bold text-blue-900">27301</td>
-                  <td className="py-2.5 px-2 font-bold">#19</td>
-                  <td className="py-2.5 px-2 font-semibold">Custom Monolithic Zirconia Crown</td>
-                  <td className="py-2.5 px-2 text-right font-medium">$750.00</td>
-                  <td className="py-2.5 px-2 text-right text-emerald-700">$520.00</td>
-                  <td className="py-2.5 px-2 text-right font-bold text-blue-900">$230.00</td>
-                  <td className="py-2.5 px-2 text-center">
-                    <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Nov 15</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+            {/* Visual Procedures Stack */}
+            <div className="space-y-3 pt-1">
+              {/* Item 1 */}
+              <div className="p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">Code 02601</span>
+                    <span className="font-bold text-xs text-slate-800">Tooth 19</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Paid</span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">3D CBCT Cone Beam Scan</h4>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="text-slate-500">Fee: $350</span>
+                  <span className="text-emerald-700 font-semibold">Ins: $280</span>
+                  <span className="font-bold text-slate-900 bg-white px-2 py-1 rounded-md border border-slate-200">Copay: $70</span>
+                </div>
+              </div>
 
-          {/* Totals */}
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
-            <div>
-              <span className="font-bold text-slate-900">Electronic Direct Pre-Determination:</span>
-              <p className="text-[11px] text-slate-500">Alberta Blue Cross EDI response received. Authorized coverage 73.4% overall.</p>
+              {/* Item 2 */}
+              <div className="p-3.5 rounded-xl border border-slate-200/90 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold text-blue-900 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">Code 79931</span>
+                    <span className="font-bold text-xs text-slate-800">Tooth 19</span>
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Done</span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">Titanium Implant Fixture Surgery</h4>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="text-slate-500">Fee: $1,350</span>
+                  <span className="text-emerald-700 font-semibold">Ins: $1,000</span>
+                  <span className="font-bold text-slate-900 bg-white px-2 py-1 rounded-md border border-slate-200">Copay: $350</span>
+                </div>
+              </div>
+
+              {/* Item 3 (Current Active) */}
+              <div className="p-3.5 rounded-xl border border-blue-300 bg-blue-50/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold text-blue-900 bg-blue-100 border border-blue-300 px-2 py-0.5 rounded">Code 27301</span>
+                    <span className="font-bold text-xs text-slate-800">Tooth 19</span>
+                    <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">Nov 15 Visit</span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">Custom Monolithic Zirconia Crown</h4>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="text-slate-500">Fee: $750</span>
+                  <span className="text-emerald-700 font-semibold">Ins: $520</span>
+                  <span className="font-bold text-blue-950 bg-white px-2 py-1 rounded-md border border-blue-200">Copay: $230</span>
+                </div>
+              </div>
             </div>
-            <div className="text-right">
-              <span className="text-slate-500">Total Patient Balance: </span>
-              <span className="text-base font-extrabold text-doctor-primary">$650.00</span>
+
+            {/* Totals & Electronic Pre-determination */}
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-3">
+              <div>
+                <span className="font-bold text-slate-900">Alberta Blue Cross Direct EDI:</span>
+                <p className="text-[11px] text-slate-500 mt-0.5">Pre-determination authorized at 73.4% overall coverage.</p>
+              </div>
+              <div className="text-left sm:text-right">
+                <span className="text-slate-500 text-xs">Total Patient Copay Balance: </span>
+                <span className="text-lg font-black text-doctor-primary block sm:inline">$650.00</span>
+              </div>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       {/* TAB 3: CLINICAL SOAP NOTES */}
       {activeTab === 'soapNotes' && (
-        <Card className="p-4 sm:p-5 border-slate-200 shadow-sm space-y-4">
+        <Card className="p-4.5 sm:p-5.5 border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                SOAP Format Clinical Progress Notes
+                SOAP Format Progress Notes
               </h3>
-              <p className="text-xs text-slate-500">Operatory 1 • Signed by Dr. Ken Miller, DDS (License #ALB-4921)</p>
+              <p className="text-xs text-slate-500">Signed by Dr. Ken Miller, DDS (License #ALB-4921)</p>
             </div>
             {savedSuccess && (
               <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-xl animate-in fade-in">
-                ✓ Saved to Archival EHR
+                ✓ Committed to EHR
               </span>
             )}
           </div>
 
-          {/* S - Subjective */}
-          <div>
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">S</span>
-              Subjective (Patient Reported):
-            </label>
-            <textarea
-              value={soapSubjective}
-              onChange={(e) => setSoapSubjective(e.target.value)}
-              rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
-            />
+          <div className="space-y-3.5">
+            {/* S - Subjective */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-md bg-doctor-primary text-white flex items-center justify-center text-[10px] font-bold">S</span>
+                <span>Subjective (Patient Reported):</span>
+              </label>
+              <textarea
+                value={soapSubjective}
+                onChange={(e) => setSoapSubjective(e.target.value)}
+                rows={2}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary transition-all"
+              />
+            </div>
+
+            {/* O - Objective */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-md bg-doctor-primary text-white flex items-center justify-center text-[10px] font-bold">O</span>
+                <span>Objective (Findings & Radiographs):</span>
+              </label>
+              <textarea
+                value={soapObjective}
+                onChange={(e) => setSoapObjective(e.target.value)}
+                rows={2}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary transition-all"
+              />
+            </div>
+
+            {/* A - Assessment */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-md bg-doctor-primary text-white flex items-center justify-center text-[10px] font-bold">A</span>
+                <span>Assessment (Diagnosis):</span>
+              </label>
+              <textarea
+                value={soapAssessment}
+                onChange={(e) => setSoapAssessment(e.target.value)}
+                rows={2}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary transition-all"
+              />
+            </div>
+
+            {/* P - Plan */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-md bg-doctor-primary text-white flex items-center justify-center text-[10px] font-bold">P</span>
+                <span>Plan & Follow-Up:</span>
+              </label>
+              <textarea
+                value={soapPlan}
+                onChange={(e) => setSoapPlan(e.target.value)}
+                rows={2}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary transition-all"
+              />
+            </div>
           </div>
 
-          {/* O - Objective */}
-          <div>
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">O</span>
-              Objective (Clinical Findings & Radiographs):
-            </label>
-            <textarea
-              value={soapObjective}
-              onChange={(e) => setSoapObjective(e.target.value)}
-              rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
-            />
-          </div>
-
-          {/* A - Assessment */}
-          <div>
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">A</span>
-              Assessment (Diagnosis):
-            </label>
-            <textarea
-              value={soapAssessment}
-              onChange={(e) => setSoapAssessment(e.target.value)}
-              rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
-            />
-          </div>
-
-          {/* P - Plan */}
-          <div>
-            <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">P</span>
-              Plan & Follow-Up:
-            </label>
-            <textarea
-              value={soapPlan}
-              onChange={(e) => setSoapPlan(e.target.value)}
-              rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
-            />
-          </div>
-
-          <div className="flex justify-end pt-2">
+          <div className="pt-2">
             <Button
               variant="doctor"
+              fullWidth
               onClick={handleSaveNotes}
-              className="flex items-center gap-2"
+              className="flex items-center justify-center gap-2 py-3 rounded-xl font-bold cursor-pointer active:scale-98"
             >
               <Save className="w-4 h-4" />
               <span>Electronically Sign & Commit SOAP Note</span>

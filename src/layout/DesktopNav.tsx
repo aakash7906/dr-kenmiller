@@ -48,7 +48,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
   ]
 
   const doctorLinks = [
-    { id: 'overview' as DoctorTab, label: 'Chairside Hub', icon: LayoutDashboard },
+    { id: 'overview' as DoctorTab, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'charting' as DoctorTab, label: 'Odontogram & Charting', icon: Activity },
     { id: 'schedule' as DoctorTab, label: 'Operatory Schedule', icon: CalendarDays },
     { id: 'triage' as DoctorTab, label: 'Emergency Triage Desk', icon: AlertOctagon, alert: true },

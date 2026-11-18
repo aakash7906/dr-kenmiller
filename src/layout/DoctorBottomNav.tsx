@@ -14,15 +14,15 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
   unreadTriageCount = 1
 }) => {
   const tabs = [
-    { id: 'overview' as DoctorTab, label: 'Chairside', icon: LayoutDashboard },
+    { id: 'overview' as DoctorTab, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'charting' as DoctorTab, label: 'Charting', icon: Activity },
     { id: 'schedule' as DoctorTab, label: 'Schedule', icon: CalendarDays },
-    { id: 'triage' as DoctorTab, label: 'Triage Desk', icon: AlertOctagon, badge: unreadTriageCount },
+    { id: 'triage' as DoctorTab, label: 'Triage Desk', icon: AlertOctagon, badge: unreadTriageCount, urgent: true },
     { id: 'lab' as DoctorTab, label: 'Lab & Post-Op', icon: PackageCheck }
   ]
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-doctor-primary/95 backdrop-blur-md border-t border-slate-700/60 shadow-[0_-4px_25px_rgba(15,43,72,0.25)] text-slate-300">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/85 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] text-slate-600">
       <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto flex items-center justify-around px-2 py-1.5 sm:py-2">
         {tabs.map((tab) => {
           const Icon = tab.icon
@@ -34,8 +34,10 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
               onClick={() => onSelectTab(tab.id)}
               className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 cursor-pointer ${
                 isActive
-                  ? 'text-cyan-300 font-bold'
-                  : 'text-slate-400 hover:text-white'
+                  ? tab.urgent
+                    ? 'text-red-600 font-bold'
+                    : 'text-doctor-primary font-bold'
+                  : 'text-slate-400 hover:text-slate-700'
               }`}
             >
               <div className="relative">
@@ -46,13 +48,19 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
                   strokeWidth={isActive ? 2.5 : 1.8}
                 />
                 {tab.badge && tab.badge > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-rose-500 text-white text-[9px] font-extrabold px-1 rounded-full animate-bounce">
+                  <span className="absolute -top-1 -right-2.5 bg-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full animate-bounce shadow-2xs">
                     {tab.badge}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
-              {isActive && <span className="w-1 h-1 rounded-full bg-cyan-400 mt-0.5" />}
+              <span className="text-[10px] mt-0.5 tracking-tight font-semibold">{tab.label}</span>
+              {isActive && (
+                <span
+                  className={`w-1 h-1 rounded-full mt-0.5 ${
+                    tab.urgent ? 'bg-red-600' : 'bg-doctor-primary'
+                  }`}
+                />
+              )}
             </button>
           )
         })}

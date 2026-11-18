@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import {
   Search,
   X,
@@ -21,7 +21,8 @@ import {
   Shield,
   Feather,
   Package,
-  BellRing
+  BellRing,
+  ExternalLink
 } from 'lucide-react'
 import { Dialog } from '@/components/ui/Dialog'
 import { CLINIC_INFO } from '@/data/mockData'
@@ -47,6 +48,8 @@ interface ServiceItem {
   tagVariant: 'blue' | 'gray' | 'rose' | 'red'
   iconVariant: 'blue' | 'rose' | 'red'
   iconType: 'tooth' | 'users' | 'sparkles' | 'emergency' | 'droplet' | 'sedation' | 'extraction' | 'moon'
+  image: string
+  websiteLink: string
   description: string
   features: ServiceFeature[]
   duration: string
@@ -67,16 +70,22 @@ const ToothOutlineIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h
   </svg>
 )
 
+/**
+ * All 15 authentic services directly from https://www.drkenmiller.ca/our-services
+ * Each service uses its downloaded real website image from public/services/
+ */
 const SERVICES_CATALOG: ServiceItem[] = [
   {
     id: 'implants',
     name: 'Dental Implants',
     categories: ['Restorative', 'Surgical'],
-    tag: 'Specialty Consultation',
+    tag: 'Guided Surgery',
     tagVariant: 'blue',
     iconVariant: 'blue',
     iconType: 'tooth',
-    description: 'Replace missing teeth and restore natural function with permanent titanium implants. Preserves jaw integrity and creates a permanent, confident smile.',
+    image: '/services/implants.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/dental-implants',
+    description: 'Learn how guided implant surgery provides a lifelong replacement for a missing tooth.',
     features: [
       { icon: 'clock', text: '60-min consult' },
       { icon: 'cube', text: '3D Digital Imaging' }
@@ -84,44 +93,16 @@ const SERVICES_CATALOG: ServiceItem[] = [
     duration: '60 Min Consult'
   },
   {
-    id: 'family-pediatric',
-    name: 'Family & Pediatric Dentistry',
-    categories: ['Preventive'],
-    tag: 'All Ages Welcome',
-    tagVariant: 'gray',
-    iconVariant: 'blue',
-    iconType: 'users',
-    description: 'Comprehensive gentle care for all ages from first teeth to seniors. We ensure young patients feel safe, empowered, and eager to maintain oral health.',
-    features: [
-      { icon: 'smile', text: 'Gentle First Visits' },
-      { icon: 'users', text: 'Multi-Member Bookings' }
-    ],
-    duration: '45 - 60 Min'
-  },
-  {
-    id: 'cosmetic-whitening',
-    name: 'Cosmetic Dentistry & Whitening',
-    categories: ['Cosmetic'],
-    tag: 'Aesthetic Focus',
-    tagVariant: 'rose',
-    iconVariant: 'rose',
-    iconType: 'sparkles',
-    description: 'In-office & take-home whitening, veneers, and smile makeovers. Crafted to complement your natural contours and brighten your everyday smile.',
-    features: [
-      { icon: 'palette', text: 'Shade Matching' },
-      { icon: 'check', text: 'Custom Trays Included' }
-    ],
-    duration: '60 Min'
-  },
-  {
-    id: 'emergencies-pain',
-    name: 'Dental Emergencies & Pain Relief',
+    id: 'emergencies',
+    name: 'Dental Emergencies',
     categories: ['Surgical'],
-    tag: 'Priority Same-Day',
+    tag: 'Same-Day Priority',
     tagVariant: 'red',
     iconVariant: 'red',
     iconType: 'emergency',
-    description: 'Rapid care for cracked teeth, acute infections, and dental trauma. Call immediately for prompt triage and fast relief right here in St. Paul.',
+    image: '/services/emergencies.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/dental-emergencies',
+    description: 'Get same day treatment for dental emergencies such as broken teeth and toothaches.',
     features: [
       { icon: 'phone', text: 'Call Direct (780) 645-4122', isPhone: true }
     ],
@@ -129,29 +110,135 @@ const SERVICES_CATALOG: ServiceItem[] = [
     isEmergency: true
   },
   {
-    id: 'periodontics-cleaning',
-    name: 'Periodontics & Deep Cleanings',
-    categories: ['Preventive'],
-    tag: 'Essential Maintenance',
-    tagVariant: 'gray',
+    id: 'restoration',
+    name: 'Dental Restoration',
+    categories: ['Restorative'],
+    tag: 'Crowns & Fillings',
+    tagVariant: 'blue',
     iconVariant: 'blue',
-    iconType: 'droplet',
-    description: 'Gum therapy and preventive periodontal wellness. We safeguard root support, reverse early gingivitis, and keep your natural foundation sturdy.',
+    iconType: 'tooth',
+    image: '/services/restoration.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/dental-restoration',
+    description: 'Restore missing, damaged, or decayed teeth with fillings, crowns, bridges and other restorations.',
     features: [
-      { icon: 'clock', text: '45–60 min hygiene' },
-      { icon: 'activity', text: 'Ultrasonic Scaling' }
+      { icon: 'check', text: 'Custom Aesthetic Crowns' },
+      { icon: 'shield', text: 'Durable Enamel Bonding' }
     ],
     duration: '45 - 60 Min'
   },
   {
-    id: 'root-canal-sedation',
-    name: 'Root Canal Therapy & Sedation',
+    id: 'snoring',
+    name: 'Snoring Counseling',
+    categories: ['Preventive'],
+    tag: 'Sleep Wellness',
+    tagVariant: 'blue',
+    iconVariant: 'blue',
+    iconType: 'moon',
+    image: '/services/snoring.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/snoring-counseling',
+    description: 'Enjoy a full night’s sleep without snoring. We diagnose and treat snoring so you can wake up rested.',
+    features: [
+      { icon: 'shield', text: 'Airway Assessment' },
+      { icon: 'bell', text: 'Custom Sleep Oral Appliance' }
+    ],
+    duration: '30 - 45 Min'
+  },
+  {
+    id: 'cosmetic',
+    name: 'Cosmetic Dentistry',
+    categories: ['Cosmetic'],
+    tag: 'Smile Makeover',
+    tagVariant: 'rose',
+    iconVariant: 'rose',
+    iconType: 'sparkles',
+    image: '/services/cosmetic.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/cosmetic-dentistry',
+    description: 'Enhance your smile with aesthetic improvements to make your teeth look whiter and straighter.',
+    features: [
+      { icon: 'palette', text: 'Porcelain Veneers' },
+      { icon: 'check', text: 'Contour Harmonization' }
+    ],
+    duration: '45 - 60 Min'
+  },
+  {
+    id: 'whitening',
+    name: 'Teeth Whitening',
+    categories: ['Cosmetic'],
+    tag: 'Safe & Long-Lasting',
+    tagVariant: 'rose',
+    iconVariant: 'rose',
+    iconType: 'sparkles',
+    image: '/services/whitening.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/teeth-whitening',
+    description: 'Whiten your teeth reliably and safely, with long-lasting, consistent results.',
+    features: [
+      { icon: 'palette', text: 'In-Office & Take-Home' },
+      { icon: 'check', text: 'Custom Trays Included' }
+    ],
+    duration: '60 Min'
+  },
+  {
+    id: 'invisalign',
+    name: 'Clear Correct',
+    categories: ['Cosmetic', 'Preventive'],
+    tag: 'Invisible Aligners',
+    tagVariant: 'blue',
+    iconVariant: 'blue',
+    iconType: 'sparkles',
+    image: '/services/invisalign.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/clear-correct',
+    description: 'Get straighter teeth with invisible, removable clear aligners.',
+    features: [
+      { icon: 'cube', text: 'Digital 3D Smile Preview' },
+      { icon: 'smile', text: 'Removable Daily Trays' }
+    ],
+    duration: '30 Min Assessment'
+  },
+  {
+    id: 'family',
+    name: 'Family Dentistry',
+    categories: ['Preventive'],
+    tag: 'All Ages Welcome',
+    tagVariant: 'gray',
+    iconVariant: 'blue',
+    iconType: 'users',
+    image: '/services/family.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/family-dentistry',
+    description: 'Keep your family healthy and smiling with preventative dental care and education.',
+    features: [
+      { icon: 'smile', text: 'Gentle First Visits' },
+      { icon: 'users', text: 'Multi-Member Bookings' }
+    ],
+    duration: '45 - 60 Min'
+  },
+  {
+    id: 'periodontics',
+    name: 'Periodontics',
+    categories: ['Preventive'],
+    tag: 'Gum Health',
+    tagVariant: 'gray',
+    iconVariant: 'blue',
+    iconType: 'droplet',
+    image: '/services/periodontics.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/periodontics',
+    description: 'Gum disease can lead to serious health problems. Read about how it is prevented and treated.',
+    features: [
+      { icon: 'activity', text: 'Ultrasonic Scaling' },
+      { icon: 'shield', text: 'Pocket Depth Analysis' }
+    ],
+    duration: '45 - 60 Min'
+  },
+  {
+    id: 'endodontics',
+    name: 'Endodontics',
     categories: ['Restorative'],
-    tag: 'Sedation Comfort Options',
+    tag: 'Root Canal Therapy',
     tagVariant: 'blue',
     iconVariant: 'blue',
     iconType: 'sedation',
-    description: 'Gentle pain-free care with modern comfort options. Eliminates severe toothaches while saving the original tooth with precise, reassuring technique.',
+    image: '/services/endodontics.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/endodontics',
+    description: 'Root canal treatment can save a damaged tooth from being lost. Learn more about this often-misunderstood procedure.',
     features: [
       { icon: 'shield', text: 'Zero-Anxiety Protocols' },
       { icon: 'check', text: 'Tooth Preservation' }
@@ -159,14 +246,50 @@ const SERVICES_CATALOG: ServiceItem[] = [
     duration: '60 - 90 Min'
   },
   {
-    id: 'wisdom-extractions',
-    name: 'Wisdom Teeth & Extractions',
+    id: 'sleep',
+    name: 'NuCalm Relaxation System',
+    categories: ['Preventive', 'Restorative'],
+    tag: 'Medication-Free Calm',
+    tagVariant: 'blue',
+    iconVariant: 'blue',
+    iconType: 'sedation',
+    image: '/services/sleep.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/nucalm-relaxation-system',
+    description: 'Enjoy medication-free relaxation to keep you calm and free from anxiety during your treatment.',
+    features: [
+      { icon: 'shield', text: 'Natural Neurological Reset' },
+      { icon: 'smile', text: 'Deep Restorative Comfort' }
+    ],
+    duration: 'Available with any visit'
+  },
+  {
+    id: 'hygiene',
+    name: 'Oral Hygiene / Cleaning',
+    categories: ['Preventive'],
+    tag: 'Preventative Care',
+    tagVariant: 'gray',
+    iconVariant: 'blue',
+    iconType: 'droplet',
+    image: '/services/hygiene.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/preventative-dentistry',
+    description: 'Prevent gum disease and tooth decay with regular professional cleanings and dental exams.',
+    features: [
+      { icon: 'clock', text: '45–60 min hygiene' },
+      { icon: 'activity', text: 'Ultrasonic Scaling' }
+    ],
+    duration: '45 - 60 Min'
+  },
+  {
+    id: 'wisdom',
+    name: 'Wisdom Teeth Extraction',
     categories: ['Surgical'],
-    tag: 'In-Clinic Extraction',
+    tag: 'In-Clinic Surgery',
     tagVariant: 'gray',
     iconVariant: 'blue',
     iconType: 'extraction',
-    description: 'Comfortable extractions with experienced precision. We provide thorough pre-procedure guidance and supportive, attentive recovery planning.',
+    image: '/services/wisdom.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/wisdom-teeth-extraction',
+    description: 'Learn why dentists extract wisdom teeth and what to expect when you have your wisdom teeth removed.',
     features: [
       { icon: 'feather', text: 'Gentle Anesthesia' },
       { icon: 'package', text: 'Recovery Care Pack' }
@@ -174,19 +297,38 @@ const SERVICES_CATALOG: ServiceItem[] = [
     duration: '45 - 75 Min'
   },
   {
-    id: 'night-guards',
-    name: 'Night Guards & Bite Appliances',
+    id: 'mouthguard',
+    name: 'Guards, Bite Appliances',
     categories: ['Preventive', 'Restorative'],
-    tag: 'Custom Fitted',
+    tag: 'Custom Protection',
     tagVariant: 'gray',
     iconVariant: 'blue',
     iconType: 'moon',
-    description: 'Custom protection against bruxism and TMJ strain. Preserves tooth enamel, reduces morning jaw soreness, and helps you sleep comfortably.',
+    image: '/services/mouthguard.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/sports-guards-and-bite-appliances',
+    description: 'Keep your teeth safe from damage with custom made guards and bite appliances.',
     features: [
-      { icon: 'cube', text: 'Precision Impression' },
-      { icon: 'bell', text: 'Morning TMJ Relief' }
+      { icon: 'cube', text: 'Precision Dental Model' },
+      { icon: 'bell', text: 'Bruxism Enamel Defense' }
     ],
     duration: '30 Min Fitting'
+  },
+  {
+    id: 'tmd',
+    name: 'TMJ Diagnosis & Treatment',
+    categories: ['Restorative', 'Preventive'],
+    tag: 'Jaw Pain Relief',
+    tagVariant: 'blue',
+    iconVariant: 'blue',
+    iconType: 'sedation',
+    image: '/services/tmd.jpg',
+    websiteLink: 'https://www.drkenmiller.ca/service/tmj',
+    description: 'Get relief from chronic facial and jaw pain with diagnosis and treatment of TMJ.',
+    features: [
+      { icon: 'shield', text: 'Jaw Joint Alignment' },
+      { icon: 'smile', text: 'Morning TMJ Relief' }
+    ],
+    duration: '45 Min Consult'
   }
 ]
 
@@ -194,6 +336,51 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory>('All')
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null)
+
+  // Drag-to-scroll / Swipe gesture handler (Mouse + Touch)
+  const categoriesRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef(false)
+  const startXRef = useRef(0)
+  const scrollLeftRef = useRef(0)
+  const hasMovedRef = useRef(false)
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!categoriesRef.current) return
+    isDraggingRef.current = true
+    hasMovedRef.current = false
+    startXRef.current = e.pageX - categoriesRef.current.offsetLeft
+    scrollLeftRef.current = categoriesRef.current.scrollLeft
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !categoriesRef.current) return
+    e.preventDefault()
+    const x = e.pageX - categoriesRef.current.offsetLeft
+    const walk = (x - startXRef.current) * 1.4
+    if (Math.abs(walk) > 4) {
+      hasMovedRef.current = true
+    }
+    categoriesRef.current.scrollLeft = scrollLeftRef.current - walk
+  }
+
+  const handleMouseUpOrLeave = () => {
+    isDraggingRef.current = false
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    if (!categoriesRef.current) return
+    if (e.deltaY !== 0 && categoriesRef.current.scrollWidth > categoriesRef.current.clientWidth) {
+      categoriesRef.current.scrollLeft += e.deltaY
+    }
+  }
+
+  const handleChipClick = (id: ServiceCategory) => {
+    if (hasMovedRef.current) {
+      // It was a drag gesture, do not trigger chip click
+      return
+    }
+    setSelectedCategory(id)
+  }
 
   const filteredServices = useMemo(() => {
     return SERVICES_CATALOG.filter((service) => {
@@ -262,12 +449,15 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
   }
 
   return (
-    <div className="space-y-4 pb-24">
+    <div className="space-y-6 pb-28 pt-2">
       {/* 1. Header Section */}
-      <div className="space-y-1 ">
+      <div className="space-y-2 pt-1">
         <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
           Our Dental Services
         </h1>
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Over 38+ years of comprehensive dental care tailored for every generation of your family.
+        </p>
       </div>
 
       {/* 2. Interactive Search Bar */}
@@ -280,7 +470,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search cleanings, implants, sedation..."
-          className="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-patient-primary focus:border-transparent transition-all"
+          className="w-full pl-10 pr-9 py-3 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-patient-primary focus:border-transparent transition-all"
         />
         {searchQuery && (
           <button
@@ -292,61 +482,68 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
         )}
       </div>
 
-      {/* 3. Category Filter Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none -mx-1 px-1">
-        {(
-          [
-            { id: 'All', label: `All (${SERVICES_CATALOG.length})` },
-            { id: 'Preventive', label: 'Preventive', icon: Shield },
-            { id: 'Restorative', label: 'Restorative', icon: ToothOutlineIcon },
-            { id: 'Cosmetic', label: 'Cosmetic', icon: Smile },
-            { id: 'Surgical', label: 'Surgical', icon: Activity }
-          ] as const
-        ).map((cat) => {
-          const isActive = selectedCategory === cat.id
-          const IconComp = 'icon' in cat ? cat.icon : null
+      {/* 3. Category Filter Chips (Smooth finger swipe & mouse pointer drag-to-scroll) */}
+      <div className="relative">
+        <div
+          ref={categoriesRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          onWheel={handleWheel}
+          className="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 scrollbar-none -mx-1 px-1 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+        >
+          {(
+            [
+              { id: 'All', label: `All (${SERVICES_CATALOG.length})` },
+              { id: 'Preventive', label: 'Preventive', icon: Shield },
+              { id: 'Restorative', label: 'Restorative', icon: ToothOutlineIcon },
+              { id: 'Cosmetic', label: 'Cosmetic', icon: Smile },
+              { id: 'Surgical', label: 'Surgical', icon: Activity }
+            ] as const
+          ).map((cat) => {
+            const isActive = selectedCategory === cat.id
+            const IconComp = 'icon' in cat ? cat.icon : null
 
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id as ServiceCategory)}
-              className={`py-2 px-3.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
-                isActive
-                  ? 'bg-patient-primary text-white shadow-xs'
-                  : 'bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50'
-              }`}
-            >
-              {IconComp && <IconComp className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />}
-              <span>{cat.label}</span>
-            </button>
-          )
-        })}
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleChipClick(cat.id as ServiceCategory)}
+                className={`py-2.5 px-4 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 select-none active:scale-98 ${
+                  isActive
+                    ? 'bg-patient-primary text-white shadow-xs'
+                    : 'bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50'
+                }`}
+              >
+                {IconComp && (
+                  <IconComp className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                )}
+                <span className="whitespace-nowrap">{cat.label}</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
-      {/* 4. Operatory Hero Banner */}
-      <div className="relative rounded-2xl overflow-hidden shadow-sm h-44 sm:h-48 w-full bg-slate-900 border border-slate-200/70">
+      {/* 4. Operatory Hero Banner (Dr. Ken Miller Clinic Photo) */}
+      <div className="relative rounded-2xl overflow-hidden shadow-sm h-44 sm:h-50 w-full bg-slate-900 border border-slate-200/70">
         <img
-          src="https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=900"
+          src="/services/clinic-operatory-banner.jpg"
           alt="Dr. Ken Miller Dental Clinic Operatory"
-          className="w-full h-full object-cover opacity-85"
+          className="w-full h-full object-cover opacity-90"
         />
         {/* Subtle Dark Gradient Overlay for contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-slate-900/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-slate-900/10" />
 
-        <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between">
-          <div>
-          </div>
-
-          <div>
-            <h2 className="text-white text-base sm:text-lg font-extrabold leading-snug drop-shadow-sm max-w-xs">
-              Modern technology meets gentle community care
-            </h2>
-          </div>
+        <div className="absolute inset-0 p-4.5 sm:p-5 flex flex-col justify-end">
+          <h2 className="text-white text-base sm:text-lg font-extrabold leading-snug drop-shadow-sm max-w-xs">
+            Modern technology meets gentle community care
+          </h2>
         </div>
       </div>
 
       {/* 5. Meta Information Strip */}
-      <div className="flex items-center justify-between text-xs px-1 text-slate-500 font-medium pt-0.5">
+      <div className="flex items-center justify-between text-xs px-1 text-slate-500 font-medium py-1">
         <span>Providing {filteredServices.length} treatments</span>
         <span className="text-patient-primary flex items-center gap-1 font-semibold">
           <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary" />
@@ -354,8 +551,8 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
         </span>
       </div>
 
-      {/* 6. List of 8 Services */}
-      <div className="space-y-3.5">
+      {/* 6. List of Services with Authentic Dr. Ken Miller Website Images */}
+      <div className="space-y-5">
         {filteredServices.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3">
             <p className="text-xs text-slate-500">
@@ -366,7 +563,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                 setSearchQuery('')
                 setSelectedCategory('All')
               }}
-              className="px-4 py-2 bg-patient-primary-light text-patient-primary rounded-xl text-xs font-bold hover:bg-patient-primary-light/80 cursor-pointer"
+              className="px-4 py-2 bg-patient-primary-light text-patient-primary rounded-xl text-xs font-bold hover:bg-patient-primary-light/80 cursor-pointer active:scale-98"
             >
               Clear Filters
             </button>
@@ -379,91 +576,120 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
             return (
               <div
                 key={service.id}
-                className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs space-y-3 transition-all hover:border-slate-300"
+                className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-2xs hover:border-slate-300 transition-all group"
               >
-                {/* Top Row: Icon and Tag */}
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${
-                      isRedCard
-                        ? 'bg-patient-emergency-light border-patient-emergency-border/60'
-                        : isRoseCard
-                        ? 'bg-rose-50 border-rose-100'
-                        : 'bg-patient-secondary-light/70 border-patient-secondary-border/60'
-                    }`}
-                  >
-                    {renderServiceIcon(service.iconType)}
-                  </div>
-
-                  <span
-                    className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
-                      service.tagVariant === 'blue'
-                        ? 'bg-patient-secondary-light text-patient-secondary-text border border-patient-secondary-border/60'
-                        : service.tagVariant === 'rose'
-                        ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
-                        : service.tagVariant === 'red'
-                        ? 'bg-patient-emergency-light text-patient-emergency border border-patient-emergency-border/60'
-                        : 'bg-slate-100 text-slate-700'
-                    }`}
-                  >
-                    {service.tag}
-                  </span>
-                </div>
-
-                {/* Title with right arrow */}
+                {/* Real Website Service Image */}
                 <div
                   onClick={() => setSelectedService(service)}
-                  className="flex items-center justify-between cursor-pointer group"
+                  className="w-full h-40 sm:h-48 relative bg-slate-100 overflow-hidden cursor-pointer"
                 >
-                  <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-patient-primary transition-colors">
-                    {service.name}
-                  </h3>
-                  <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-patient-primary group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                  <img
+                    src={service.image}
+                    alt={service.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103"
+                    loading="lazy"
+                  />
+                  {/* Subtle top gradient for tag readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/65 via-transparent to-black/20" />
+
+                  {/* Top Right Tag */}
+                  <div className="absolute top-3 right-3">
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs backdrop-blur-md ${
+                        service.tagVariant === 'blue'
+                          ? 'bg-sky-500/90 text-white'
+                          : service.tagVariant === 'rose'
+                          ? 'bg-rose-500/90 text-white'
+                          : service.tagVariant === 'red'
+                          ? 'bg-red-600/95 text-white'
+                          : 'bg-slate-900/80 text-white'
+                      }`}
+                    >
+                      {service.tag}
+                    </span>
+                  </div>
+
+                  {/* Bottom Image Caption Title */}
+                  <div className="absolute bottom-3 left-3.5 right-3.5 flex items-center justify-between text-white">
+                    <span className="font-bold text-sm drop-shadow-md truncate">
+                      {service.name}
+                    </span>
+                    <span className="text-[11px] text-white/90 bg-white/20 backdrop-blur-xs px-2.5 py-0.5 rounded-md">
+                      {service.duration}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {service.description}
-                </p>
-
-                {/* Feature Tags / Badges */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-slate-500 pt-0.5">
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5">
-                      {renderFeatureIcon(feature)}
-                      {feature.isPhone ? (
-                        <a
-                          href="tel:7806454122"
-                          className="text-xs text-slate-700 font-semibold hover:text-patient-emergency transition-colors"
-                        >
-                          {feature.text}
-                        </a>
-                      ) : (
-                        <span className="text-slate-600 font-medium">{feature.text}</span>
-                      )}
+                {/* Card Content Body */}
+                <div className="p-4.5 sm:p-5.5 space-y-3.5">
+                  {/* Header row: Icon & Title */}
+                  <div
+                    onClick={() => setSelectedService(service)}
+                    className="flex items-center justify-between cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border ${
+                          isRedCard
+                            ? 'bg-patient-emergency-light border-patient-emergency-border/60'
+                            : isRoseCard
+                            ? 'bg-rose-50 border-rose-100'
+                            : 'bg-patient-secondary-light/70 border-patient-secondary-border/60'
+                        }`}
+                      >
+                        {renderServiceIcon(service.iconType)}
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-patient-primary transition-colors truncate">
+                        {service.name}
+                      </h3>
                     </div>
-                  ))}
-                </div>
+                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-patient-primary group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                  </div>
 
-                {/* Action CTA Button */}
-                <div className="pt-1">
-                  {service.isEmergency ? (
-                    <a
-                      href="tel:7806454122"
-                      className="w-full py-2.5 px-4 bg-patient-emergency hover:bg-patient-emergency-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"
-                    >
-                      <Phone className="w-4 h-4 text-white" />
-                      <span>Emergency Call Now</span>
-                    </a>
-                  ) : (
-                    <button
-                      onClick={() => setSelectedService(service)}
-                      className="w-full py-2.5 px-4 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"
-                    >
-                      <span>Learn More & Book</span>
-                      <span className="text-base leading-none">→</span>
-                    </button>
-                  )}
+                  {/* Description directly from drkenmiller.ca */}
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {service.description}
+                  </p>
+
+                  {/* Feature Highlights */}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500 pt-1 pb-0.5">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center gap-1.5">
+                        {renderFeatureIcon(feature)}
+                        {feature.isPhone ? (
+                          <a
+                            href="tel:7806454122"
+                            className="text-xs text-slate-700 font-semibold hover:text-patient-emergency transition-colors"
+                          >
+                            {feature.text}
+                          </a>
+                        ) : (
+                          <span className="text-slate-600 font-medium">{feature.text}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action CTA Button */}
+                  <div className="pt-2">
+                    {service.isEmergency ? (
+                      <a
+                        href="tel:7806454122"
+                        className="w-full py-3 px-4 bg-patient-emergency hover:bg-patient-emergency-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"
+                      >
+                        <Phone className="w-4 h-4 text-white" />
+                        <span>Emergency Call Now</span>
+                      </a>
+                    ) : (
+                      <button
+                        onClick={() => setSelectedService(service)}
+                        className="w-full py-3 px-4 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"
+                      >
+                        <span>Learn More & Book</span>
+                        <span className="text-base leading-none">→</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             )
@@ -472,7 +698,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
       </div>
 
       {/* 7. Bottom Clinic Location & Assistance Card */}
-      <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-2xl p-4 sm:p-5 shadow-2xs space-y-3">
+      <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-2xl p-4.5 sm:p-5.5 shadow-2xs space-y-3.5">
         <div className="flex items-start gap-3">
           <div className="w-9 h-9 rounded-full bg-patient-secondary-light text-patient-secondary flex items-center justify-center shrink-0 mt-0.5 border border-patient-secondary-border">
             <MapPin className="w-4 h-4" />
@@ -491,7 +717,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           Need assistance choosing a treatment? Dr. Miller and our dedicated hygienists will walk you through transparent treatment plans with direct insurance submissions.
         </p>
 
-        <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-200/60 font-medium">
+        <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/60 font-medium">
           <a
             href="tel:7806454122"
             className="flex items-center gap-1.5 text-slate-700 font-bold hover:text-patient-primary transition-colors"
@@ -512,6 +738,20 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
       >
         {selectedService && (
           <div className="space-y-4 text-xs sm:text-sm text-slate-700">
+            {/* Header Image in Modal */}
+            <div className="w-full h-40 sm:h-48 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 relative shadow-2xs">
+              <img
+                src={selectedService.image}
+                alt={selectedService.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-2.5 right-2.5">
+                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-900/80 text-white backdrop-blur-md">
+                  {selectedService.tag}
+                </span>
+              </div>
+            </div>
+
             <p className="leading-relaxed text-slate-600">{selectedService.description}</p>
 
             <div className="bg-patient-primary-subtle p-3.5 rounded-xl border border-patient-primary-border/80 space-y-2">
@@ -550,6 +790,16 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
               >
                 <Phone className="w-3.5 h-3.5 text-slate-500" />
                 <span>Call Clinic Directly: (780) 645-4122</span>
+              </a>
+
+              <a
+                href={selectedService.websiteLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-1.5 text-center text-[11px] font-semibold text-slate-400 hover:text-patient-primary flex items-center justify-center gap-1 transition-colors"
+              >
+                <span>Read Full Article on DrKenMiller.ca</span>
+                <ExternalLink className="w-3 h-3" />
               </a>
             </div>
           </div>

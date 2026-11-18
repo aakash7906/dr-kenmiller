@@ -3,22 +3,22 @@ import {
   PhoneCall,
   AlertTriangle,
   Clock,
-  ChevronDown,
-  ChevronUp,
   MapPin,
-  Mail,
   Hospital,
-  ShieldAlert,
   Send,
   CheckCircle2,
-  ExternalLink
+  ExternalLink,
+  ChevronRight,
+  ShieldAlert,
+  Droplets,
+  Activity
 } from 'lucide-react'
 import { ToothIcon } from '@/components/ui/ToothIcon'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
 import { EMERGENCY_PROTOCOLS, CLINIC_INFO } from '@/data/mockData'
+import { EmergencyProtocol } from '@/types'
 
 interface PatientEmergencyProps {
   onNotifyArrivalSuccess?: () => void
@@ -27,15 +27,11 @@ interface PatientEmergencyProps {
 export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
   onNotifyArrivalSuccess
 }) => {
-  const [expandedId, setExpandedId] = useState<string>('emg-1')
+  const [selectedProtocol, setSelectedProtocol] = useState<EmergencyProtocol | null>(null)
   const [showNotifyModal, setShowNotifyModal] = useState(false)
   const [eta, setEta] = useState('15')
   const [patientConditionNote, setPatientConditionNote] = useState('Knocked-out tooth stored in cold whole milk.')
   const [notifiedDone, setNotifiedDone] = useState(false)
-
-  const toggleExpand = (id: string) => {
-    setExpandedId(prev => (prev === id ? '' : id))
-  }
 
   const handleNotifySubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,293 +41,269 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
     }
   }
 
+  const getProtocolIcon = (id: string) => {
+    switch (id) {
+      case 'emg-1':
+        return <ToothIcon className="w-5 h-5 text-patient-emergency" />
+      case 'emg-2':
+        return <Activity className="w-5 h-5 text-amber-600" />
+      case 'emg-3':
+        return <ShieldAlert className="w-5 h-5 text-sky-600" />
+      case 'emg-4':
+      default:
+        return <Droplets className="w-5 h-5 text-rose-600" />
+    }
+  }
+
   return (
-    <div className="space-y-4 pb-20">
-      {/* Top On-Call Status Banner */}
-      <div className="flex items-center justify-between pt-1">
+    <div className="space-y-6 pb-28 pt-2.5">
+      {/* 1. Top On-Call Pulse Bar */}
+      <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-red-600 animate-ping" />
-          <span className="text-[11px] font-extrabold uppercase tracking-wider text-red-700">
-            On-Call Response Ready
+          <span className="w-2.5 h-2.5 rounded-full bg-patient-emergency animate-ping" />
+          <span className="text-xs font-black uppercase tracking-wider text-patient-emergency">
+            Live Emergency Triage Active
           </span>
         </div>
-        <span className="text-[11px] font-semibold text-slate-500">
-          St. Paul, AB
+        <span className="text-[11px] font-bold text-slate-500">
+          St. Paul Clinic
         </span>
       </div>
 
-      {/* Urgent Triage Line (Hero Card Matching Services Banner Styling) */}
-      <div className="bg-patient-primary rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden">
-        {/* Subtle background dental watermark */}
-        <div className="absolute -right-6 -bottom-6 opacity-10">
+      {/* 2. Hero Emergency Action Card (Visual, Direct & High Visibility) */}
+      <div className="bg-patient-emergency rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden space-y-4">
+        {/* Background Watermark */}
+        <div className="absolute -right-6 -bottom-6 opacity-10 pointer-events-none">
           <ToothIcon className="w-36 h-36 text-white" />
         </div>
 
-        <div className="relative z-10">
-          <div className="flex items-start justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-200">
-                URGENT TRIAGE LINE
-              </span>
-              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5">
-                Urgent Dental Emergency?
-              </h2>
-            </div>
-            <div className="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
-              <PhoneCall className="w-5 h-5" />
-            </div>
+        <div className="relative z-10 flex items-start justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/80 bg-white/20 px-2 py-0.5 rounded-md">
+              PRIORITY WALK-IN LINE
+            </span>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
+              Urgent Dental Emergency?
+            </h2>
           </div>
+          <div className="w-10 h-10 rounded-xl bg-white/15 backdrop-blur-md text-white flex items-center justify-center shrink-0">
+            <PhoneCall className="w-5 h-5" />
+          </div>
+        </div>
 
-          <p className="text-xs text-teal-100 mt-2 leading-relaxed">
-            Rapid intervention prevents tooth loss and manages acute pain. Don't wait — contact our clinical response team directly:
-          </p>
-
-          {/* Big Direct Call Button */}
+        {/* Action Buttons: Call Now & Notify Dispatch */}
+        <div className="relative z-10 space-y-2 pt-0.5">
           <a
             href="tel:7806454122"
-            className="mt-3.5 w-full bg-white hover:bg-teal-50 text-patient-primary font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs active:scale-98 cursor-pointer"
+            className="w-full bg-white hover:bg-red-50 text-patient-emergency font-extrabold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-99 cursor-pointer"
           >
-            <PhoneCall className="w-4 h-4 text-patient-primary" />
-            <span>Call Clinic Direct: {CLINIC_INFO.phone}</span>
+            <PhoneCall className="w-4 h-4 text-patient-emergency" />
+            <span>Call Clinic Direct: (780) 645-4122</span>
           </a>
 
-          {/* Severe After Hours Note */}
-          <div className="mt-3 bg-black/15 border border-white/15 rounded-xl p-2.5 flex items-start gap-2 text-[11px] text-teal-100">
-            <span className="text-amber-300 font-bold shrink-0">ⓘ</span>
-            <p className="leading-snug">
-              <strong className="text-white">Severe After-Hours Note:</strong> For trauma, uncontrolled bleeding, or severe facial swelling, call immediately and follow automated instructions to page the on-call dentist.
-            </p>
-          </div>
+          <button
+            onClick={() => setShowNotifyModal(true)}
+            className="w-full bg-white/15 hover:bg-white/25 text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all backdrop-blur-sm cursor-pointer"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>Notify Clinic: I'm En Route (Prep Bay)</span>
+          </button>
         </div>
       </div>
 
-      {/* Emergency First-Aid Triage Accordions */}
-      <div>
-        <div className="flex items-center justify-between mb-2.5 px-1">
-          <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-              Emergency First-Aid Triage
-            </h3>
-            <p className="text-[11px] text-slate-500">
-              Take immediate action while heading to our clinic
-            </p>
-          </div>
-          <span className="text-base">🛡️</span>
+      {/* 3. First-Aid Protocols: Visual 2x2 Grid (No Text Overload) */}
+      <div className="space-y-3 pt-1">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+            First-Aid Action Protocols
+          </h3>
+          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+            Tap Card for Steps
+          </span>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="grid grid-cols-2 gap-3">
           {EMERGENCY_PROTOCOLS.map((proto) => {
-            const isExpanded = expandedId === proto.id
+            const isRed = proto.badgeVariant === 'red'
+            const isAmber = proto.badgeVariant === 'amber'
 
             return (
               <div
                 key={proto.id}
-                className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-2xs transition-all"
+                onClick={() => setSelectedProtocol(proto)}
+                className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between h-38 group"
               >
-                {/* Header Row */}
-                <button
-                  type="button"
-                  onClick={() => toggleExpand(proto.id)}
-                  className="w-full p-3.5 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50/60"
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                        proto.badgeVariant === 'red'
-                          ? 'bg-rose-50 text-rose-700'
-                          : proto.badgeVariant === 'amber'
-                          ? 'bg-amber-50 text-amber-700'
-                          : 'bg-blue-50 text-blue-700'
-                      }`}
-                    >
-                      {proto.id === 'emg-1' && <Clock className="w-4 h-4" />}
-                      {proto.id === 'emg-2' && <span className="text-sm">😣</span>}
-                      {proto.id === 'emg-3' && <span className="text-sm">🦷</span>}
-                      {proto.id === 'emg-4' && <span className="text-sm">🩸</span>}
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
-                          {proto.title}
-                        </h4>
-                        {proto.urgencyBadge && (
-                          <span
-                            className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
-                              proto.badgeVariant === 'red'
-                                ? 'bg-rose-100 text-rose-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
-                          >
-                            {proto.urgencyBadge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                        {proto.id === 'emg-1' && 'Avulsed permanent tooth instructions'}
-                        {proto.id === 'emg-2' && 'Infection or suspected dental abscess'}
-                        {proto.id === 'emg-3' && 'Crown fractures and structural cracks'}
-                        {proto.id === 'emg-4' && 'Lacerated lips, tongue, or bleeding gums'}
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
+                      isRed
+                        ? 'bg-rose-50 border-rose-100'
+                        : isAmber
+                        ? 'bg-amber-50 border-amber-100'
+                        : 'bg-sky-50 border-sky-100'
+                    }`}
+                  >
+                    {getProtocolIcon(proto.id)}
                   </div>
+                  <span
+                    className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full ${
+                      isRed
+                        ? 'bg-rose-100 text-rose-800'
+                        : isAmber
+                        ? 'bg-amber-100 text-amber-800'
+                        : 'bg-sky-100 text-sky-800'
+                    }`}
+                  >
+                    {proto.urgencyBadge}
+                  </span>
+                </div>
 
-                  <div className="text-slate-400 pl-2">
-                    {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                  </div>
-                </button>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-patient-emergency transition-colors line-clamp-1">
+                    {proto.title.split('(')[0].trim()}
+                  </h4>
+                  <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-snug">
+                    {proto.id === 'emg-1' && 'Handle crown only. Submerge in milk or saliva.'}
+                    {proto.id === 'emg-2' && 'Cold compress on cheek. Never put aspirin on gum.'}
+                    {proto.id === 'emg-3' && 'Recover fragments in milk. Warm water rinse.'}
+                    {proto.id === 'emg-4' && 'Firm sterile gauze pressure for 15 minutes.'}
+                  </p>
+                </div>
 
-                {/* Collapsible Content */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 pt-1 border-t border-slate-100 space-y-3 animate-in fade-in duration-150">
-                    {proto.protocolTitle && (
-                      <div className="text-xs font-bold text-red-900 flex items-center gap-1.5 mt-1">
-                        <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
-                        <span>{proto.protocolTitle}</span>
-                      </div>
-                    )}
-
-                    <ul className="space-y-2 text-xs text-slate-700">
-                      {proto.steps.map((step, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary shrink-0 mt-0.5" />
-                          <span className="leading-snug">{step}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {proto.crucialWarning && (
-                      <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-[11px] text-rose-900 font-semibold leading-relaxed">
-                        ⚠️ {proto.crucialWarning}
-                      </div>
-                    )}
-
-                    {/* Quick Arrival Notification Button */}
-                    {proto.actionLabel && (
-                      <div className="pt-1">
-                        <button
-                          onClick={() => setShowNotifyModal(true)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                          <span>{proto.actionLabel}</span>
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                <div className="flex items-center justify-between text-[11px] font-bold text-patient-primary group-hover:translate-x-0.5 transition-transform pt-1 border-t border-slate-100">
+                  <span>View Steps</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-patient-primary" />
+                </div>
               </div>
             )
           })}
         </div>
       </div>
 
-      {/* Clinic Location & Map View */}
-      <Card className="overflow-hidden border-slate-200 shadow-2xs">
-        <div className="h-40 w-full relative bg-slate-200">
-          <img
-            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=700"
-            alt="St. Paul Dental Location"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-slate-900/35 flex items-center justify-center p-3 text-center">
-            <div className="bg-white/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg border border-white">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-patient-primary">
-                <MapPin className="w-4 h-4 text-red-600" />
-                <span>Main St. Paul Dental Center</span>
+      {/* 4. Location & Hospital Emergency Backup (Glanceable 2-Card Grid) */}
+      <div className="space-y-3 pt-1">
+        <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700 px-1">
+          Clinic Location & Hospital ER
+        </h3>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* Clinic Location Card */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between h-36">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-patient-primary-light text-patient-primary flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4" />
               </div>
-              <p className="text-[11px] text-slate-600 mt-0.5">Serving St. Paul & Lakeland since 1986</p>
+              <div className="min-w-0">
+                <h4 className="text-xs font-bold text-slate-900 truncate">Dr. Ken Miller</h4>
+                <span className="text-[10px] text-emerald-700 font-bold block">Open Mon–Fri</span>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="p-4 space-y-3">
-          <div>
-            <h4 className="text-sm font-bold text-slate-900">{CLINIC_INFO.name}</h4>
-            <p className="text-xs text-slate-600 mt-0.5">{CLINIC_INFO.fullAddress}</p>
-          </div>
+            <p className="text-[11px] text-slate-600 leading-tight">
+              4703 – 50 Ave (2nd Floor), St. Paul, AB
+            </p>
 
-          <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600 flex items-start gap-2">
-            <span className="text-base">♿</span>
-            <p>Elevator and wide accessible stair access available through the main lobby entrance.</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 pt-1">
             <a
               href="https://maps.google.com/?q=4703+50+Ave+St+Paul+AB"
               target="_blank"
               rel="noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-patient-primary hover:bg-patient-primary-hover text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              className="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-patient-primary text-[11px] font-bold rounded-lg border border-slate-200 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Google Maps</span>
+              <span>Get Directions</span>
+              <ExternalLink className="w-3 h-3" />
             </a>
+          </div>
+
+          {/* Hospital ER Backup Card */}
+          <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-col justify-between h-36">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-patient-emergency-light text-patient-emergency flex items-center justify-center shrink-0 border border-patient-emergency-border/60">
+                <Hospital className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <h4 className="text-xs font-bold text-slate-900 truncate">Hospital ER</h4>
+                <span className="text-[10px] text-patient-emergency font-bold block">24/7 Trauma</span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-600 leading-tight">
+              St. Therese Centre, 4713 48 Ave
+            </p>
+
             <a
-              href="https://maps.apple.com/?q=4703+50+Ave+St+Paul+AB"
+              href="https://maps.google.com/?q=St+Therese+Healthcare+Centre+St+Paul+AB"
               target="_blank"
               rel="noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full py-1.5 bg-rose-50 hover:bg-rose-100 text-patient-emergency text-[11px] font-bold rounded-lg border border-rose-200/80 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Apple Maps</span>
+              <span>ER Route</span>
+              <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         </div>
-      </Card>
+      </div>
 
-      {/* Operating Hours & Practice Info */}
-      <Card className="p-4 border-slate-200 shadow-2xs space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-          Operating Hours & Practice Info
-        </h3>
+      {/* 5. Emergency Protocol Detail Dialog */}
+      <Dialog
+        isOpen={!!selectedProtocol}
+        onClose={() => setSelectedProtocol(null)}
+        title={selectedProtocol?.title || 'Emergency Protocol'}
+        subtitle={selectedProtocol?.urgencyBadge || 'Clinical Guidance'}
+      >
+        {selectedProtocol && (
+          <div className="space-y-4 text-xs sm:text-sm text-slate-700">
+            {selectedProtocol.protocolTitle && (
+              <div className="text-xs font-bold text-patient-emergency flex items-center gap-1.5 bg-patient-emergency-light p-2.5 rounded-xl border border-patient-emergency-border/60">
+                <AlertTriangle className="w-4 h-4 text-patient-emergency shrink-0" />
+                <span>{selectedProtocol.protocolTitle}</span>
+              </div>
+            )}
 
-        <div className="space-y-1.5 text-xs text-slate-700">
-          <div className="flex items-center justify-between p-2 rounded-lg bg-emerald-50/70 border border-emerald-100">
-            <span className="font-semibold text-slate-900">Monday – Friday</span>
-            <span className="font-bold text-emerald-800">8:30 AM – 4:30 PM (Open)</span>
+            <div className="space-y-2 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+              <strong className="text-slate-900 block font-bold text-xs uppercase tracking-wide">
+                Immediate Action Steps:
+              </strong>
+              <ul className="space-y-2">
+                {selectedProtocol.steps.map((step, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-slate-700 text-xs">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {selectedProtocol.crucialWarning && (
+              <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-semibold leading-relaxed">
+                ⚠️ {selectedProtocol.crucialWarning}
+              </div>
+            )}
+
+            <div className="space-y-2 pt-1">
+              <a
+                href="tel:7806454122"
+                className="w-full py-2.5 px-4 bg-patient-emergency hover:bg-patient-emergency-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+              >
+                <PhoneCall className="w-4 h-4" />
+                <span>Call Clinic Triage: (780) 645-4122</span>
+              </a>
+
+              <button
+                onClick={() => {
+                  setSelectedProtocol(null)
+                  setShowNotifyModal(true)
+                }}
+                className="w-full py-2 px-4 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>Notify Clinic I'm Arriving</span>
+              </button>
+            </div>
           </div>
+        )}
+      </Dialog>
 
-          <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 text-slate-600">
-            <span className="font-medium">Saturday – Sunday</span>
-            <span className="font-medium text-slate-500">Closed (Pager Monitored)</span>
-          </div>
-        </div>
-
-        {/* Direct Insurance Billing note */}
-        <div className="bg-patient-primary-subtle p-3 rounded-xl border border-patient-primary-border flex items-start gap-2.5 text-xs">
-          <span className="text-base">💳</span>
-          <div>
-            <strong className="text-slate-900 block">Direct Insurance Billing:</strong>
-            <p className="text-[11px] text-slate-600 mt-0.5">
-              We bill directly to all major Canadian dental plans.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between pt-1 text-xs">
-          <span className="text-slate-500 font-mono text-[11px]">{CLINIC_INFO.email}</span>
-          <a
-            href={`mailto:${CLINIC_INFO.email}`}
-            className="text-xs font-bold text-patient-primary hover:underline flex items-center gap-1"
-          >
-            <Mail className="w-3.5 h-3.5" />
-            <span>Email Us</span>
-          </a>
-        </div>
-
-        {/* Regional Hospital Backup */}
-        <div className="bg-slate-100/80 p-3 rounded-xl border border-slate-200/90 flex items-start gap-2.5 text-xs text-slate-700">
-          <Hospital className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-          <div>
-            <strong className="text-slate-900 block text-[11px]">Regional Hospital ER Backup:</strong>
-            <p className="text-[11px] text-slate-600 mt-0.5">
-              {CLINIC_INFO.emergencyBackup}
-            </p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Notify Arrival Modal */}
+      {/* 6. Notify Arrival Modal */}
       <Dialog
         isOpen={showNotifyModal}
         onClose={() => setShowNotifyModal(false)}
@@ -345,7 +317,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
             </div>
             <h4 className="text-base font-bold text-slate-900">Emergency Alert Transmitted!</h4>
             <p className="text-xs text-slate-600">
-              Dr. Ken Miller and chairside assistants have been paged. Operatory 1 is being prepped for your arrival in ~{eta} minutes.
+              Dr. Ken Miller and chairside assistants have been paged. Operatory is being prepped for your arrival in ~{eta} minutes.
             </p>
             <Button
               variant="primary"
@@ -359,13 +331,13 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleNotifySubmit} className="space-y-3 text-xs sm:text-sm">
+          <form onSubmit={handleNotifySubmit} className="space-y-3.5 text-xs sm:text-sm">
             <p className="text-slate-600 text-xs">
               Alert the clinical team so we can prepare anesthetic, sterile trays, and radiograph equipment before you step in the door.
             </p>
 
             <div>
-              <label className="text-xs font-bold text-slate-800 block mb-1">
+              <label className="text-xs font-bold text-slate-800 block mb-1.5">
                 Estimated Arrival Time (ETA):
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -374,10 +346,10 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
                     key={option}
                     type="button"
                     onClick={() => setEta(option.split(' ')[0])}
-                    className={`p-2 rounded-xl border text-xs font-bold transition-all ${
+                    className={`p-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                       eta === option.split(' ')[0]
-                        ? 'bg-red-600 text-white border-red-600'
-                        : 'bg-slate-50 text-slate-700 border-slate-200'
+                        ? 'bg-patient-emergency text-white border-patient-emergency shadow-xs'
+                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
                     {option}
@@ -387,14 +359,14 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
             </div>
 
             <div>
-              <label className="text-xs font-bold text-slate-800 block mb-1">
+              <label className="text-xs font-bold text-slate-800 block mb-1.5">
                 Brief Situation Details:
               </label>
               <textarea
                 value={patientConditionNote}
                 onChange={(e) => setPatientConditionNote(e.target.value)}
                 rows={2}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-600"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-patient-emergency"
               />
             </div>
 

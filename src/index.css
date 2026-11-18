@@ -95,7 +95,17 @@
   --doctor-text-muted: #475569;          /* Secondary medical notes */
 
   /* --------------------------------------------------------------------------
-     3. DYNAMIC ACTIVE THEME TOKENS (Automatically updates with role)
+     3. ONBOARDING SCREEN THEME
+     (Minimalist studio blue canvas matching uploaded 3D tooth mascot)
+     -------------------------------------------------------------------------- */
+  --onboarding-bg-from: #68A7E8;          /* Studio Sky Blue Gradient Top */
+  --onboarding-bg-to: #8EC5F8;            /* Studio Sky Blue Gradient Bottom */
+  --onboarding-btn-bg: #2B7FF6;           /* Electric Sky Blue "Get Started" Pill */
+  --onboarding-btn-hover: #1D68D8;        /* Button hover state */
+  --onboarding-btn-text: #FFFFFF;         /* Button text color */
+
+  /* --------------------------------------------------------------------------
+     4. DYNAMIC ACTIVE THEME TOKENS (Automatically updates with role)
      -------------------------------------------------------------------------- */
   --theme-primary: var(--patient-primary);
   --theme-primary-hover: var(--patient-primary-hover);
@@ -209,6 +219,12 @@
 
   --color-theme-bg: var(--theme-bg);
   --color-theme-card: var(--theme-card);
+
+  --color-onboarding-bg-from: var(--onboarding-bg-from);
+  --color-onboarding-bg-to: var(--onboarding-bg-to);
+  --color-onboarding-btn: var(--onboarding-btn-bg);
+  --color-onboarding-btn-hover: var(--onboarding-btn-hover);
+  --color-onboarding-btn-text: var(--onboarding-btn-text);
 }
 
 @layer base {
@@ -221,27 +237,19 @@
   }
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+/* --------------------------------------------------------------------------
+   GLOBAL NATIVE APP SCROLLBAR HIDING
+   In modern mobile apps, scrollbars are never visible.
+   Keeps touch, trackpad, and mouse wheel scrolling 100% functional.
+   -------------------------------------------------------------------------- */
+html, body, *, *::before, *::after {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Hide scrollbar for clean chip strips */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }

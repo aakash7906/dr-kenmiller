@@ -23,7 +23,7 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-doctor-primary/95 backdrop-blur-md border-t border-slate-700/60 shadow-[0_-4px_25px_rgba(15,43,72,0.25)] text-slate-300">
-      <div className="max-w-md mx-auto sm:max-w-xl md:max-w-3xl flex items-center justify-around px-2 py-1.5">
+      <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto flex items-center justify-around px-2 py-1.5 sm:py-2">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id

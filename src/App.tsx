@@ -1,37 +1,66 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { UserRole, PatientTab, DoctorTab } from '@/types'
-import { ClinicHeader } from '@/components/layout/ClinicHeader'
-import { DesktopNav } from '@/components/layout/DesktopNav'
-import { PatientBottomNav } from '@/components/layout/PatientBottomNav'
-import { DoctorBottomNav } from '@/components/layout/DoctorBottomNav'
-import { ThemeSpecDrawer } from '@/components/common/ThemeSpecDrawer'
+import { ClinicHeader } from '@/layout/ClinicHeader'
+import { PatientBottomNav } from '@/layout/PatientBottomNav'
+import { DoctorBottomNav } from '@/layout/DoctorBottomNav'
+import { DesktopDeviceFrame } from '@/layout/DesktopDeviceFrame'
 import { Dialog } from '@/components/ui/Dialog'
 import { CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
 
 // Splash & Onboarding
-import { SplashScreen } from '@/components/onboarding/SplashScreen'
-import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
+import { SplashScreen } from '@/pages/onboarding/SplashScreen'
+import { OnboardingScreen } from '@/pages/onboarding/OnboardingScreen'
 
 // Patient Views
-import { PatientHome } from '@/components/patient/PatientHome'
-import { PatientAppointments } from '@/components/patient/PatientAppointments'
-import { PatientServices } from '@/components/patient/PatientServices'
-import { PatientMyCare } from '@/components/patient/PatientMyCare'
-import { PatientEmergency } from '@/components/patient/PatientEmergency'
+import { PatientHome } from '@/pages/patient/PatientHome'
+import { PatientAppointments } from '@/pages/patient/PatientAppointments'
+import { PatientServices } from '@/pages/patient/PatientServices'
+import { PatientMyCare } from '@/pages/patient/PatientMyCare'
+import { PatientEmergency } from '@/pages/patient/PatientEmergency'
 
 // Doctor Views
-import { DoctorDashboard } from '@/components/doctor/DoctorDashboard'
-import { DoctorCharting } from '@/components/doctor/DoctorCharting'
-import { DoctorSchedule } from '@/components/doctor/DoctorSchedule'
-import { DoctorEmergencyDesk } from '@/components/doctor/DoctorEmergencyDesk'
-import { DoctorLabAndPostOp } from '@/components/doctor/DoctorLabAndPostOp'
+import { DoctorDashboard } from '@/pages/doctor/DoctorDashboard'
+import { DoctorCharting } from '@/pages/doctor/DoctorCharting'
+import { DoctorSchedule } from '@/pages/doctor/DoctorSchedule'
+import { DoctorEmergencyDesk } from '@/pages/doctor/DoctorEmergencyDesk'
+import { DoctorLabAndPostOp } from '@/pages/doctor/DoctorLabAndPostOp'
 
-export function App() {
-  const [appState, setAppState] = useState<'splash' | 'onboarding' | 'portal'>('splash')
-  const [role, setRole] = useState<UserRole>('patient')
-  const [patientTab, setPatientTab] = useState<PatientTab>('home')
-  const [doctorTab, setDoctorTab] = useState<DoctorTab>('overview')
-  const [themeSpecOpen, setThemeSpecOpen] = useState(false)
+/**
+ * Mobile Dental App Core
+ * When rendered inside the 393x852 viewport iframe or on physical mobile,
+ * all media queries, touches, and layouts run in genuine 1:1 mobile mode.
+ */
+function MobileDentalApp() {
+  // Query param helper to preserve route state on refresh
+  const getInitialParam = (param: string) => {
+    if (typeof window === 'undefined') return null
+    const params = new URLSearchParams(window.location.search)
+    return params.get(param)
+  }
+
+  const [appState, setAppState] = useState<'splash' | 'onboarding' | 'portal'>(() => {
+    const s = getInitialParam('state')
+    if (s === 'portal' || s === 'onboarding' || s === 'splash') return s
+    return 'splash'
+  })
+
+  const [role, setRole] = useState<UserRole>(() => {
+    const r = getInitialParam('role')
+    return r === 'doctor' ? 'doctor' : 'patient'
+  })
+
+  const [patientTab, setPatientTab] = useState<PatientTab>(() => {
+    const t = getInitialParam('tab') as PatientTab
+    if (['home', 'appointments', 'services', 'mycare', 'emergency'].includes(t)) return t
+    return 'home'
+  })
+
+  const [doctorTab, setDoctorTab] = useState<DoctorTab>(() => {
+    const t = getInitialParam('tab') as DoctorTab
+    if (['overview', 'charting', 'schedule', 'triage', 'lab'].includes(t)) return t
+    return 'overview'
+  })
+
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [receptionModalOpen, setReceptionModalOpen] = useState(false)
 
@@ -46,47 +75,65 @@ export function App() {
 
   const isDoctor = role === 'doctor'
 
+  // Bi-Directional URL Synchronization with Desktop Parent Frame
+  useEffect(() => {
+    const currentTab = role === 'doctor' ? doctorTab : patientTab
+    const params = new URLSearchParams()
+    if (appState !== 'splash') params.set('state', appState)
+    if (role === 'doctor') params.set('role', 'doctor')
+    if (currentTab !== 'home' && currentTab !== 'overview') params.set('tab', currentTab)
+
+    const searchStr = params.toString() ? `?${params.toString()}` : ''
+    const newRelativePathQuery = window.location.pathname + searchStr + window.location.hash
+
+    window.history.replaceState(null, '', newRelativePathQuery)
+
+    // Sync to parent window if inside iframe
+    if (typeof window !== 'undefined' && window.self !== window.top) {
+      try {
+        if (
+          window.top &&
+          window.top.location.pathname + window.top.location.search + window.top.location.hash !==
+            newRelativePathQuery
+        ) {
+          window.top.history.replaceState(null, '', newRelativePathQuery)
+        }
+      } catch {
+        // Cross-origin safety
+      }
+    }
+  }, [appState, role, patientTab, doctorTab])
+
   // 1. Splash Screen Mode
   if (appState === 'splash') {
     return <SplashScreen onComplete={() => setAppState('onboarding')} />
   }
 
-  // 2. Onboarding Screen Mode (exact match to uploaded design)
+  // 2. Onboarding Screen Mode (Pixel match to uploaded design)
   if (appState === 'onboarding') {
     return <OnboardingScreen onComplete={handleOnboardingFinish} />
   }
 
   // 3. Main Clinical & Patient Portal Mode
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
-      isDoctor ? 'bg-doctor-bg' : 'bg-patient-bg'
-    }`}>
+    <div
+      className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
+        isDoctor ? 'bg-doctor-bg' : 'bg-patient-bg'
+      }`}
+    >
       {/* Top Clinic Header */}
       <ClinicHeader
         role={role}
         onToggleRole={toggleRole}
-        onOpenThemeSpec={() => setThemeSpecOpen(true)}
         onCallClinic={() => setReceptionModalOpen(true)}
         onOpenProfile={() => setProfileModalOpen(true)}
         onOpenOnboarding={() => setAppState('onboarding')}
       />
 
-      {/* Main Responsive Body */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
-        {/* Desktop Sidebar (hidden on mobile, visible on desktop) */}
-        <DesktopNav
-          role={role}
-          patientTab={patientTab}
-          doctorTab={doctorTab}
-          onSelectPatientTab={(tab) => setPatientTab(tab)}
-          onSelectDoctorTab={(tab) => setDoctorTab(tab)}
-          onToggleRole={toggleRole}
-          onOpenThemeSpec={() => setThemeSpecOpen(true)}
-          onOpenOnboarding={() => setAppState('onboarding')}
-        />
-
+      {/* Main Responsive Body (Mobile & Tablet First) */}
+      <div className="flex-1 flex flex-col w-full">
         {/* Dynamic Content Container */}
-        <main className="flex-1 max-w-md mx-auto sm:max-w-xl md:max-w-3xl lg:max-w-4xl px-4 py-3 sm:py-5 w-full">
+        <main className="flex-1 max-w-md sm:max-w-xl md:max-w-2xl mx-auto px-4 py-3 sm:py-5 w-full pb-24 sm:pb-28">
           {/* PATIENT SCREENS */}
           {!isDoctor && (
             <>
@@ -119,53 +166,26 @@ export function App() {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <div className="lg:hidden">
-        {!isDoctor ? (
-          <PatientBottomNav
-            activeTab={patientTab}
-            onSelectTab={(tab) => setPatientTab(tab)}
-          />
-        ) : (
-          <DoctorBottomNav
-            activeTab={doctorTab}
-            onSelectTab={(tab) => setDoctorTab(tab)}
-            unreadTriageCount={1}
-          />
-        )}
-      </div>
-
-      {/* Floating Theme Spec Pill (always accessible on mobile) */}
-      <div className="lg:hidden fixed bottom-16 right-4 z-30 flex flex-col gap-2 items-end">
-        <button
-          onClick={() => setAppState('onboarding')}
-          className="bg-purple-900/95 text-white text-[11px] font-bold py-1.5 px-3 rounded-full shadow-lg backdrop-blur-xs flex items-center gap-1.5 hover:bg-purple-800 transition-all cursor-pointer border border-purple-400/30"
-          title="View Onboarding Screen"
-        >
-          <span>✨</span>
-          <span>Onboarding</span>
-        </button>
-        <button
-          onClick={() => setThemeSpecOpen(true)}
-          className="bg-slate-900/90 text-white text-[11px] font-bold py-1.5 px-3 rounded-full shadow-lg backdrop-blur-xs flex items-center gap-1.5 hover:bg-slate-800 transition-all cursor-pointer border border-slate-700"
-        >
-          <span>🎨</span>
-          <span>Theme Tokens</span>
-        </button>
-      </div>
-
-      {/* Theme Specification Modal */}
-      <ThemeSpecDrawer
-        isOpen={themeSpecOpen}
-        onClose={() => setThemeSpecOpen(false)}
-      />
+      {/* Mobile & Tablet Bottom Navigation Bar (Always Visible) */}
+      {!isDoctor ? (
+        <PatientBottomNav
+          activeTab={patientTab}
+          onSelectTab={(tab) => setPatientTab(tab)}
+        />
+      ) : (
+        <DoctorBottomNav
+          activeTab={doctorTab}
+          onSelectTab={(tab) => setDoctorTab(tab)}
+          unreadTriageCount={1}
+        />
+      )}
 
       {/* Reception Call Modal */}
       <Dialog
         isOpen={receptionModalOpen}
         onClose={() => setReceptionModalOpen(false)}
-        title="Call Dr. Ken Miller Dental Reception"
-        subtitle={CLINIC_INFO.fullAddress}
+        title="Dr. Ken Miller Dental Clinic"
+        subtitle={CLINIC_INFO.location}
       >
         <div className="space-y-3 text-xs sm:text-sm text-slate-700">
           <p>
@@ -234,7 +254,7 @@ export function App() {
                 toggleRole()
                 setProfileModalOpen(false)
               }}
-              className="w-full py-2.5 px-3 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-100 transition-colors"
+              className="w-full py-2.5 px-3 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
             >
               Switch Role to {isDoctor ? 'Patient View' : 'Doctor View'}
             </button>
@@ -243,9 +263,9 @@ export function App() {
                 setProfileModalOpen(false)
                 setAppState('splash')
               }}
-              className="w-full py-2 px-3 rounded-xl bg-purple-50 text-purple-900 font-bold text-xs hover:bg-purple-100 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2 px-3 rounded-xl bg-purple-50 text-purple-900 font-bold text-xs hover:bg-purple-100 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <span>✨ Replay Splash & Onboarding</span>
+              <span> Replay Splash & Onboarding</span>
             </button>
           </div>
         </div>
@@ -253,4 +273,19 @@ export function App() {
     </div>
   )
 }
+
+/**
+ * Root Application
+ * Wraps with DesktopDeviceFrame (Viewport Iframe Architecture)
+ * - On desktop: hosts an iPhone 15 Pro mockup with 393x852 iframe
+ * - Inside iframe / on mobile: renders genuine 1:1 mobile PWA directly
+ */
+export function App() {
+  return (
+    <DesktopDeviceFrame>
+      <MobileDentalApp />
+    </DesktopDeviceFrame>
+  )
+}
+
 export default App

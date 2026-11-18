@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Sparkles, Shield, ArrowRight } from 'lucide-react'
+import { ToothIcon } from '@/components/ui/ToothIcon'
 import { CLINIC_INFO } from '@/data/mockData'
 
 interface SplashScreenProps {
@@ -31,41 +31,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
       <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-cyan-400/15 blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
-      {/* Top Bar with Skip */}
-      <div className="w-full max-w-md flex items-center justify-between z-10 pt-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-teal-200/80 bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">
-          St. Paul, AB • Est. {CLINIC_INFO.sinceYear}
-        </span>
-        <button
-          onClick={onComplete}
-          className="text-xs font-semibold text-teal-100/90 hover:text-white flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-full backdrop-blur-md transition-colors cursor-pointer"
-        >
-          <span>Skip</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
+
 
       {/* Center Logo & Branding */}
       <div className="flex flex-col items-center text-center z-10 my-auto space-y-6">
         {/* Animated Tooth Logo Icon with Luminous Glow */}
         <div className="relative">
-          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl flex items-center justify-center relative overflow-hidden group">
+          <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/12 backdrop-blur-xl border border-white/25 shadow-2xl flex items-center justify-center relative overflow-hidden group">
             {/* Shimmer light sweep */}
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent -translate-x-full animate-[shimmer_2.5s_infinite]" />
 
-            {/* Tooth SVG with gradient fill */}
-            <svg
-              className="w-14 h-14 sm:w-16 sm:h-16 text-white drop-shadow-[0_4px_12px_rgba(255,255,255,0.4)]"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M18.8 4c-1.3 0-2.4.7-3.1 1.7-.8-.7-1.8-1.2-3-1.2-1.2 0-2.2.5-3 1.2C9 4.7 7.9 4 6.6 4 4.1 4 2 6.1 2 8.6c0 3.8 2.2 6.8 4 9.1 1.2 1.5 2.5 2.8 3.5 3.7.4.4.8.6 1.2.6.4 0 .8-.2 1.2-.6 1-.9 2.3-2.2 3.5-3.7 1.8-2.3 4-5.3 4-9.1C21.4 6.1 19.3 4 18.8 4z" />
-            </svg>
-
-            {/* Sparkle badge */}
-            <div className="absolute top-2 right-2">
-              <Sparkles className="w-4 h-4 text-cyan-200 animate-pulse" />
-            </div>
+            {/* Authentic Anatomical Molar Tooth Icon */}
+            <ToothIcon className="w-14 h-14 sm:w-16 sm:h-16 text-white drop-shadow-[0_4px_16px_rgba(255,255,255,0.45)]" />
           </div>
 
           {/* Pulse ring */}
@@ -84,7 +61,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
 
         {/* Heritage Trust Badge */}
         <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-xs text-amber-200 font-bold">
-          <span>⭐ {CLINIC_INFO.yearsOfCare} of Clinical Trust</span>
+          <span> {CLINIC_INFO.yearsOfCare} of Clinical Trust</span>
           <span className="text-white/40">•</span>
           <span>Lead DDS Dr. Ken Miller</span>
         </div>

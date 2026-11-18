@@ -21,7 +21,7 @@ export const PatientBottomNav: React.FC<PatientBottomNavProps> = ({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
-      <div className="max-w-md mx-auto sm:max-w-xl md:max-w-3xl flex items-center justify-around px-2 py-1.5">
+      <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto flex items-center justify-around px-2 py-1.5 sm:py-2">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id

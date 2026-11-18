@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   ExternalLink
 } from 'lucide-react'
+import { ToothIcon } from '@/components/ui/ToothIcon'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -59,41 +60,44 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
         </span>
       </div>
 
-      {/* Urgent Triage Line (Hero Card in Deep Crimson) */}
-      <div className="bg-gradient-to-br from-[var(--patient-emergency-dark)] via-[var(--patient-emergency-hover)] to-[var(--patient-emergency-darker)] rounded-2xl p-4 sm:p-5 text-white shadow-lg shadow-red-900/20 relative overflow-hidden">
+      {/* Urgent Triage Line (Hero Card Matching Services Banner Styling) */}
+      <div className="bg-patient-primary rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden">
         {/* Subtle background dental watermark */}
         <div className="absolute -right-6 -bottom-6 opacity-10">
-          <svg className="w-36 h-36 fill-white" viewBox="0 0 24 24">
-            <path d="M18.8 4c-1.3 0-2.4.7-3.1 1.7-.8-.7-1.8-1.2-3-1.2-1.2 0-2.2.5-3 1.2C9 4.7 7.9 4 6.6 4 4.1 4 2 6.1 2 8.6c0 3.8 2.2 6.8 4 9.1 1.2 1.5 2.5 2.8 3.5 3.7.4.4.8.6 1.2.6.4 0 .8-.2 1.2-.6 1-.9 2.3-2.2 3.5-3.7 1.8-2.3 4-5.3 4-9.1C21.4 6.1 19.3 4 18.8 4z" />
-          </svg>
+          <ToothIcon className="w-36 h-36 text-white" />
         </div>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-2 text-rose-200 text-xs font-bold uppercase tracking-wider mb-1">
-            <ShieldAlert className="w-4 h-4 text-red-300" />
-            <span>Urgent Triage Line</span>
+          <div className="flex items-start justify-between">
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-200">
+                URGENT TRIAGE LINE
+              </span>
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-0.5">
+                Urgent Dental Emergency?
+              </h2>
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
+              <PhoneCall className="w-5 h-5" />
+            </div>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-            Urgent Dental Emergency?
-          </h2>
-
-          <p className="text-xs text-rose-100 mt-1.5 leading-relaxed">
+          <p className="text-xs text-teal-100 mt-2 leading-relaxed">
             Rapid intervention prevents tooth loss and manages acute pain. Don't wait — contact our clinical response team directly:
           </p>
 
           {/* Big Direct Call Button */}
           <a
             href="tel:7806454122"
-            className="mt-3.5 w-full bg-white hover:bg-rose-50 text-red-950 font-black text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-98 cursor-pointer"
+            className="mt-3.5 w-full bg-white hover:bg-teal-50 text-patient-primary font-bold text-xs sm:text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs active:scale-98 cursor-pointer"
           >
-            <PhoneCall className="w-4 h-4 text-red-700" />
+            <PhoneCall className="w-4 h-4 text-patient-primary" />
             <span>Call Clinic Direct: {CLINIC_INFO.phone}</span>
           </a>
 
           {/* Severe After Hours Note */}
-          <div className="mt-3 bg-red-950/60 border border-red-500/30 rounded-xl p-2.5 flex items-start gap-2 text-[11px] text-rose-200">
-            <span className="text-amber-400 font-bold shrink-0">ⓘ</span>
+          <div className="mt-3 bg-black/15 border border-white/15 rounded-xl p-2.5 flex items-start gap-2 text-[11px] text-teal-100">
+            <span className="text-amber-300 font-bold shrink-0">ⓘ</span>
             <p className="leading-snug">
               <strong className="text-white">Severe After-Hours Note:</strong> For trauma, uncontrolled bleeding, or severe facial swelling, call immediately and follow automated instructions to page the on-call dentist.
             </p>

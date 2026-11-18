@@ -1,14 +1,10 @@
 import React, { useState } from 'react'
 import {
-  Sparkles,
-  ShieldCheck,
   ChevronRight,
   Info,
   Calendar,
   PhoneCall,
   CheckCircle2,
-  Clock,
-  Heart,
   Users,
   Smile,
   Activity
@@ -100,7 +96,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                     {heroService.name}
                   </h3>
                   <div className="w-8 h-8 rounded-full bg-teal-50 text-patient-primary flex items-center justify-center">
-                    <Sparkles className="w-4 h-4" />
+            
                   </div>
                 </div>
 
@@ -190,7 +186,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
 
                 <div className="flex items-center justify-between mt-3.5 pt-1">
                   <span className="text-[11px] text-slate-500 font-medium">
-                    ✨ 1h Same-day results
+                     1h Same-day results
                   </span>
                   <button
                     onClick={() => onNavigate('appointments')}

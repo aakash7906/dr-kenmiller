@@ -390,7 +390,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
               setShowQuickNoteModal(false)
             }}
           >
-            Sign & Commit to Chart #KM-6421
+            Sign & Commit to Chart
           </Button>
         </div>
       </Dialog>

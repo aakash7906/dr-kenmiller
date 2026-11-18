@@ -14,6 +14,7 @@ import {
   Phone,
   Palette
 } from 'lucide-react'
+import { ToothIcon } from '@/components/ui/ToothIcon'
 import { UserRole, PatientTab, DoctorTab } from '@/types'
 import { CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
 
@@ -24,7 +25,6 @@ interface DesktopNavProps {
   onSelectPatientTab: (tab: PatientTab) => void
   onSelectDoctorTab: (tab: DoctorTab) => void
   onToggleRole: () => void
-  onOpenThemeSpec: () => void
   onOpenOnboarding: () => void
 }
 
@@ -35,7 +35,6 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
   onSelectPatientTab,
   onSelectDoctorTab,
   onToggleRole,
-  onOpenThemeSpec,
   onOpenOnboarding
 }) => {
   const isDoctor = role === 'doctor'
@@ -67,9 +66,7 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
                 isDoctor ? 'bg-doctor-primary' : 'bg-patient-primary'
               }`}
             >
-              <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                <path d="M18.8 4c-1.3 0-2.4.7-3.1 1.7-.8-.7-1.8-1.2-3-1.2-1.2 0-2.2.5-3 1.2C9 4.7 7.9 4 6.6 4 4.1 4 2 6.1 2 8.6c0 3.8 2.2 6.8 4 9.1 1.2 1.5 2.5 2.8 3.5 3.7.4.4.8.6 1.2.6.4 0 .8-.2 1.2-.6 1-.9 2.3-2.2 3.5-3.7 1.8-2.3 4-5.3 4-9.1C21.4 6.1 19.3 4 18.8 4z" />
-              </svg>
+              <ToothIcon className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-xs font-black text-slate-900 leading-tight">
@@ -171,14 +168,6 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({
         >
           <Sparkles className="w-4 h-4 text-purple-600" />
           <span>Splash & Onboarding Tour</span>
-        </button>
-
-        <button
-          onClick={onOpenThemeSpec}
-          className="w-full flex items-center gap-2 p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold cursor-pointer transition-colors"
-        >
-          <Palette className="w-4 h-4 text-teal-700" />
-          <span>Theme & Color Tokens</span>
         </button>
 
         <a

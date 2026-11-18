@@ -8,15 +8,13 @@ import {
   FileCheck,
   AlertTriangle,
   PlusCircle,
-  ExternalLink,
   ChevronRight,
-  Sparkles,
   CheckCircle2,
   Brush,
-  ShieldCheck,
   CreditCard,
   Droplet
 } from 'lucide-react'
+import { ToothIcon } from '@/components/ui/ToothIcon'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -246,9 +244,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5">
             <span className="p-1 rounded-md bg-patient-primary-light text-patient-primary">
-              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                <path d="M18.8 4c-1.3 0-2.4.7-3.1 1.7-.8-.7-1.8-1.2-3-1.2-1.2 0-2.2.5-3 1.2C9 4.7 7.9 4 6.6 4 4.1 4 2 6.1 2 8.6c0 3.8 2.2 6.8 4 9.1 1.2 1.5 2.5 2.8 3.5 3.7.4.4.8.6 1.2.6.4 0 .8-.2 1.2-.6 1-.9 2.3-2.2 3.5-3.7 1.8-2.3 4-5.3 4-9.1C21.4 6.1 19.3 4 18.8 4z" />
-              </svg>
+              <ToothIcon className="w-3.5 h-3.5" />
             </span>
             <span className="text-xs font-bold text-slate-900">Active Care Plan</span>
           </div>
@@ -322,7 +318,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
                 </p>
               </div>
               <Badge variant="amber" size="sm" className="font-bold shrink-0">
-                ⭐ {CLINIC_INFO.yearsOfCare}
+                 {CLINIC_INFO.yearsOfCare}
               </Badge>
             </div>
           </div>
@@ -385,27 +381,32 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Urgent Dental Support Bottom CTA */}
-      <div className="bg-slate-900 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
-        <div className="flex items-center gap-2 mb-1.5">
-          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-          <span className="text-[11px] font-bold uppercase tracking-wider text-red-400">
-            Urgent Dental Support
-          </span>
+      {/* Urgent Dental Support Bottom CTA (Matching Services Banner Styling) */}
+      <div className="bg-patient-primary rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden">
+        <div className="flex items-start justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-200">
+              URGENT DENTAL SUPPORT
+            </span>
+            <h3 className="text-sm sm:text-base font-bold leading-snug mt-0.5 text-white">
+              Experiencing acute toothache or trauma?
+            </h3>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0">
+            <PhoneCall className="w-5 h-5" />
+          </div>
         </div>
-        <h3 className="text-sm sm:text-base font-bold leading-snug">
-          Experiencing acute toothache or trauma?
-        </h3>
-        <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+
+        <p className="text-xs text-teal-100 mt-2 leading-relaxed">
           Same-day priority walk-in assistance for broken tooth, severe pain, or bleeding.
         </p>
 
         <a
           href="tel:7806454122"
-          className="mt-3 w-full bg-red-600 hover:bg-red-700 active:scale-98 text-white font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shadow-red-900/40"
+          className="mt-3.5 w-full bg-white text-patient-primary hover:bg-teal-50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
         >
-          <span className="text-base">🚑</span>
-          <span>Call Emergency Triage {CLINIC_INFO.phone}</span>
+          <PhoneCall className="w-4 h-4 text-patient-primary" />
+          <span>Call Emergency Triage: {CLINIC_INFO.phone}</span>
         </a>
       </div>
 

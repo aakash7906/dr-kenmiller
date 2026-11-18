@@ -63,7 +63,7 @@ export const DoctorLabAndPostOp: React.FC = () => {
           <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
             Prosthetics & Patient Recovery
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-[#0F2B48] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Lab Cases & Post-Op Tracker
           </h2>
         </div>
@@ -74,7 +74,7 @@ export const DoctorLabAndPostOp: React.FC = () => {
             onClick={() => setActiveSubTab('labs')}
             className={`py-1.5 px-3 rounded-lg transition-all ${
               activeSubTab === 'labs'
-                ? 'bg-[#0F2B48] text-white shadow-xs'
+                ? 'bg-doctor-primary text-white shadow-xs'
                 : 'text-slate-700 hover:text-slate-900'
             }`}
           >
@@ -84,7 +84,7 @@ export const DoctorLabAndPostOp: React.FC = () => {
             onClick={() => setActiveSubTab('postOp')}
             className={`py-1.5 px-3 rounded-lg transition-all flex items-center gap-1 ${
               activeSubTab === 'postOp'
-                ? 'bg-[#0F2B48] text-white shadow-xs'
+                ? 'bg-doctor-primary text-white shadow-xs'
                 : 'text-slate-700 hover:text-slate-900'
             }`}
           >
@@ -119,7 +119,7 @@ export const DoctorLabAndPostOp: React.FC = () => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-lg bg-[#0F2B48] text-white font-mono font-bold flex items-center justify-center text-xs">
+                        <span className="w-7 h-7 rounded-lg bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs">
                           {lab.toothNumber}
                         </span>
                         <h4 className="text-sm font-bold text-slate-900">

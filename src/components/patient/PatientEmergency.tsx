@@ -60,7 +60,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
       </div>
 
       {/* Urgent Triage Line (Hero Card in Deep Crimson) */}
-      <div className="bg-gradient-to-br from-[#991B1B] via-[#881337] to-[#4C0519] rounded-2xl p-4 sm:p-5 text-white shadow-lg shadow-red-900/20 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[var(--patient-emergency-dark)] via-[var(--patient-emergency-hover)] to-[var(--patient-emergency-darker)] rounded-2xl p-4 sm:p-5 text-white shadow-lg shadow-red-900/20 relative overflow-hidden">
         {/* Subtle background dental watermark */}
         <div className="absolute -right-6 -bottom-6 opacity-10">
           <svg className="w-36 h-36 fill-white" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
                     <ul className="space-y-2 text-xs text-slate-700">
                       {proto.steps.map((step, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#0A5C67] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary shrink-0 mt-0.5" />
                           <span className="leading-snug">{step}</span>
                         </li>
                       ))}
@@ -232,7 +232,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
           />
           <div className="absolute inset-0 bg-slate-900/35 flex items-center justify-center p-3 text-center">
             <div className="bg-white/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg border border-white">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#0A5C67]">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-patient-primary">
                 <MapPin className="w-4 h-4 text-red-600" />
                 <span>Main St. Paul Dental Center</span>
               </div>
@@ -257,7 +257,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
               href="https://maps.google.com/?q=4703+50+Ave+St+Paul+AB"
               target="_blank"
               rel="noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-[#0A5C67] hover:bg-[#084952] text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              className="py-2.5 px-3 rounded-xl bg-patient-primary hover:bg-patient-primary-hover text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Google Maps</span>
@@ -294,7 +294,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
         </div>
 
         {/* Direct Insurance Billing note */}
-        <div className="bg-[#F0F8F9] p-3 rounded-xl border border-[#D5EDF1] flex items-start gap-2.5 text-xs">
+        <div className="bg-patient-primary-subtle p-3 rounded-xl border border-patient-primary-border flex items-start gap-2.5 text-xs">
           <span className="text-base">💳</span>
           <div>
             <strong className="text-slate-900 block">Direct Insurance Billing:</strong>
@@ -308,7 +308,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
           <span className="text-slate-500 font-mono text-[11px]">{CLINIC_INFO.email}</span>
           <a
             href={`mailto:${CLINIC_INFO.email}`}
-            className="text-xs font-bold text-[#0A5C67] hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-patient-primary hover:underline flex items-center gap-1"
           >
             <Mail className="w-3.5 h-3.5" />
             <span>Email Us</span>

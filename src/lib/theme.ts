@@ -1,28 +1,10 @@
 /**
- * Color Palette and Theme Specification for Dr. Ken Miller Dental Clinic App
+ * Centralized Design System Bridge for Dr. Ken Miller Dental Clinic
  * 
- * PATIENT THEME:
- * - Designed around calm, reassuring, trustworthy dental wellness.
- * - Derived from Dr. Ken Miller's brand & the Stitch design.
- * - Primary: Deep Teal / Alpine Spruce (#0A5C67 / #084952)
- *   -> Conveys medical reliability, calming dental care, reduces dental anxiety.
- * - Secondary: Crisp Arctic Sky Blue (#E0F2FE / #0369A1)
- *   -> Subtle background accents, pill badges, and soothing micro-interactions.
- * - Emergency Accent: Crimson Alert (#DC2626)
- *   -> Immediate recognition for knocked-out tooth, acute pain triage.
- * - Warm Gold Accent: Heritage Amber (#D97706 / #FEF3C7)
- *   -> Highlights 38+ years of clinic heritage in St. Paul since 1986.
+ * NOTE: All CSS custom properties and color values are defined in:
+ * `src/index.css`
  * 
- * DOCTOR THEME:
- * - Designed for rapid clinical decision making, high data density, and zero distractions.
- * - Primary: Clinical Royal Navy / Precision Blue (#0F2B48 / #1E3A8A / #0284C7)
- *   -> Authoritative, clear diagnostic contrast, crisp electronic health record aesthetic.
- * - Secondary: Diagnostic Cyan & Surgical Slate (#0EA5E9 / #1E293B)
- *   -> Clear visual hierarchy for operatory bays, tooth odontogram statuses.
- * - Status Accents:
- *   - Seated / Active: Clinical Emerald (#059669 / #D1FAE5)
- *   - Prepping / Buffer: Electric Blue (#2563EB / #DBEAFE)
- *   - Critical / Triage: Vivid Amber-Rose (#EA580C / #FFEDD5)
+ * To change the brand colors or theme of the application, simply edit `src/index.css`!
  */
 
 export const THEME_CONFIG = {
@@ -31,65 +13,73 @@ export const THEME_CONFIG = {
     brandName: 'Dr. Ken Miller Dental Clinic',
     tagline: 'Compassionate Family Care Since 1986',
     primary: {
-      main: '#0A5C67',
-      hover: '#084952',
-      dark: '#05333A',
-      light: '#E6F4F6',
-      subtle: '#F0F8F9',
-      border: '#D1EAEF',
-      text: '#FFFFFF'
+      main: 'var(--patient-primary)',
+      hover: 'var(--patient-primary-hover)',
+      dark: 'var(--patient-primary-dark)',
+      light: 'var(--patient-primary-light)',
+      subtle: 'var(--patient-primary-subtle)',
+      border: 'var(--patient-primary-border)',
+      text: 'var(--patient-primary-text)'
     },
     secondary: {
-      main: '#0284C7',
-      light: '#E0F2FE',
-      text: '#0369A1'
+      main: 'var(--patient-secondary)',
+      hover: 'var(--patient-secondary-hover)',
+      light: 'var(--patient-secondary-light)',
+      border: 'var(--patient-secondary-border)',
+      text: 'var(--patient-secondary-text)'
     },
     emergency: {
-      main: '#DC2626',
-      dark: '#991B1B',
-      light: '#FEF2F2',
-      border: '#FCA5A5',
-      text: '#FFFFFF'
+      main: 'var(--patient-emergency)',
+      dark: 'var(--patient-emergency-dark)',
+      darker: 'var(--patient-emergency-darker)',
+      light: 'var(--patient-emergency-light)',
+      border: 'var(--patient-emergency-border)',
+      text: 'var(--patient-emergency-text)'
     },
     accent: {
-      gold: '#D97706',
-      goldLight: '#FEF3C7',
-      goldBorder: '#FDE68A'
+      gold: 'var(--patient-gold)',
+      goldLight: 'var(--patient-gold-light)',
+      goldBorder: 'var(--patient-gold-border)',
+      goldText: 'var(--patient-gold-text)'
     },
-    background: '#F8FAFC',
-    card: '#FFFFFF',
-    textMain: '#0F172A',
-    textMuted: '#64748B'
+    background: 'var(--patient-bg)',
+    card: 'var(--patient-card)'
   },
   doctor: {
     name: 'Doctor Portal (Chairside Ops & EHR)',
     brandName: 'Dr. Ken Miller, Lead DDS',
     tagline: 'Operatory Command & Patient Management',
     primary: {
-      main: '#0F2B48',
-      hover: '#091A2C',
-      dark: '#061320',
-      light: '#EBF3FB',
-      subtle: '#F1F6FB',
-      border: '#CBDCF0',
-      text: '#FFFFFF'
+      main: 'var(--doctor-primary)',
+      hover: 'var(--doctor-primary-hover)',
+      dark: 'var(--doctor-primary-dark)',
+      light: 'var(--doctor-primary-light)',
+      subtle: 'var(--doctor-primary-subtle)',
+      border: 'var(--doctor-primary-border)',
+      text: 'var(--doctor-primary-text)'
     },
     secondary: {
-      main: '#0EA5E9',
-      light: '#E0F2FE',
-      text: '#0284C7'
+      main: 'var(--doctor-secondary)',
+      hover: 'var(--doctor-secondary-hover)',
+      light: 'var(--doctor-secondary-light)',
+      border: 'var(--doctor-secondary-border)',
+      text: 'var(--doctor-secondary-text)'
     },
     status: {
-      active: '#059669',
-      activeLight: '#D1FAE5',
-      warning: '#EA580C',
-      warningLight: '#FFEDD5',
-      info: '#2563EB',
-      infoLight: '#DBEAFE'
+      active: 'var(--doctor-status-active)',
+      activeLight: 'var(--doctor-status-active-light)',
+      activeBorder: 'var(--doctor-status-active-border)',
+      activeText: 'var(--doctor-status-active-text)',
+
+      warning: 'var(--doctor-status-warning)',
+      warningLight: 'var(--doctor-status-warning-light)',
+      warningBorder: 'var(--doctor-status-warning-border)',
+      warningText: 'var(--doctor-status-warning-text)',
+
+      info: 'var(--doctor-status-info)',
+      infoLight: 'var(--doctor-status-info-light)'
     },
-    background: '#F1F5F9',
-    card: '#FFFFFF',
-    textMain: '#0F172A',
-    textMuted: '#475569'
+    background: 'var(--doctor-bg)',
+    card: 'var(--doctor-card)'
   }
 }

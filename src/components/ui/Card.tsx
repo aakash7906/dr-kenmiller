@@ -11,9 +11,9 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const variants = {
       default: 'bg-white border border-slate-100 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-2xl',
       elevated: 'bg-white border border-slate-100 shadow-[0_8px_20px_-4px_rgba(0,0,0,0.08)] rounded-2xl',
-      subtle: 'bg-[#F0F8F9] border border-[#E0F0F2] rounded-2xl',
-      emergency: 'bg-gradient-to-br from-[#991B1B] to-[#7F1D1D] text-white rounded-2xl shadow-lg shadow-red-900/20',
-      doctor: 'bg-white border border-slate-200 shadow-sm rounded-xl'
+      subtle: 'bg-patient-primary-subtle border border-patient-primary-border rounded-2xl',
+      emergency: 'bg-gradient-to-br from-[var(--patient-emergency-dark)] to-[var(--patient-emergency-darker)] text-white rounded-2xl shadow-lg shadow-red-900/20',
+      doctor: 'bg-white border border-doctor-border shadow-sm rounded-xl'
     }
 
     return (

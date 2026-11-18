@@ -57,7 +57,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
           <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
             Chairside Practice Hub
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-[#0F2B48] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Today's Clinical Floor
           </h2>
         </div>
@@ -70,7 +70,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
         <div className="bg-white p-3 rounded-2xl border border-slate-200/90 shadow-2xs">
           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Patients Today</div>
-          <div className="text-2xl font-black text-[#0F2B48] mt-0.5">14</div>
+          <div className="text-2xl font-black text-doctor-primary mt-0.5">14</div>
           <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">● 2 Completed</div>
         </div>
 
@@ -210,7 +210,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
           </div>
 
           {/* Quick Charting Link */}
-          <div className="bg-[#EBF3FB] p-3 rounded-xl border border-blue-200 flex flex-col justify-between">
+          <div className="bg-doctor-primary-light p-3 rounded-xl border border-doctor-primary-border flex flex-col justify-between">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-wider text-blue-900">
                 Digital Odontogram
@@ -229,7 +229,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
               </button>
               <button
                 onClick={() => setShowQuickNoteModal(true)}
-                className="text-xs font-bold text-[#0F2B48] bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs hover:bg-blue-50"
+                className="text-xs font-bold text-doctor-primary bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs hover:bg-blue-50"
               >
                 + Quick SOAP
               </button>
@@ -364,7 +364,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
               rows={4}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F2B48]"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
             />
           </div>
 

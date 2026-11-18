@@ -125,14 +125,14 @@ export const DoctorSchedule: React.FC = () => {
           <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
             Operatory Flow Coordination
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-[#0F2B48] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Daily Chair Schedule
           </h2>
         </div>
 
         <button
           onClick={() => setShowAddBufferModal(true)}
-          className="self-start sm:self-auto bg-[#0F2B48] hover:bg-[#0A1F36] text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 shadow-xs cursor-pointer"
+          className="self-start sm:self-auto bg-doctor-primary hover:bg-doctor-primary-hover text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center gap-1.5 shadow-xs cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Insert Emergency Buffer</span>
@@ -147,7 +147,7 @@ export const DoctorSchedule: React.FC = () => {
             onClick={() => setProviderFilter(prov)}
             className={`py-1.5 px-3 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               providerFilter === prov
-                ? 'bg-[#0F2B48] text-white shadow-xs'
+                ? 'bg-doctor-primary text-white shadow-xs'
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
             }`}
           >

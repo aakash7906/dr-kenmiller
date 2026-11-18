@@ -49,7 +49,7 @@ export const DoctorEmergencyDesk: React.FC = () => {
           <span className="text-[11px] font-bold uppercase tracking-wider text-red-600">
             Emergency Dispatch System
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-[#0F2B48] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Live Clinical Triage Desk
           </h2>
         </div>
@@ -80,7 +80,7 @@ export const DoctorEmergencyDesk: React.FC = () => {
                 onClick={() => setSelectedTicket(ticket)}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'ring-2 ring-[#0F2B48] shadow-md'
+                    ? 'ring-2 ring-doctor-primary shadow-md'
                     : 'hover:shadow-xs'
                 } ${
                   isRed

@@ -61,7 +61,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
             onClick={() => setActiveCategory(category)}
             className={`py-2 px-4 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${
               activeCategory === category
-                ? 'bg-[#0A5C67] text-white shadow-xs'
+                ? 'bg-patient-primary text-white shadow-xs'
                 : 'bg-white text-slate-600 border border-slate-200/90 hover:bg-slate-50'
             }`}
           >
@@ -87,7 +87,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-3 left-3">
-                  <span className="bg-[#0A5C67] text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wider">
+                  <span className="bg-patient-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wider">
                     {heroService.tag}
                   </span>
                 </div>
@@ -99,7 +99,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                   <h3 className="text-lg font-bold text-slate-900 leading-snug">
                     {heroService.name}
                   </h3>
-                  <div className="w-8 h-8 rounded-full bg-teal-50 text-[#0A5C67] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-teal-50 text-patient-primary flex items-center justify-center">
                     <Sparkles className="w-4 h-4" />
                   </div>
                 </div>
@@ -126,7 +126,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
 
                   <button
                     onClick={() => onNavigate('appointments')}
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#0A5C67] hover:bg-[#084952] text-white rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer"
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>Book Consult</span>
@@ -161,7 +161,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                   </span>
                   <button
                     onClick={() => onNavigate('appointments')}
-                    className="text-xs font-bold text-[#0A5C67] hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-patient-primary hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Book Family Visit</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -174,7 +174,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           {/* Cosmetic & Whitening */}
           <Card className="p-4 border-slate-200 shadow-2xs">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-teal-50 text-[#0A5C67] flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-10 h-10 rounded-2xl bg-teal-50 text-patient-primary flex items-center justify-center shrink-0 mt-0.5">
                 <Smile className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -194,7 +194,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                   </span>
                   <button
                     onClick={() => onNavigate('appointments')}
-                    className="text-xs font-bold text-[#0A5C67] hover:underline flex items-center gap-1 cursor-pointer"
+                    className="text-xs font-bold text-patient-primary hover:underline flex items-center gap-1 cursor-pointer"
                   >
                     <span>Consultation</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -210,7 +210,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
             className="bg-white p-3.5 rounded-2xl border border-slate-200/90 flex items-center justify-between hover:border-slate-300 transition-all cursor-pointer"
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-cyan-50 text-[#0369A1] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-patient-secondary-light text-patient-secondary flex items-center justify-center shrink-0">
                 <Activity className="w-5 h-5" />
               </div>
               <div className="min-w-0">
@@ -284,7 +284,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                 <span className="text-slate-500 font-medium">Timing: {service.duration}</span>
                 <button
                   onClick={() => setSelectedService(service)}
-                  className="font-bold text-[#0A5C67] hover:underline"
+                  className="font-bold text-patient-primary hover:underline"
                 >
                   View Details →
                 </button>
@@ -295,7 +295,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
       )}
 
       {/* Have Questions? Banner */}
-      <div className="bg-[#0A5C67] rounded-2xl p-4 sm:p-5 text-white shadow-md">
+      <div className="bg-patient-primary rounded-2xl p-4 sm:p-5 text-white shadow-md">
         <div className="flex items-start justify-between">
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-200">
@@ -316,9 +316,9 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
 
         <a
           href="tel:7806454122"
-          className="mt-3.5 w-full bg-white text-[#0A5C67] hover:bg-teal-50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs"
+          className="mt-3.5 w-full bg-white text-patient-primary hover:bg-teal-50 font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs"
         >
-          <PhoneCall className="w-4 h-4 text-[#0A5C67]" />
+          <PhoneCall className="w-4 h-4 text-patient-primary" />
           <span>{CLINIC_INFO.phone}</span>
         </a>
       </div>
@@ -334,12 +334,12 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           <div className="space-y-4 text-xs sm:text-sm text-slate-700">
             <p className="leading-relaxed">{selectedService.description}</p>
 
-            <div className="bg-[#F0F8F9] p-3 rounded-xl border border-[#D5EDF1]">
+            <div className="bg-patient-primary-subtle p-3 rounded-xl border border-patient-primary-border">
               <strong className="text-slate-900 block mb-1.5">What makes this treatment unique at Dr. Ken Miller's Clinic:</strong>
               <ul className="space-y-1">
                 {selectedService.features.map((f, i) => (
                   <li key={i} className="flex items-center gap-2 text-slate-800">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#0A5C67]" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary" />
                     <span>{f}</span>
                   </li>
                 ))}

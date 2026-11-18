@@ -16,23 +16,23 @@ export const Badge: React.FC<BadgeProps> = ({
   ...props
 }) => {
   const variants = {
-    teal: 'bg-[#E6F4F6] text-[#0A5C67] border border-[#CDEAEF]',
-    blue: 'bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]',
-    amber: 'bg-[#FEF3C7] text-[#B45309] border border-[#FDE68A]',
-    red: 'bg-[#FEE2E2] text-[#B91C1C] border border-[#FECACA]',
+    teal: 'bg-patient-primary-light text-patient-primary border border-patient-primary-border',
+    blue: 'bg-patient-secondary-light text-patient-secondary-text border border-patient-secondary-border',
+    amber: 'bg-patient-gold-light text-patient-gold-text border border-patient-gold-border',
+    red: 'bg-patient-emergency-light text-patient-emergency-hover border border-patient-emergency-border',
     gray: 'bg-slate-100 text-slate-700 border border-slate-200',
-    navy: 'bg-[#EBF3FB] text-[#0F2B48] border border-[#CBDCF0]',
-    emerald: 'bg-[#D1FAE5] text-[#065F46] border border-[#A7F3D0]'
+    navy: 'bg-doctor-primary-light text-doctor-primary border border-doctor-primary-border',
+    emerald: 'bg-doctor-active-light text-doctor-active-text border border-doctor-active-border'
   }
 
   const dotColors = {
-    teal: 'bg-[#0A5C67]',
-    blue: 'bg-[#0284C7]',
-    amber: 'bg-[#D97706]',
-    red: 'bg-[#DC2626]',
+    teal: 'bg-patient-primary',
+    blue: 'bg-patient-secondary',
+    amber: 'bg-patient-gold',
+    red: 'bg-patient-emergency',
     gray: 'bg-slate-400',
-    navy: 'bg-[#0F2B48]',
-    emerald: 'bg-[#10B981]'
+    navy: 'bg-doctor-primary',
+    emerald: 'bg-doctor-active'
   }
 
   const sizes = {

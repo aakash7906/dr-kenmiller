@@ -75,7 +75,7 @@ export const PatientMyCare: React.FC = () => {
 
         {/* 2 Micro Cards: Primary Dentist & Active Plan */}
         <div className="grid grid-cols-2 gap-2 pt-1">
-          <div className="bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200/80">
+          <div className="bg-patient-bg p-2.5 rounded-xl border border-slate-200/80">
             <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
               Primary Dentist
             </span>
@@ -87,7 +87,7 @@ export const PatientMyCare: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] p-2.5 rounded-xl border border-slate-200/80">
+          <div className="bg-patient-bg p-2.5 rounded-xl border border-slate-200/80">
             <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
               Active Plan
             </span>
@@ -105,7 +105,7 @@ export const PatientMyCare: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-2.5 px-1">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#0A5C67] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-patient-primary animate-pulse" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
               Ongoing Treatment
             </h3>
@@ -116,7 +116,7 @@ export const PatientMyCare: React.FC = () => {
         <Card className="p-4 sm:p-5 border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-lg bg-teal-50 text-[#0A5C67] flex items-center justify-center font-bold text-xs">
+              <span className="w-8 h-8 rounded-lg bg-patient-primary-light text-patient-primary flex items-center justify-center font-bold text-xs">
                 #19
               </span>
               <div>
@@ -135,7 +135,7 @@ export const PatientMyCare: React.FC = () => {
           <div className="space-y-3.5 pl-1 border-l-2 border-slate-200 ml-3.5 my-2">
             {/* Phase 1 */}
             <div className="relative pl-5">
-              <span className="absolute -left-[23px] top-0.5 w-4 h-4 rounded-full bg-[#0A5C67] text-white flex items-center justify-center text-[10px]">
+              <span className="absolute -left-[23px] top-0.5 w-4 h-4 rounded-full bg-patient-primary text-white flex items-center justify-center text-[10px]">
                 ✓
               </span>
               <div className="flex items-center justify-between">
@@ -149,7 +149,7 @@ export const PatientMyCare: React.FC = () => {
 
             {/* Phase 2 */}
             <div className="relative pl-5">
-              <span className="absolute -left-[23px] top-0.5 w-4 h-4 rounded-full bg-[#0A5C67] text-white flex items-center justify-center text-[10px]">
+              <span className="absolute -left-[23px] top-0.5 w-4 h-4 rounded-full bg-patient-primary text-white flex items-center justify-center text-[10px]">
                 ✓
               </span>
               <div className="flex items-center justify-between">
@@ -179,7 +179,7 @@ export const PatientMyCare: React.FC = () => {
           </div>
 
           {/* Dr. Ken Miller's Clinical Note */}
-          <div className="bg-[#F0F8F9] border border-[#D5EDF1] rounded-xl p-3 flex items-start gap-2.5">
+          <div className="bg-patient-primary-subtle border border-patient-primary-border rounded-xl p-3 flex items-start gap-2.5">
             <span className="text-base">📝</span>
             <div className="text-xs text-slate-700">
               <strong className="text-slate-900 block mb-0.5">Dr. Ken Miller's Clinical Note:</strong>
@@ -201,7 +201,7 @@ export const PatientMyCare: React.FC = () => {
             </div>
             <div className="border-t border-slate-200 pt-1.5 flex items-center justify-between font-bold text-slate-900">
               <span>Estimated Patient Copay</span>
-              <span className="text-base text-[#0A5C67]">${ACTIVE_CARE_PLAN.copayEstimated.toFixed(2)}</span>
+              <span className="text-base text-patient-primary">${ACTIVE_CARE_PLAN.copayEstimated.toFixed(2)}</span>
             </div>
             <p className="text-[10px] text-slate-400 mt-1">
               Final claim submitted electronically upon completion on Nov 15.
@@ -225,7 +225,7 @@ export const PatientMyCare: React.FC = () => {
         <div className="space-y-2 text-xs">
           {/* Item 1 */}
           <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start gap-2.5">
-            <div className="w-5 h-5 rounded-md bg-[#0A5C67] text-white flex items-center justify-center shrink-0 mt-0.5">
+            <div className="w-5 h-5 rounded-md bg-patient-primary text-white flex items-center justify-center shrink-0 mt-0.5">
               <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1">
@@ -240,7 +240,7 @@ export const PatientMyCare: React.FC = () => {
             <button
               onClick={handleIncrementRinse}
               className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-colors cursor-pointer ${
-                saltWaterCount >= 3 ? 'bg-[#0A5C67] text-white' : 'bg-white border border-slate-300 text-teal-800'
+                saltWaterCount >= 3 ? 'bg-patient-primary text-white' : 'bg-white border border-slate-300 text-teal-800'
               }`}
             >
               {saltWaterCount >= 3 ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Plus className="w-3 h-3" />}
@@ -249,7 +249,7 @@ export const PatientMyCare: React.FC = () => {
               <strong className="text-slate-900 block">Warm Salt Water Rinses</strong>
               <p className="text-slate-500 text-[11px]">3 times daily after meals (Gently, do not swish forcefully)</p>
             </div>
-            <span className="text-xs font-bold text-[#0A5C67] bg-teal-50 px-2 py-0.5 rounded-md">
+            <span className="text-xs font-bold text-patient-primary bg-patient-primary-light px-2 py-0.5 rounded-md">
               Today: {saltWaterCount} / 3
             </span>
           </div>
@@ -262,7 +262,7 @@ export const PatientMyCare: React.FC = () => {
                 showToast(brushingDone ? 'Marked pending' : 'Evening brushing completed!')
               }}
               className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-colors cursor-pointer ${
-                brushingDone ? 'bg-[#0A5C67] text-white' : 'bg-white border border-slate-300'
+                brushingDone ? 'bg-patient-primary text-white' : 'bg-white border border-slate-300'
               }`}
             >
               {brushingDone && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
@@ -292,7 +292,7 @@ export const PatientMyCare: React.FC = () => {
               }}
               className={`py-2 px-2 rounded-xl text-xs font-semibold border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
                 painLevel === 'comfortable'
-                  ? 'bg-[#0A5C67] text-white border-[#0A5C67] shadow-xs'
+                  ? 'bg-patient-primary text-white border-patient-primary shadow-xs'
                   : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
               }`}
             >
@@ -361,7 +361,7 @@ export const PatientMyCare: React.FC = () => {
         <Card className="p-3.5 border-slate-200 shadow-2xs">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-teal-50 text-[#0A5C67] flex items-center justify-center shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-xl bg-patient-primary-light text-patient-primary flex items-center justify-center shrink-0 mt-0.5">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
@@ -379,7 +379,7 @@ export const PatientMyCare: React.FC = () => {
           <div className="mt-3 flex justify-end">
             <button
               onClick={() => alert('Hygiene appointment pre-reserved for May 2025!')}
-              className="text-xs font-bold text-[#0A5C67] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-patient-primary hover:underline flex items-center gap-1 cursor-pointer"
             >
               <span>Pre-Reserve Spot</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -404,7 +404,7 @@ export const PatientMyCare: React.FC = () => {
           {/* Progress bar */}
           <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#0A5C67] rounded-full transition-all duration-300"
+              className="h-full bg-patient-primary rounded-full transition-all duration-300"
               style={{ width: `${(toothbrushDaysLeft / 90) * 100}%` }}
             />
           </div>
@@ -417,7 +417,7 @@ export const PatientMyCare: React.FC = () => {
               onClick={handleResetToothbrush}
               className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-lg cursor-pointer"
             >
-              <RotateCcw className="w-3 h-3 text-[#0A5C67]" />
+              <RotateCcw className="w-3 h-3 text-patient-primary" />
               <span>Reset Counter (New Brush)</span>
             </button>
           </div>
@@ -454,7 +454,7 @@ export const PatientMyCare: React.FC = () => {
               onClick={() => alert(`Opening archival copy of: ${rec.title}`)}
             >
               <div className="flex items-center gap-2.5">
-                <FileText className="w-4 h-4 text-[#0A5C67]" />
+                <FileText className="w-4 h-4 text-patient-primary" />
                 <div>
                   <h4 className="text-xs font-bold text-slate-800">{rec.title}</h4>
                   <p className="text-[10px] text-slate-500">{rec.desc}</p>
@@ -467,8 +467,8 @@ export const PatientMyCare: React.FC = () => {
       </div>
 
       {/* St. Paul Patient Continuity Guarantee */}
-      <div className="bg-[#E6F4F6] p-3.5 rounded-2xl border border-[#CDEAEF] flex items-start gap-2.5 text-xs text-[#0A5C67]">
-        <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5 text-[#0A5C67]" />
+      <div className="bg-patient-primary-light p-3.5 rounded-2xl border border-patient-primary-border flex items-start gap-2.5 text-xs text-patient-primary">
+        <ShieldCheck className="w-5 h-5 shrink-0 mt-0.5 text-patient-primary" />
         <div>
           <strong className="block font-bold">St. Paul Patient Continuity Guarantee</strong>
           <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">

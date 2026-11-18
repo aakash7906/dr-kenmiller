@@ -1,10 +1,217 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  }
+/* ==========================================================================
+   DR. KEN MILLER DENTAL CLINIC - GLOBAL THEME & COLOR SPECIFICATION
+   ==========================================================================
+   All color tokens and theme specifications are centralized here.
+   If you need to change the brand colors or theme of the project in the future,
+   YOU ONLY NEED TO CHANGE THE VALUES BELOW in this file!
+   ========================================================================== */
 
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* --------------------------------------------------------------------------
+     1. PATIENT THEME: DENTAL WELLNESS & CALMING REASSURANCE
+     Inspired by Google Stitch Design & Dr. Ken Miller Dental Clinic (St. Paul)
+     -------------------------------------------------------------------------- */
+  /* Primary Teal Palette */
+  --patient-primary: #0A5C67;            /* Deep Alpine Teal (Primary buttons, active states, brand mark) */
+  --patient-primary-hover: #084952;      /* Button hover & pressed states */
+  --patient-primary-dark: #05333A;       /* Deepest brand teal */
+  --patient-primary-light: #E6F4F6;      /* Soft ice teal tint for chips & banners */
+  --patient-primary-subtle: #F0F8F9;     /* Gentle card background tint */
+  --patient-primary-border: #D1EAEF;     /* Subtle border outline for teal elements */
+  --patient-primary-text: #FFFFFF;       /* High-contrast text on primary buttons */
+
+  /* Secondary Arctic Sky Blue Palette */
+  --patient-secondary: #0284C7;          /* Arctic Sky Blue */
+  --patient-secondary-hover: #0369A1;    /* Deep sky blue */
+  --patient-secondary-light: #E0F2FE;    /* Soft appointment date block & pill background */
+  --patient-secondary-border: #BAE6FD;   /* Secondary border outline */
+  --patient-secondary-text: #0369A1;     /* Contrast text on light blue */
+
+  /* Emergency / Urgent Triage Palette */
+  --patient-emergency: #DC2626;          /* High-visibility triage alert red */
+  --patient-emergency-hover: #B91C1C;    /* Urgent button hover */
+  --patient-emergency-dark: #991B1B;     /* Deep emergency banner gradient start */
+  --patient-emergency-darker: #7F1D1D;   /* Deep emergency banner gradient end */
+  --patient-emergency-light: #FEF2F2;    /* Soft emergency card tint */
+  --patient-emergency-border: #FCA5A5;   /* Emergency card border */
+  --patient-emergency-text: #FFFFFF;     /* Text on emergency banner */
+
+  /* Clinic Heritage Gold Palette (Celebrating 38+ Years Since 1986) */
+  --patient-gold: #D97706;               /* Heritage warm amber */
+  --patient-gold-light: #FEF3C7;         /* Heritage star badge surface */
+  --patient-gold-border: #FDE68A;        /* Gold badge outline */
+  --patient-gold-text: #B45309;          /* Gold text */
+
+  /* Patient Neutral Base */
+  --patient-bg: #F8FAFC;                 /* App background */
+  --patient-card: #FFFFFF;               /* Card surface */
+  --patient-border: #E2E8F0;             /* Standard border */
+  --patient-text-main: #0F172A;          /* Main headings */
+  --patient-text-muted: #64748B;         /* Secondary descriptions */
+
+  /* --------------------------------------------------------------------------
+     2. DOCTOR THEME: CLINICAL PRECISION & OPERATORY COMMAND
+     Tailored for Dr. Ken Miller, DDS & Staff Chairside Workflow
+     -------------------------------------------------------------------------- */
+  /* Primary Clinical Navy Palette */
+  --doctor-primary: #0F2B48;             /* Clinical Royal Navy (Header, primary actions, EHR cards) */
+  --doctor-primary-hover: #0A1F36;       /* Dark navy hover */
+  --doctor-primary-dark: #061320;        /* Deepest navy */
+  --doctor-primary-light: #EBF3FB;       /* Light blue-slate card highlight */
+  --doctor-primary-subtle: #F1F6FB;      /* Operatory background tint */
+  --doctor-primary-border: #CBDCF0;      /* Clinical navy border */
+  --doctor-primary-text: #FFFFFF;        /* Contrast text */
+
+  /* Secondary Diagnostic Cyan Palette */
+  --doctor-secondary: #0EA5E9;          /* Diagnostic Cyan (Tooth selection, macro tags) */
+  --doctor-secondary-hover: #0284C7;     /* Hover state */
+  --doctor-secondary-light: #E0F2FE;     /* Diagnostic chip surface */
+  --doctor-secondary-border: #BAE6FD;    /* Diagnostic border */
+  --doctor-secondary-text: #0284C7;      /* Diagnostic text */
+
+  /* Chairside Status Colors */
+  --doctor-status-active: #059669;       /* Clinical Emerald (Seated in chair, timer active) */
+  --doctor-status-active-light: #D1FAE5; /* Emerald surface */
+  --doctor-status-active-border: #A7F3D0;/* Emerald border */
+  --doctor-status-active-text: #065F46;  /* Emerald text */
+
+  --doctor-status-warning: #EA580C;      /* Triage Urgency Amber-Rose */
+  --doctor-status-warning-light: #FFEDD5;/* Amber-Rose surface */
+  --doctor-status-warning-border: #FED7AA;
+  --doctor-status-warning-text: #9A3412;
+
+  --doctor-status-info: #2563EB;         /* Restorative Blue (In preparation) */
+  --doctor-status-info-light: #DBEAFE;   /* Info blue surface */
+
+  /* Doctor Neutral Base */
+  --doctor-bg: #F1F5F9;                  /* Clinical surgical slate background */
+  --doctor-card: #FFFFFF;                /* Card surface */
+  --doctor-border: #CBD5E1;              /* Clinical border */
+  --doctor-text-main: #0F172A;           /* High-contrast slate text */
+  --doctor-text-muted: #475569;          /* Secondary medical notes */
+
+  /* --------------------------------------------------------------------------
+     3. DYNAMIC ACTIVE THEME TOKENS (Automatically updates with role)
+     -------------------------------------------------------------------------- */
+  --theme-primary: var(--patient-primary);
+  --theme-primary-hover: var(--patient-primary-hover);
+  --theme-primary-dark: var(--patient-primary-dark);
+  --theme-primary-light: var(--patient-primary-light);
+  --theme-primary-subtle: var(--patient-primary-subtle);
+  --theme-primary-border: var(--patient-primary-border);
+  --theme-primary-text: var(--patient-primary-text);
+
+  --theme-secondary: var(--patient-secondary);
+  --theme-secondary-light: var(--patient-secondary-light);
+  --theme-secondary-text: var(--patient-secondary-text);
+
+  --theme-bg: var(--patient-bg);
+  --theme-card: var(--patient-card);
+}
+
+/* Dynamic role theme overrides */
+[data-theme="doctor"] {
+  --theme-primary: var(--doctor-primary);
+  --theme-primary-hover: var(--doctor-primary-hover);
+  --theme-primary-dark: var(--doctor-primary-dark);
+  --theme-primary-light: var(--doctor-primary-light);
+  --theme-primary-subtle: var(--doctor-primary-subtle);
+  --theme-primary-border: var(--doctor-primary-border);
+  --theme-primary-text: var(--doctor-primary-text);
+
+  --theme-secondary: var(--doctor-secondary);
+  --theme-secondary-light: var(--doctor-secondary-light);
+  --theme-secondary-text: var(--doctor-secondary-text);
+
+  --theme-bg: var(--doctor-bg);
+  --theme-card: var(--doctor-card);
+}
+
+/* --------------------------------------------------------------------------
+   4. TAILWIND CSS @THEME MAPPINGS
+   Exposes the custom properties directly to Tailwind utility classes!
+   (e.g., bg-patient-primary, text-patient-primary, bg-doctor-primary, etc.)
+   -------------------------------------------------------------------------- */
+@theme {
+  --color-patient-primary: var(--patient-primary);
+  --color-patient-primary-hover: var(--patient-primary-hover);
+  --color-patient-primary-dark: var(--patient-primary-dark);
+  --color-patient-primary-light: var(--patient-primary-light);
+  --color-patient-primary-subtle: var(--patient-primary-subtle);
+  --color-patient-primary-border: var(--patient-primary-border);
+  --color-patient-primary-text: var(--patient-primary-text);
+
+  --color-patient-secondary: var(--patient-secondary);
+  --color-patient-secondary-hover: var(--patient-secondary-hover);
+  --color-patient-secondary-light: var(--patient-secondary-light);
+  --color-patient-secondary-border: var(--patient-secondary-border);
+  --color-patient-secondary-text: var(--patient-secondary-text);
+
+  --color-patient-emergency: var(--patient-emergency);
+  --color-patient-emergency-hover: var(--patient-emergency-hover);
+  --color-patient-emergency-dark: var(--patient-emergency-dark);
+  --color-patient-emergency-darker: var(--patient-emergency-darker);
+  --color-patient-emergency-light: var(--patient-emergency-light);
+  --color-patient-emergency-border: var(--patient-emergency-border);
+
+  --color-patient-gold: var(--patient-gold);
+  --color-patient-gold-light: var(--patient-gold-light);
+  --color-patient-gold-border: var(--patient-gold-border);
+  --color-patient-gold-text: var(--patient-gold-text);
+
+  --color-patient-bg: var(--patient-bg);
+  --color-patient-card: var(--patient-card);
+
+  --color-doctor-primary: var(--doctor-primary);
+  --color-doctor-primary-hover: var(--doctor-primary-hover);
+  --color-doctor-primary-dark: var(--doctor-primary-dark);
+  --color-doctor-primary-light: var(--doctor-primary-light);
+  --color-doctor-primary-subtle: var(--doctor-primary-subtle);
+  --color-doctor-primary-border: var(--doctor-primary-border);
+  --color-doctor-primary-text: var(--doctor-primary-text);
+
+  --color-doctor-secondary: var(--doctor-secondary);
+  --color-doctor-secondary-hover: var(--doctor-secondary-hover);
+  --color-doctor-secondary-light: var(--doctor-secondary-light);
+  --color-doctor-secondary-border: var(--doctor-secondary-border);
+  --color-doctor-secondary-text: var(--doctor-secondary-text);
+
+  --color-doctor-active: var(--doctor-status-active);
+  --color-doctor-active-light: var(--doctor-status-active-light);
+  --color-doctor-active-border: var(--doctor-status-active-border);
+  --color-doctor-active-text: var(--doctor-status-active-text);
+
+  --color-doctor-warning: var(--doctor-status-warning);
+  --color-doctor-warning-light: var(--doctor-status-warning-light);
+  --color-doctor-warning-border: var(--doctor-status-warning-border);
+  --color-doctor-warning-text: var(--doctor-status-warning-text);
+
+  --color-doctor-info: var(--doctor-status-info);
+  --color-doctor-info-light: var(--doctor-status-info-light);
+
+  --color-doctor-bg: var(--doctor-bg);
+  --color-doctor-card: var(--doctor-card);
+
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-primary-hover: var(--theme-primary-hover);
+  --color-theme-primary-light: var(--theme-primary-light);
+  --color-theme-primary-subtle: var(--theme-primary-subtle);
+  --color-theme-primary-border: var(--theme-primary-border);
+  --color-theme-primary-text: var(--theme-primary-text);
+
+  --color-theme-secondary: var(--theme-secondary);
+  --color-theme-secondary-light: var(--theme-secondary-light);
+  --color-theme-secondary-text: var(--theme-secondary-text);
+
+  --color-theme-bg: var(--theme-bg);
+  --color-theme-card: var(--theme-card);
+}
+
+@layer base {
   body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;

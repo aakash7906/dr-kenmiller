@@ -43,7 +43,7 @@ export const DoctorCharting: React.FC = () => {
           <span className="text-[11px] font-bold uppercase tracking-wider text-blue-900">
             Electronic Health Record (EHR)
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-[#0F2B48] tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Patient Odontogram & Charting
           </h2>
         </div>
@@ -104,7 +104,7 @@ export const DoctorCharting: React.FC = () => {
         <button
           onClick={() => setActiveTab('odontogram')}
           className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
-            activeTab === 'odontogram' ? 'bg-[#0F2B48] text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
+            activeTab === 'odontogram' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
           Adult Odontogram (#1–32)
@@ -112,7 +112,7 @@ export const DoctorCharting: React.FC = () => {
         <button
           onClick={() => setActiveTab('treatmentPlan')}
           className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
-            activeTab === 'treatmentPlan' ? 'bg-[#0F2B48] text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
+            activeTab === 'treatmentPlan' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
           Treatment Plan & Fees
@@ -120,7 +120,7 @@ export const DoctorCharting: React.FC = () => {
         <button
           onClick={() => setActiveTab('soapNotes')}
           className={`flex-1 py-1.5 px-3 rounded-lg transition-all ${
-            activeTab === 'soapNotes' ? 'bg-[#0F2B48] text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
+            activeTab === 'soapNotes' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
           Clinical SOAP Notes
@@ -139,7 +139,7 @@ export const DoctorCharting: React.FC = () => {
           <Card className="p-4 border-slate-200 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="w-7 h-7 rounded-lg bg-[#0F2B48] text-white font-mono font-bold flex items-center justify-center text-xs">
+                <span className="w-7 h-7 rounded-lg bg-doctor-primary text-white font-mono font-bold flex items-center justify-center text-xs">
                   #{selectedTooth.number}
                 </span>
                 <div>
@@ -267,7 +267,7 @@ export const DoctorCharting: React.FC = () => {
             </div>
             <div className="text-right">
               <span className="text-slate-500">Total Patient Balance: </span>
-              <span className="text-base font-extrabold text-[#0F2B48]">$650.00</span>
+              <span className="text-base font-extrabold text-doctor-primary">$650.00</span>
             </div>
           </div>
         </Card>
@@ -293,56 +293,56 @@ export const DoctorCharting: React.FC = () => {
           {/* S - Subjective */}
           <div>
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-[#0F2B48] text-white flex items-center justify-center text-[10px]">S</span>
+              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">S</span>
               Subjective (Patient Reported):
             </label>
             <textarea
               value={soapSubjective}
               onChange={(e) => setSoapSubjective(e.target.value)}
               rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F2B48]"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
             />
           </div>
 
           {/* O - Objective */}
           <div>
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-[#0F2B48] text-white flex items-center justify-center text-[10px]">O</span>
+              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">O</span>
               Objective (Clinical Findings & Radiographs):
             </label>
             <textarea
               value={soapObjective}
               onChange={(e) => setSoapObjective(e.target.value)}
               rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F2B48]"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
             />
           </div>
 
           {/* A - Assessment */}
           <div>
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-[#0F2B48] text-white flex items-center justify-center text-[10px]">A</span>
+              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">A</span>
               Assessment (Diagnosis):
             </label>
             <textarea
               value={soapAssessment}
               onChange={(e) => setSoapAssessment(e.target.value)}
               rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F2B48]"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
             />
           </div>
 
           {/* P - Plan */}
           <div>
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5 mb-1">
-              <span className="w-4 h-4 rounded bg-[#0F2B48] text-white flex items-center justify-center text-[10px]">P</span>
+              <span className="w-4 h-4 rounded bg-doctor-primary text-white flex items-center justify-center text-[10px]">P</span>
               Plan & Follow-Up:
             </label>
             <textarea
               value={soapPlan}
               onChange={(e) => setSoapPlan(e.target.value)}
               rows={2}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F2B48]"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-doctor-primary"
             />
           </div>
 

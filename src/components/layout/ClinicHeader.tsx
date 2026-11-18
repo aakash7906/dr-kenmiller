@@ -1,5 +1,5 @@
 import React from 'react'
-import { Phone, User, Stethoscope, HeartPulse, Palette } from 'lucide-react'
+import { Phone, User, Stethoscope, HeartPulse, Palette, Sparkles } from 'lucide-react'
 import { UserRole } from '@/types'
 import { CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
 
@@ -9,6 +9,7 @@ interface ClinicHeaderProps {
   onOpenThemeSpec: () => void
   onCallClinic: () => void
   onOpenProfile: () => void
+  onOpenOnboarding: () => void
 }
 
 export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
@@ -16,7 +17,8 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
   onToggleRole,
   onOpenThemeSpec,
   onCallClinic,
-  onOpenProfile
+  onOpenProfile,
+  onOpenOnboarding
 }) => {
   const isDoctor = role === 'doctor'
 
@@ -29,8 +31,8 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
           <div
             className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
               isDoctor
-                ? 'bg-[#0F2B48] text-white shadow-xs'
-                : 'bg-[#0A5C67] text-white shadow-xs'
+                ? 'bg-doctor-primary text-white shadow-xs'
+                : 'bg-patient-primary text-white shadow-xs'
             }`}
           >
             {isDoctor ? (
@@ -61,6 +63,16 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
 
         {/* Right side actions & Role Switcher */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Onboarding preview button */}
+          <button
+            onClick={onOpenOnboarding}
+            title="Replay Splash & Onboarding Screen"
+            className="flex items-center gap-1 text-[11px] font-semibold text-purple-900 bg-purple-50 hover:bg-purple-100 border border-purple-200 px-2 py-1.5 rounded-lg transition-colors cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+            <span className="hidden md:inline">Onboarding</span>
+          </button>
+
           {/* Theme & Color Spec Info Pill */}
           <button
             onClick={onOpenThemeSpec}
@@ -103,7 +115,7 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
             title="Call Clinic Reception"
             aria-label="Call Reception"
           >
-            <Phone className="w-4 h-4 text-[#0A5C67]" />
+            <Phone className="w-4 h-4 text-patient-primary" />
           </button>
 
           {/* User profile avatar / button */}

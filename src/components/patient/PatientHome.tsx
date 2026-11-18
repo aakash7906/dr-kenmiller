@@ -42,7 +42,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
       {/* Welcome Back & Patient Status Header */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0A5C67] animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-patient-primary animate-pulse" />
           <span className="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
             Welcome Back
           </span>
@@ -70,19 +70,19 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
       </div>
 
       {/* Hygiene Recall Due Banner */}
-      <div className="bg-[#E6F4F6] border border-[#C6E6EC] rounded-2xl p-3.5 flex items-center justify-between gap-3">
+      <div className="bg-patient-primary-light border border-patient-primary-border rounded-2xl p-3.5 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-[#0A5C67] text-white flex items-center justify-center shrink-0 shadow-2xs">
+          <div className="w-9 h-9 rounded-xl bg-patient-primary text-white flex items-center justify-center shrink-0 shadow-2xs">
             <Calendar className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <h4 className="text-xs font-bold text-[#0A5C67] truncate">Hygiene Recall Due</h4>
+            <h4 className="text-xs font-bold text-patient-primary truncate">Hygiene Recall Due</h4>
             <p className="text-[11px] text-slate-600 truncate">Routine 6-mo cleaning window</p>
           </div>
         </div>
         <button
           onClick={() => onNavigate('appointments')}
-          className="shrink-0 bg-[#0A5C67] hover:bg-[#084952] text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer"
+          className="shrink-0 bg-patient-primary hover:bg-patient-primary-hover text-white text-xs font-semibold px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer"
         >
           Reserve Slot
         </button>
@@ -92,8 +92,8 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
       <Card className="p-4 sm:p-5 border-slate-200 shadow-sm relative overflow-hidden">
         {/* Top Badges */}
         <div className="flex items-center justify-between mb-3">
-          <span className="inline-flex items-center gap-1.5 bg-[#E6F4F6] text-[#0A5C67] text-xs font-bold px-2.5 py-1 rounded-full border border-[#CDEAEF]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0A5C67]" />
+          <span className="inline-flex items-center gap-1.5 bg-patient-primary-light text-patient-primary text-xs font-bold px-2.5 py-1 rounded-full border border-patient-primary-border">
+            <span className="w-1.5 h-1.5 rounded-full bg-patient-primary" />
             Confirmed Visit
           </span>
           <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
@@ -111,7 +111,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         {/* Details list */}
         <div className="mt-3 space-y-2 text-xs text-slate-600">
           <div className="flex items-start gap-2.5">
-            <Calendar className="w-4 h-4 text-[#0A5C67] shrink-0 mt-0.5" />
+            <Calendar className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
             <span className="font-semibold text-slate-800">{upcomingApt.date} at {upcomingApt.time.split('–')[0]}</span>
           </div>
           <div className="flex items-start gap-2.5">
@@ -119,7 +119,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             <span>{upcomingApt.provider}</span>
           </div>
           <div className="flex items-start gap-2.5">
-            <MapPin className="w-4 h-4 text-[#0A5C67] shrink-0 mt-0.5" />
+            <MapPin className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
             <span>{upcomingApt.location}</span>
           </div>
         </div>
@@ -130,14 +130,14 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             onClick={() => alert(`Added "${upcomingApt.type}" to your device calendar for ${upcomingApt.date}.`)}
             className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
           >
-            <CalendarPlus className="w-4 h-4 text-[#0A5C67]" />
+            <CalendarPlus className="w-4 h-4 text-patient-primary" />
             <span>Add to Calendar</span>
           </button>
           <button
             onClick={() => setShowRescheduleModal(true)}
             className="flex items-center justify-center gap-1.5 py-2.5 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/90 rounded-xl text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
           >
-            <Clock className="w-4 h-4 text-[#0A5C67]" />
+            <Clock className="w-4 h-4 text-patient-primary" />
             <span>Reschedule</span>
           </button>
         </div>
@@ -148,7 +148,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           className={`w-full mt-2.5 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs ${
             checkInDone
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-              : 'bg-[#0A5C67] hover:bg-[#084952] text-white'
+              : 'bg-patient-primary hover:bg-patient-primary-hover text-white'
           }`}
         >
           {checkInDone ? (
@@ -213,7 +213,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             href="tel:7806454122"
             className="bg-white p-3.5 rounded-2xl border border-slate-200/80 hover:border-slate-300 hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
           >
-            <div className="w-8 h-8 rounded-xl bg-teal-50 text-[#0A5C67] flex items-center justify-center mb-2">
+            <div className="w-8 h-8 rounded-xl bg-patient-primary-light text-patient-primary flex items-center justify-center mb-2">
               <PhoneCall className="w-4 h-4" />
             </div>
             <div>
@@ -229,7 +229,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           >
             <div className="flex items-center justify-between mb-2">
               <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
-                <FileCheck className="w-4 h-4 text-[#0A5C67]" />
+                <FileCheck className="w-4 h-4 text-patient-primary" />
               </div>
               <span className="w-2 h-2 rounded-full bg-emerald-500" title="Ready to submit" />
             </div>
@@ -245,7 +245,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
       <Card className="p-4 border-slate-200 shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5">
-            <span className="p-1 rounded-md bg-teal-50 text-[#0A5C67]">
+            <span className="p-1 rounded-md bg-patient-primary-light text-patient-primary">
               <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                 <path d="M18.8 4c-1.3 0-2.4.7-3.1 1.7-.8-.7-1.8-1.2-3-1.2-1.2 0-2.2.5-3 1.2C9 4.7 7.9 4 6.6 4 4.1 4 2 6.1 2 8.6c0 3.8 2.2 6.8 4 9.1 1.2 1.5 2.5 2.8 3.5 3.7.4.4.8.6 1.2.6.4 0 .8-.2 1.2-.6 1-.9 2.3-2.2 3.5-3.7 1.8-2.3 4-5.3 4-9.1C21.4 6.1 19.3 4 18.8 4z" />
               </svg>
@@ -265,28 +265,28 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
         {/* Progress header & tracker */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="font-bold text-[#0A5C67]">Step {ACTIVE_CARE_PLAN.currentStep} of {ACTIVE_CARE_PLAN.totalSteps}</span>
+            <span className="font-bold text-patient-primary">Step {ACTIVE_CARE_PLAN.currentStep} of {ACTIVE_CARE_PLAN.totalSteps}</span>
             <span className="text-slate-500 text-[11px]">Final Step: Crown Delivery</span>
           </div>
 
           {/* Stepper bar */}
           <div className="grid grid-cols-3 gap-1.5 py-1">
-            <div className="h-2 rounded-full bg-[#0A5C67]" />
-            <div className="h-2 rounded-full bg-[#0A5C67]" />
+            <div className="h-2 rounded-full bg-patient-primary" />
+            <div className="h-2 rounded-full bg-patient-primary" />
             <div className="h-2 rounded-full bg-slate-200" />
           </div>
 
           <div className="grid grid-cols-3 text-[10px] text-slate-600 mt-1 font-medium text-center">
-            <span className="text-[#0A5C67] font-semibold flex items-center justify-center gap-0.5">
+            <span className="text-patient-primary font-semibold flex items-center justify-center gap-0.5">
               ✓ Post Placed
             </span>
-            <span className="text-[#0A5C67] font-bold">Abutment Fit</span>
+            <span className="text-patient-primary font-bold">Abutment Fit</span>
             <span className="text-slate-400">Final Crown</span>
           </div>
         </div>
 
         {/* Protocol reader mini-card */}
-        <div className="mt-3 bg-[#F0F8F9] border border-[#D5EDF1] rounded-xl p-2.5 flex items-center justify-between gap-2">
+        <div className="mt-3 bg-patient-primary-subtle border border-patient-primary-border rounded-xl p-2.5 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-base">📄</span>
             <div className="min-w-0">
@@ -296,7 +296,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           </div>
           <button
             onClick={() => setShowProtocolModal(true)}
-            className="shrink-0 text-xs font-bold text-[#0A5C67] bg-white hover:bg-teal-50 px-2.5 py-1 rounded-lg border border-[#CDEAEF] flex items-center gap-1 cursor-pointer transition-colors"
+            className="shrink-0 text-xs font-bold text-patient-primary bg-white hover:bg-patient-primary-light px-2.5 py-1 rounded-lg border border-patient-primary-border flex items-center gap-1 cursor-pointer transition-colors"
           >
             <span>Read</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -356,7 +356,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
 
           {/* Night Guard Hygiene */}
           <div className="bg-white p-3 rounded-xl border border-slate-200/90 flex items-start gap-3">
-            <div className="w-8 h-8 rounded-lg bg-teal-50 text-[#0A5C67] flex items-center justify-center shrink-0 mt-0.5">
+            <div className="w-8 h-8 rounded-lg bg-teal-50 text-patient-primary flex items-center justify-center shrink-0 mt-0.5">
               <Droplet className="w-4 h-4" />
             </div>
             <div className="flex-1 min-w-0">
@@ -450,7 +450,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
               setCheckInDone(true)
               setShowCheckInModal(false)
             }}
-            className="w-full bg-[#0A5C67] hover:bg-[#084952] text-white py-3 rounded-xl font-bold transition-all cursor-pointer"
+            className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold transition-all cursor-pointer"
           >
             I Have Arrived at Clinic Lobby
           </button>
@@ -472,10 +472,10 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="space-y-2">
             <label className="font-semibold text-slate-800 block text-xs">Preferred Time Window:</label>
             <div className="grid grid-cols-2 gap-2">
-              <button className="p-2.5 rounded-xl border border-slate-200 text-xs font-medium hover:border-[#0A5C67] hover:bg-teal-50 text-left">
+              <button className="p-2.5 rounded-xl border border-slate-200 text-xs font-medium hover:border-patient-primary hover:bg-patient-primary-light text-left">
                 🌅 Morning (9am – 12pm)
               </button>
-              <button className="p-2.5 rounded-xl border border-slate-200 text-xs font-medium hover:border-[#0A5C67] hover:bg-teal-50 text-left">
+              <button className="p-2.5 rounded-xl border border-slate-200 text-xs font-medium hover:border-patient-primary hover:bg-patient-primary-light text-left">
                 ☀️ Afternoon (1pm – 4pm)
               </button>
             </div>
@@ -484,7 +484,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="pt-2">
             <a
               href="tel:7806454122"
-              className="w-full block text-center bg-[#0A5C67] text-white py-2.5 rounded-xl font-semibold hover:bg-[#084952]"
+              className="w-full block text-center bg-patient-primary text-white py-2.5 rounded-xl font-semibold hover:bg-patient-primary-hover"
             >
               Call Reception Directly ({CLINIC_INFO.phone})
             </a>

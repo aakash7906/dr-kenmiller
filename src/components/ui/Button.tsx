@@ -20,13 +20,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     const variantStyles = {
-      primary: 'bg-[#0A5C67] hover:bg-[#084952] text-white shadow-sm focus:ring-[#0A5C67]/40',
-      secondary: 'bg-[#E0F2FE] hover:bg-[#BAE6FD] text-[#0369A1] focus:ring-[#0284C7]/30',
+      primary: 'bg-patient-primary hover:bg-patient-primary-hover text-white shadow-sm focus:ring-[var(--patient-primary)]/40',
+      secondary: 'bg-patient-secondary-light hover:bg-[var(--patient-secondary-border)] text-patient-secondary-text focus:ring-[var(--patient-secondary)]/30',
       outline: 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 focus:ring-slate-400/20 shadow-xs',
       ghost: 'bg-transparent hover:bg-slate-100 text-slate-700',
-      emergency: 'bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white shadow-md shadow-red-500/20 focus:ring-red-500/40 font-semibold',
-      doctor: 'bg-[#0F2B48] hover:bg-[#0A1F36] text-white shadow-sm focus:ring-[#0F2B48]/40',
-      subtle: 'bg-[#F0F8F9] hover:bg-[#E2F2F5] text-[#0A5C67] border border-[#D1EAEF]'
+      emergency: 'bg-gradient-to-r from-patient-emergency to-patient-emergency-hover text-white shadow-md shadow-red-500/20 focus:ring-red-500/40 font-semibold',
+      doctor: 'bg-doctor-primary hover:bg-doctor-primary-hover text-white shadow-sm focus:ring-[var(--doctor-primary)]/40',
+      subtle: 'bg-patient-primary-subtle hover:bg-patient-primary-light text-patient-primary border border-patient-primary-border'
     }
 
     return (

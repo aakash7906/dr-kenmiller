@@ -33,7 +33,7 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
         {/* Patient Theme Specification */}
         <div className="border border-teal-100 rounded-2xl p-4 bg-teal-50/30">
           <div className="flex items-center gap-2 mb-3">
-            <span className="p-1.5 rounded-lg bg-[#0A5C67] text-white">
+            <span className="p-1.5 rounded-lg bg-patient-primary text-white">
               <HeartHandshake className="w-4 h-4" />
             </span>
             <div>
@@ -50,10 +50,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Primary */}
             <div className="bg-white p-3 rounded-xl border border-teal-100 shadow-2xs">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#0A5C67] shadow-xs" />
+                <div className="w-7 h-7 rounded-lg bg-patient-primary shadow-xs" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Primary Color</div>
-                  <div className="font-mono text-[11px] text-slate-500">#0A5C67 (Deep Alpine Teal)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--patient-primary)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -64,10 +64,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Secondary */}
             <div className="bg-white p-3 rounded-xl border border-teal-100 shadow-2xs">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#E0F2FE] border border-[#BAE6FD]" />
+                <div className="w-7 h-7 rounded-lg bg-patient-secondary-light border border-patient-secondary-border" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Secondary Color</div>
-                  <div className="font-mono text-[11px] text-slate-500">#E0F2FE / #0369A1 (Arctic Sky Blue)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--patient-secondary)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -78,10 +78,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Emergency Accent */}
             <div className="bg-white p-3 rounded-xl border border-rose-100 shadow-2xs">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#DC2626]" />
+                <div className="w-7 h-7 rounded-lg bg-patient-emergency" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Emergency Alert Accent</div>
-                  <div className="font-mono text-[11px] text-slate-500">#DC2626 / #7F1D1D (Crimson Triage)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--patient-emergency)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -92,10 +92,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Heritage Gold Accent */}
             <div className="bg-white p-3 rounded-xl border border-amber-100 shadow-2xs">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#FEF3C7] border border-[#FDE68A]" />
+                <div className="w-7 h-7 rounded-lg bg-patient-gold-light border border-patient-gold-border" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Heritage Accent</div>
-                  <div className="font-mono text-[11px] text-slate-500">#D97706 / #FEF3C7 (Warm Amber)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--patient-gold)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -108,7 +108,7 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
         {/* Doctor Theme Specification */}
         <div className="border border-blue-200 rounded-2xl p-4 bg-slate-900 text-white">
           <div className="flex items-center gap-2 mb-3">
-            <span className="p-1.5 rounded-lg bg-blue-600 text-white">
+            <span className="p-1.5 rounded-lg bg-doctor-secondary text-white">
               <Stethoscope className="w-4 h-4" />
             </span>
             <div>
@@ -125,10 +125,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Primary */}
             <div className="bg-white p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#0F2B48] shadow-xs" />
+                <div className="w-7 h-7 rounded-lg bg-doctor-primary shadow-xs" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Doctor Primary</div>
-                  <div className="font-mono text-[11px] text-slate-500">#0F2B48 (Clinical Royal Navy)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--doctor-primary)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -139,10 +139,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Secondary */}
             <div className="bg-white p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#0EA5E9]" />
+                <div className="w-7 h-7 rounded-lg bg-doctor-secondary" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Doctor Secondary</div>
-                  <div className="font-mono text-[11px] text-slate-500">#0EA5E9 (Diagnostic Cyan)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--doctor-secondary)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -153,10 +153,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Operatory Status: Emerald */}
             <div className="bg-white p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#059669]" />
+                <div className="w-7 h-7 rounded-lg bg-doctor-active" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Chairside Active State</div>
-                  <div className="font-mono text-[11px] text-slate-500">#059669 / #D1FAE5 (Clinical Emerald)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--doctor-status-active)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">
@@ -167,10 +167,10 @@ export const ThemeSpecDrawer: React.FC<ThemeSpecDrawerProps> = ({
             {/* Triage Urgency: Amber-Rose */}
             <div className="bg-white p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#EA580C]" />
+                <div className="w-7 h-7 rounded-lg bg-doctor-warning" />
                 <div>
                   <div className="font-bold text-slate-900 text-xs">Urgent Triage Queue</div>
-                  <div className="font-mono text-[11px] text-slate-500">#EA580C (Vivid Amber-Rose)</div>
+                  <div className="font-mono text-[11px] text-slate-500">var(--doctor-status-warning)</div>
                 </div>
               </div>
               <p className="text-[11px] text-slate-600 mt-2">

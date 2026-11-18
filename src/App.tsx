@@ -8,6 +8,10 @@ import { ThemeSpecDrawer } from '@/components/common/ThemeSpecDrawer'
 import { Dialog } from '@/components/ui/Dialog'
 import { CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
 
+// Splash & Onboarding
+import { SplashScreen } from '@/components/onboarding/SplashScreen'
+import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
+
 // Patient Views
 import { PatientHome } from '@/components/patient/PatientHome'
 import { PatientAppointments } from '@/components/patient/PatientAppointments'
@@ -23,6 +27,7 @@ import { DoctorEmergencyDesk } from '@/components/doctor/DoctorEmergencyDesk'
 import { DoctorLabAndPostOp } from '@/components/doctor/DoctorLabAndPostOp'
 
 export function App() {
+  const [appState, setAppState] = useState<'splash' | 'onboarding' | 'portal'>('splash')
   const [role, setRole] = useState<UserRole>('patient')
   const [patientTab, setPatientTab] = useState<PatientTab>('home')
   const [doctorTab, setDoctorTab] = useState<DoctorTab>('overview')
@@ -34,11 +39,27 @@ export function App() {
     setRole((prev) => (prev === 'patient' ? 'doctor' : 'patient'))
   }
 
+  const handleOnboardingFinish = (selectedRole: UserRole) => {
+    setRole(selectedRole)
+    setAppState('portal')
+  }
+
   const isDoctor = role === 'doctor'
 
+  // 1. Splash Screen Mode
+  if (appState === 'splash') {
+    return <SplashScreen onComplete={() => setAppState('onboarding')} />
+  }
+
+  // 2. Onboarding Screen Mode (exact match to uploaded design)
+  if (appState === 'onboarding') {
+    return <OnboardingScreen onComplete={handleOnboardingFinish} />
+  }
+
+  // 3. Main Clinical & Patient Portal Mode
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 ${
-      isDoctor ? 'bg-[#F1F5F9]' : 'bg-[#F8FAFC]'
+      isDoctor ? 'bg-doctor-bg' : 'bg-patient-bg'
     }`}>
       {/* Top Clinic Header */}
       <ClinicHeader
@@ -47,6 +68,7 @@ export function App() {
         onOpenThemeSpec={() => setThemeSpecOpen(true)}
         onCallClinic={() => setReceptionModalOpen(true)}
         onOpenProfile={() => setProfileModalOpen(true)}
+        onOpenOnboarding={() => setAppState('onboarding')}
       />
 
       {/* Main Responsive Body */}
@@ -60,6 +82,7 @@ export function App() {
           onSelectDoctorTab={(tab) => setDoctorTab(tab)}
           onToggleRole={toggleRole}
           onOpenThemeSpec={() => setThemeSpecOpen(true)}
+          onOpenOnboarding={() => setAppState('onboarding')}
         />
 
         {/* Dynamic Content Container */}
@@ -74,7 +97,7 @@ export function App() {
               {patientTab === 'emergency' && (
                 <PatientEmergency
                   onNotifyArrivalSuccess={() => {
-                    // switch to doctor or alert
+                    // Alert dispatched
                   }}
                 />
               )}
@@ -113,7 +136,15 @@ export function App() {
       </div>
 
       {/* Floating Theme Spec Pill (always accessible on mobile) */}
-      <div className="lg:hidden fixed bottom-16 right-4 z-30">
+      <div className="lg:hidden fixed bottom-16 right-4 z-30 flex flex-col gap-2 items-end">
+        <button
+          onClick={() => setAppState('onboarding')}
+          className="bg-purple-900/95 text-white text-[11px] font-bold py-1.5 px-3 rounded-full shadow-lg backdrop-blur-xs flex items-center gap-1.5 hover:bg-purple-800 transition-all cursor-pointer border border-purple-400/30"
+          title="View Onboarding Screen"
+        >
+          <span>✨</span>
+          <span>Onboarding</span>
+        </button>
         <button
           onClick={() => setThemeSpecOpen(true)}
           className="bg-slate-900/90 text-white text-[11px] font-bold py-1.5 px-3 rounded-full shadow-lg backdrop-blur-xs flex items-center gap-1.5 hover:bg-slate-800 transition-all cursor-pointer border border-slate-700"
@@ -146,7 +177,7 @@ export function App() {
           </div>
           <a
             href={`tel:${CLINIC_INFO.phone.replace(/[^0-9]/g, '')}`}
-            className="w-full bg-[#0A5C67] hover:bg-[#084952] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+            className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors"
           >
             <span>Dial {CLINIC_INFO.phone} Now</span>
           </a>
@@ -197,7 +228,7 @@ export function App() {
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 space-y-2">
             <button
               onClick={() => {
                 toggleRole()
@@ -206,6 +237,15 @@ export function App() {
               className="w-full py-2.5 px-3 rounded-xl border border-slate-300 font-bold text-slate-800 hover:bg-slate-100 transition-colors"
             >
               Switch Role to {isDoctor ? 'Patient View' : 'Doctor View'}
+            </button>
+            <button
+              onClick={() => {
+                setProfileModalOpen(false)
+                setAppState('splash')
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-purple-50 text-purple-900 font-bold text-xs hover:bg-purple-100 transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>✨ Replay Splash & Onboarding</span>
             </button>
           </div>
         </div>

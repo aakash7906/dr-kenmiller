@@ -33,8 +33,8 @@ export const PatientBottomNav: React.FC<PatientBottomNavProps> = ({
               className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 cursor-pointer ${
                 isActive
                   ? tab.urgent
-                    ? 'text-red-600 font-bold'
-                    : 'text-[#0A5C67] font-bold'
+                    ? 'text-patient-emergency font-bold'
+                    : 'text-patient-primary font-bold'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
@@ -46,14 +46,14 @@ export const PatientBottomNav: React.FC<PatientBottomNavProps> = ({
                   strokeWidth={isActive ? 2.5 : 1.8}
                 />
                 {tab.urgent && !isActive && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-patient-emergency animate-pulse" />
                 )}
               </div>
               <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
               {isActive && (
                 <span
                   className={`w-1 h-1 rounded-full mt-0.5 ${
-                    tab.urgent ? 'bg-red-600' : 'bg-[#0A5C67]'
+                    tab.urgent ? 'bg-patient-emergency' : 'bg-patient-primary'
                   }`}
                 />
               )}

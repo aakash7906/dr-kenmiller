@@ -37,6 +37,7 @@ function MobileDentalApp() {
   const [role, setRole] = useState<UserRole>('patient')
   const [patientTab, setPatientTab] = useState<PatientTab>('home')
   const [doctorTab, setDoctorTab] = useState<DoctorTab>('overview')
+  const [patientInitialFilter, setPatientInitialFilter] = useState<'all' | 'today'>('today')
 
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [receptionModalOpen, setReceptionModalOpen] = useState(false)
@@ -117,10 +118,19 @@ function MobileDentalApp() {
           {isDoctor && (
             <>
               {doctorTab === 'overview' && (
-                <DoctorDashboard onNavigateTab={(t) => setDoctorTab(t)} />
+                <DoctorDashboard
+                  onNavigateTab={(t, filter) => {
+                    setDoctorTab(t)
+                    if (filter === 'today') setPatientInitialFilter('today')
+                    else setPatientInitialFilter('all')
+                  }}
+                />
               )}
               {doctorTab === 'patients' && (
-                <DoctorPatients onNavigateTab={(t) => setDoctorTab(t)} />
+                <DoctorPatients
+                  onNavigateTab={(t) => setDoctorTab(t)}
+                  initialFilter={patientInitialFilter}
+                />
               )}
               {doctorTab === 'charting' && <DoctorCharting />}
               {doctorTab === 'schedule' && <DoctorSchedule />}

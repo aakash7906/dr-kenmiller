@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Stethoscope,
   ChevronRight,
+  ChevronDown,
   ShieldAlert,
   Play,
   RotateCcw,
@@ -22,13 +23,14 @@ import { OPERATORY_CHAIRS, LIVE_TRIAGE_TICKETS, CURRENT_PATIENT, CLINIC_INFO } f
 import { DoctorTab } from '@/types'
 
 interface DoctorDashboardProps {
-  onNavigateTab: (tab: DoctorTab) => void
+  onNavigateTab: (tab: DoctorTab, filter?: string) => void
 }
 
 export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab }) => {
   const [anesthesiaSeconds, setAnesthesiaSeconds] = useState(1440) // 24 minutes
   const [timerRunning, setTimerRunning] = useState(true)
   const [showQuickNoteModal, setShowQuickNoteModal] = useState(false)
+  const [isTraumaExpanded, setIsTraumaExpanded] = useState(false)
   const [noteContent, setNoteContent] = useState('Local infiltration 2% Lido 1:100k given at 10:05 AM. Adequate profound pulpal anesthesia confirmed. Site 19 healing abutment removed, torque checked to 35 Ncm.')
 
   useEffect(() => {
@@ -68,12 +70,12 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
         {/* 1. PATIENTS */}
         <button
           type="button"
-          onClick={() => onNavigateTab('patients')}
+          onClick={() => onNavigateTab('patients', 'today')}
           className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1.5 text-left transition-all hover:border-blue-400 hover:shadow-xs hover:bg-blue-50/20 active:scale-98 cursor-pointer group"
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-doctor-primary transition-colors">
-              Patients
+              Today Patients
             </span>
             <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
               <Users className="w-3.5 h-3.5" />
@@ -141,46 +143,74 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
         </button>
       </div>
 
-      {/* HIGH PRIORITY INBOUND TRAUMA BANNER */}
+      {/* HIGH PRIORITY INBOUND TRAUMA BANNER (Collapsible Single-Line Dropdown) */}
       {urgentTicket && (
-        <div className="bg-gradient-to-r from-red-600 to-rose-700 rounded-2xl p-4.5 sm:p-5 text-white shadow-md relative overflow-hidden space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
-              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-md">
-                Incoming Emergency Trauma
+        <div className="bg-gradient-to-r from-red-600 to-rose-700 rounded-2xl text-white shadow-md relative overflow-hidden transition-all duration-200">
+          {/* Header Bar - Single line when collapsed, clickable to toggle dropdown */}
+          <div
+            onClick={() => setIsTraumaExpanded(prev => !prev)}
+            className="p-3 sm:p-3.5 flex items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-white/5 transition-colors"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2 py-0.5 rounded-md shrink-0">
+                Incoming Trauma
+              </span>
+              <span className="text-xs font-bold truncate text-white/95">
+                {urgentTicket.patientName} • {urgentTicket.condition.split('–')[0].trim()}
               </span>
             </div>
-            <button
-              onClick={() => onNavigateTab('triage')}
-              className="text-xs font-bold underline cursor-pointer text-white hover:text-rose-100 active:scale-98"
-            >
-              Open Desk →
-            </button>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onNavigateTab('triage')
+                }}
+                className="text-[11px] font-bold underline cursor-pointer text-white hover:text-rose-100 active:scale-98"
+              >
+                Open Desk →
+              </button>
+              <div className="w-6 h-6 rounded-lg bg-white/15 flex items-center justify-center text-white transition-transform duration-200">
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    isTraumaExpanded ? 'rotate-180' : ''
+                  }`}
+                />
+              </div>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-base font-extrabold leading-snug">
-              {urgentTicket.patientName} <br></br>{urgentTicket.condition}
-            </h3>
-           
-          </div>
+          {/* Expanded Dropdown Content */}
+          {isTraumaExpanded && (
+            <div className="px-3.5 pb-4 sm:px-4 sm:pb-4.5 pt-1 space-y-3 border-t border-white/15 animate-in fade-in-0 slide-in-from-top-2 duration-150">
+              <div>
+                <h3 className="text-sm sm:text-base font-extrabold leading-snug">
+                  {urgentTicket.patientName}
+                </h3>
+                <p className="text-xs text-white/90 mt-0.5 leading-relaxed">
+                  {urgentTicket.condition}
+                </p>
+              </div>
 
-          <div className="pt-1 flex items-center gap-2.5 flex-wrap">
-            <button
-              onClick={() => alert('Chair 3 prepared for emergency arrival. Assistant alerted.')}
-              className="bg-white text-red-900 hover:bg-rose-50 text-xs font-bold py-2 px-3.5 rounded-xl transition-all cursor-pointer active:scale-98 shadow-xs"
-            >
-              Prepare Chair 3
-            </button>
-            <a
-              href={`tel:${urgentTicket.phone.replace(/[^0-9]/g, '')}`}
-              className="bg-red-800/80 hover:bg-red-800 text-white text-xs font-semibold py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all active:scale-98"
-            >
-              <PhoneCall className="w-3.5 h-3.5" />
-              <span>Call ({urgentTicket.phone})</span>
-            </a>
-          </div>
+              <div className="flex items-center gap-2.5 flex-wrap pt-0.5">
+                <button
+                  onClick={() => alert('Chair 3 prepared for emergency arrival. Assistant alerted.')}
+                  className="bg-white text-red-900 hover:bg-rose-50 text-xs font-bold py-2 px-3.5 rounded-xl transition-all cursor-pointer active:scale-98 shadow-xs"
+                >
+                  Prepare Chair 3
+                </button>
+                <a
+                  href={`tel:${urgentTicket.phone.replace(/[^0-9]/g, '')}`}
+                  className="bg-red-800/80 hover:bg-red-800 text-white text-xs font-semibold py-2 px-3.5 rounded-xl flex items-center gap-1.5 transition-all active:scale-98"
+                >
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>Call ({urgentTicket.phone})</span>
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

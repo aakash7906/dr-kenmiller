@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import {
   Users,
   Search,
@@ -35,13 +35,86 @@ import { ComprehensivePatientRecord, DoctorTab } from '@/types'
 
 interface DoctorPatientsProps {
   onNavigateTab: (tab: DoctorTab) => void
+  initialFilter?: 'all' | 'today'
 }
 
-export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab }) => {
+// Live today floor schedule map: indicates who is being treated by whom, in which operatory, and current status
+const TODAY_FLOOR_SCHEDULE: Record<string, {
+  time: string
+  operatory: string
+  provider: string
+  procedure: string
+  status: 'seated' | 'completed' | 'upcoming'
+}> = {
+  'Sarah Tremblay': {
+    time: '10:00 AM – 10:45 AM',
+    operatory: 'Operatory 1',
+    provider: 'Dr. Ken Miller, DDS',
+    procedure: 'Implant Stage 2 Abutment Seating & Bitewings',
+    status: 'seated'
+  },
+  'David Chen': {
+    time: '9:45 AM & 11:15 AM',
+    operatory: 'Hygiene Bay A / Operatory 2',
+    provider: 'Lisa (RDH) & Dr. Julie Miller',
+    procedure: 'Periodontal Prophylaxis & CEREC Tessera Onlay',
+    status: 'seated'
+  },
+  "Liam O'Connor": {
+    time: '11:30 AM – 12:30 PM',
+    operatory: 'Operatory 4',
+    provider: 'Dr. Austin Chomay, DDS',
+    procedure: 'Urgent Trauma Stabilization & Wire Splint #8',
+    status: 'seated'
+  },
+  'Robert Gagne': {
+    time: '8:45 AM – 9:30 AM',
+    operatory: 'Operatory 1',
+    provider: 'Dr. Ken Miller, DDS',
+    procedure: 'Post-Op Suture Removal 30',
+    status: 'completed'
+  },
+  'Marcus Vance': {
+    time: '10:45 AM – 11:30 AM',
+    operatory: 'Operatory 2',
+    provider: 'Dr. Ken Miller, DDS',
+    procedure: 'Crown Prep & Temp Placement 14',
+    status: 'upcoming'
+  },
+  'Grace Miller': {
+    time: '1:15 PM – 2:00 PM',
+    operatory: 'Hygiene Bay B',
+    provider: 'Elena (RDH)',
+    procedure: 'Pediatric Exam & Fluoride Varnish',
+    status: 'upcoming'
+  },
+  'Ronald Bouchard': {
+    time: '2:15 PM – 3:15 PM',
+    operatory: 'Operatory 1',
+    provider: 'Dr. Ken Miller, DDS',
+    procedure: '3-Unit Bridge Try-In & Occlusal Balance',
+    status: 'upcoming'
+  },
+  'Bernice Campbell': {
+    time: '1:00 PM – 1:45 PM',
+    operatory: 'Operatory 3',
+    provider: 'Dr. Viktoria Kirsten, DDS',
+    procedure: 'Hard Tissue Laser Debridement & Thermal Check #31',
+    status: 'upcoming'
+  }
+}
+
+export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab, initialFilter = 'today' }) => {
   const [patientsList, setPatientsList] = useState<ComprehensivePatientRecord[]>(COMPREHENSIVE_PATIENTS)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'in_treatment' | 'recall_due' | 'alerts' | 'emergency'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'today' | 'in_treatment' | 'recall_due' | 'alerts' | 'emergency'>(initialFilter)
   const [selectedDoctorFilter, setSelectedDoctorFilter] = useState('All')
+
+  useEffect(() => {
+    if (initialFilter) {
+      setStatusFilter(initialFilter)
+    }
+  }, [initialFilter])
   
   // Selected Patient for 360° Medical Record Dossier
   const [activePatient, setActivePatient] = useState<ComprehensivePatientRecord | null>(null)
@@ -73,6 +146,8 @@ export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab })
       const matchesStatus =
         statusFilter === 'all'
           ? true
+          : statusFilter === 'today'
+          ? !!TODAY_FLOOR_SCHEDULE[p.name]
           : statusFilter === 'in_treatment'
           ? p.status === 'in_treatment'
           : statusFilter === 'recall_due'
@@ -224,6 +299,32 @@ export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab })
 
         {/* Doctor and Status Filter Badges */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+          {/* Status Quick Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+            {[
+              { id: 'today', label: "Today's Schedule (7)", isLive: true },
+              { id: 'all', label: `All Patients (${patientsList.length})` },
+              { id: 'in_treatment', label: 'In-Treatment' },
+              { id: 'alerts', label: 'Allergies & Alerts' },
+              { id: 'recall_due', label: 'Recall Due' },
+              { id: 'emergency', label: 'Emergency' }
+            ].map(chip => (
+              <button
+                key={chip.id}
+                onClick={() => setStatusFilter(chip.id as any)}
+                className={`py-1.5 px-3 rounded-xl font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                  statusFilter === chip.id
+                    ? 'bg-doctor-primary text-white shadow-2xs'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                }`}
+              >
+                {chip.isLive && (
+                  <span className={`w-1.5 h-1.5 rounded-full ${statusFilter === chip.id ? 'bg-emerald-300 animate-pulse' : 'bg-emerald-500'}`} />
+                )}
+                <span>{chip.label}</span>
+              </button>
+            ))}
+          </div>
 
           {/* Provider Dropdown */}
           <div className="flex items-center gap-2 shrink-0">
@@ -252,7 +353,15 @@ export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab })
       {/* 3. Patients Registry Cards List */}
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1 text-xs text-slate-500 font-semibold">
-          <span>Showing {filteredPatients.length} Records</span>
+          <span>
+            {statusFilter === 'today' ? "Today's Clinical Floor Patients" : `Showing ${filteredPatients.length} Records`}
+          </span>
+          {statusFilter === 'today' && (
+            <span className="text-emerald-700 font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+              Live Clinic Shift
+            </span>
+          )}
         </div>
 
         {filteredPatients.length === 0 ? (
@@ -262,96 +371,144 @@ export const DoctorPatients: React.FC<DoctorPatientsProps> = ({ onNavigateTab })
             <p className="text-xs text-slate-500">Try adjusting your search criteria or register a new intake.</p>
           </div>
         ) : (
-          filteredPatients.map(patient => (
-            <Card
-              key={patient.id}
-              className="p-4 sm:p-4.5 border-slate-200/90 hover:border-doctor-primary/40 transition-all shadow-2xs hover:shadow-xs cursor-pointer group"
-              onClick={() => {
-                setActivePatient(patient)
-                setDossierTab('vitals')
-              }}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                {/* Left Patient Bio */}
-                <div className="flex items-start gap-3.5">
-                  <div className="relative">
-                    <img
-                      src={patient.avatar}
-                      alt={patient.name}
-                      className="w-12 h-12 rounded-xl object-cover ring-2 ring-slate-100 shrink-0"
-                    />
-                    <span
-                      className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${
-                        patient.status === 'emergency'
-                          ? 'bg-rose-500 animate-ping'
-                          : patient.status === 'in_treatment'
-                          ? 'bg-teal-500'
-                          : patient.status === 'recall_due'
-                          ? 'bg-amber-500'
-                          : 'bg-emerald-500'
-                      }`}
-                    />
-                  </div>
+          filteredPatients.map(patient => {
+            const todaySchedule = TODAY_FLOOR_SCHEDULE[patient.name]
 
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-doctor-primary transition-colors">
-                        {patient.name}
-                      </h3>
-                      <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
-                        {patient.chartNumber}
-                      </span>
-                      <span className="text-xs text-slate-500">
-                        {patient.age} yrs • {patient.gender}
-                      </span>
+            return (
+              <Card
+                key={patient.id}
+                className="p-4 sm:p-4.5 border-slate-200/90 hover:border-doctor-primary/40 transition-all shadow-2xs hover:shadow-xs cursor-pointer group"
+                onClick={() => {
+                  setActivePatient(patient)
+                  setDossierTab('vitals')
+                }}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  {/* Left Patient Bio */}
+                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                    <div className="relative shrink-0">
+                      <img
+                        src={patient.avatar}
+                        alt={patient.name}
+                        className="w-12 h-12 rounded-xl object-cover ring-2 ring-slate-100 shrink-0"
+                      />
+                      <span
+                        className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full border-2 border-white ${
+                          todaySchedule?.status === 'seated'
+                            ? 'bg-emerald-500 ring-2 ring-emerald-200'
+                            : patient.status === 'emergency'
+                            ? 'bg-rose-500 animate-ping'
+                            : patient.status === 'in_treatment'
+                            ? 'bg-teal-500'
+                            : patient.status === 'recall_due'
+                            ? 'bg-amber-500'
+                            : 'bg-emerald-500'
+                        }`}
+                      />
                     </div>
 
-                    <div className="flex items-center gap-2 mt-1 text-xs text-slate-600 flex-wrap">
-                      <span className="font-semibold text-doctor-primary">{patient.primaryDentist}</span>
-                      <span>•</span>
-                      <span>{patient.insurancePlan}</span>
-                    </div>
-
-                    {/* Medical Alert Pills */}
-                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                      {patient.medicalAlerts.map((alert, idx) => (
-                        <span
-                          key={idx}
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
-                            alert.toLowerCase().includes('allergy') || alert.toLowerCase().includes('trauma')
-                              ? 'bg-rose-50 text-rose-800 border-rose-200'
-                              : 'bg-blue-50 text-blue-800 border-blue-200'
-                          }`}
-                        >
-                          {alert.toLowerCase().includes('allergy') && '⚠️ '}
-                          {alert}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="text-sm sm:text-base font-extrabold text-slate-900 group-hover:text-doctor-primary transition-colors">
+                          {patient.name}
+                        </h3>
+                        <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
+                          {patient.chartNumber}
                         </span>
-                      ))}
+                        <span className="text-xs text-slate-500">
+                          {patient.age} yrs • {patient.gender}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2 mt-1 text-xs text-slate-600 flex-wrap">
+                        <span className="font-semibold text-doctor-primary">{patient.primaryDentist}</span>
+                        <span>•</span>
+                        <span>{patient.insurancePlan}</span>
+                      </div>
+
+                      {/* Medical Alert Pills */}
+                      <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                        {patient.medicalAlerts.map((alert, idx) => (
+                          <span
+                            key={idx}
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
+                              alert.toLowerCase().includes('allergy') || alert.toLowerCase().includes('trauma')
+                                ? 'bg-rose-50 text-rose-800 border-rose-200'
+                                : 'bg-blue-50 text-blue-800 border-blue-200'
+                            }`}
+                          >
+                            {alert.toLowerCase().includes('allergy') && '⚠️ '}
+                            {alert}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Live Today Floor Appointment Strip */}
+                      {todaySchedule && (
+                        <div className="mt-2.5 p-2.5 bg-blue-50/80 border border-blue-200/90 rounded-xl flex items-center justify-between gap-2 flex-wrap">
+                          <div className="flex items-center gap-2 flex-wrap text-xs">
+                            <span className="font-extrabold text-slate-900 flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-doctor-primary" />
+                              <span>{todaySchedule.time}</span>
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-2xs">
+                              {todaySchedule.operatory}
+                            </span>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-slate-600">
+                              Doctor: <strong className="text-doctor-primary font-bold">{todaySchedule.provider}</strong>
+                            </span>
+                          </div>
+
+                          <Badge
+                            variant={
+                              todaySchedule.status === 'seated'
+                                ? 'emerald'
+                                : todaySchedule.status === 'completed'
+                                ? 'gray'
+                                : 'blue'
+                            }
+                            size="sm"
+                            className="font-bold shrink-0 text-[10px]"
+                          >
+                            {todaySchedule.status === 'seated'
+                              ? '🟢 In Chair'
+                              : todaySchedule.status === 'completed'
+                              ? '✓ Completed'
+                              : '🕒 Scheduled'}
+                          </Badge>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
 
-                {/* Right Action & Visit Info */}
-                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100 gap-2 shrink-0">
-                  <div className="text-left sm:text-right">
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Last Visit</span>
-                    <span className="text-xs font-semibold text-slate-700">{patient.lastVisitDate}</span>
+                  {/* Right Action & Visit Info */}
+                  <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100 gap-2 shrink-0">
+                    <div className="text-left sm:text-right">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
+                        {todaySchedule ? "Today's Status" : 'Last Visit'}
+                      </span>
+                      <span className="text-xs font-semibold text-slate-700">
+                        {todaySchedule ? todaySchedule.procedure.split('–')[0].trim() : patient.lastVisitDate}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setActivePatient(patient)
+                      }}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-doctor-primary bg-doctor-primary-light hover:bg-doctor-primary hover:text-white px-3 py-1.5 rounded-xl border border-doctor-primary-border transition-all cursor-pointer"
+                    >
+                      <span>360° Dossier</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setActivePatient(patient)
-                    }}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-doctor-primary bg-doctor-primary-light hover:bg-doctor-primary hover:text-white px-3 py-1.5 rounded-xl border border-doctor-primary-border transition-all cursor-pointer"
-                  >
-                    <span>360° Dossier</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
                 </div>
-              </div>
-            </Card>
-          ))
+              </Card>
+            )
+          })
         )}
       </div>
 

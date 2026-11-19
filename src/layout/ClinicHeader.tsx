@@ -1,5 +1,5 @@
 import React from 'react'
-import { Phone, Stethoscope } from 'lucide-react'
+import { Stethoscope } from 'lucide-react'
 import { ToothIcon } from '@/components/ui/ToothIcon'
 import { UserRole } from '@/types'
 import { CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
@@ -8,14 +8,13 @@ interface ClinicHeaderProps {
   role: UserRole
   onToggleRole?: () => void
   onOpenThemeSpec?: () => void
-  onCallClinic: () => void
+  onCallClinic?: () => void
   onOpenProfile: () => void
   onOpenOnboarding?: () => void
 }
 
 export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
   role,
-  onCallClinic,
   onOpenProfile
 }) => {
   const isDoctor = role === 'doctor'
@@ -47,18 +46,8 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({
           </div>
         </div>
 
-        {/* Right side actions (Clean Minimalist: Phone & Profile Avatar matching Stitch design) */}
+        {/* Right side actions (Profile Avatar) */}
         <div className="flex items-center gap-2">
-          {/* Direct Phone button */}
-          <button
-            onClick={onCallClinic}
-            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
-            title="Call Clinic Reception"
-            aria-label="Call Reception"
-          >
-            <Phone className="w-4 h-4 text-patient-primary" />
-          </button>
-
           {/* User profile avatar / button */}
           <button
             onClick={onOpenProfile}

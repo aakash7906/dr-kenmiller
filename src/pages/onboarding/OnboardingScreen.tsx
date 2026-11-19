@@ -37,7 +37,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
 
           {/* Subtitle */}
           <p className="text-[13px] sm:text-[14px] text-white/95 leading-relaxed font-normal mt-3.5 max-w-[275px] sm:max-w-[290px] drop-shadow-xs">
-            At Dr. Ken Miller, every patient receives thoughtful care built on their goals, lifestyle, and comfort.
+            At Dr. Ken Miller clinic, every patient receives thoughtful care built on their goals, lifestyle, and comfort.
           </p>
         </div>
 

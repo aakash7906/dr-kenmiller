@@ -484,7 +484,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
   // --------------------------------------------------------------------------
   if (selectedService) {
     return (
-      <div className="space-y-5 pb-32 pt-1 animate-in fade-in duration-200">
+      <div className="space-y-4 pb-32 -mt-1.5 sm:mt-0 animate-in fade-in duration-200">
         <div id="service-page-anchor" className="h-0 w-0 opacity-0 pointer-events-none" />
 
         {/* Top Sticky/Header Back Navigation Bar */}
@@ -492,7 +492,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           <button
             type="button"
             onClick={handleBackToServices}
-            className="inline-flex items-center gap-1.5 py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-98"
+            className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-98"
           >
             <ChevronLeft className="w-4 h-4 text-patient-primary" />
             <span>Back to All Services</span>
@@ -680,48 +680,48 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
   }
 
   return (
-    <div className="space-y-6 pb-28 pt-2">
-      {/* 1. Header Section */}
-      <div className="space-y-2 pt-1">
-        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-          Our Dental Services
-        </h1>
-
-      </div>
-
-      {/* 2. Interactive Search Bar */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <Search className="w-4 h-4 text-slate-400" />
+    <div className="space-y-4 pb-28 -mt-1.5 sm:mt-0">
+      {/* 1. Top Controls Section (Header, Search & Filters with Compact Spacing) */}
+      <div className="space-y-2.5">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+            Our Dental Services
+          </h1>
         </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search cleanings, implants, sedation..."
-          className="w-full pl-10 pr-9 py-3 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-patient-primary focus:border-transparent transition-all"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery('')}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-      </div>
 
-      {/* 3. Category Filter Chips (Smooth finger swipe & mouse pointer drag-to-scroll) */}
-      <div className="relative">
-        <div
-          ref={categoriesRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUpOrLeave}
-          onMouseLeave={handleMouseUpOrLeave}
-          onWheel={handleWheel}
-          className="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 scrollbar-none -mx-1 px-1 cursor-grab active:cursor-grabbing select-none touch-pan-x"
-        >
+        {/* 2. Interactive Search Bar */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+            <Search className="w-4 h-4 text-slate-400" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search cleanings, implants, sedation..."
+            className="w-full pl-10 pr-9 py-2.5 bg-white border border-slate-200/90 rounded-xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-patient-primary focus:border-transparent transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* 3. Category Filter Chips (Smooth finger swipe & mouse pointer drag-to-scroll) */}
+        <div className="relative">
+          <div
+            ref={categoriesRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUpOrLeave}
+            onMouseLeave={handleMouseUpOrLeave}
+            onWheel={handleWheel}
+            className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar-none -mx-1 px-1 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+          >
           {(
             [
               { id: 'All', label: `All (${SERVICES_CATALOG.length})` },
@@ -752,6 +752,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
             )
           })}
         </div>
+      </div>
       </div>
 
       {/* 4. Operatory Hero Banner (Dr. Ken Miller Clinic Photo) */}

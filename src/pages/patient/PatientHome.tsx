@@ -89,10 +89,10 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
   const upcomingApt = PATIENT_APPOINTMENTS[0]
 
   return (
-    <div className="space-y-6 pb-28 pt-2">
+    <div className="space-y-6 pb-28">
 
       {/* Greeting card */}
-      <div className="flex items-center justify-between pt-1">
+      <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
             Good morning, {CURRENT_PATIENT.name.split(' ')[0]}

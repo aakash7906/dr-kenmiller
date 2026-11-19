@@ -8,7 +8,10 @@ import {
   OperatoryChair,
   ToothData,
   TriageTicket,
-  LabCase
+  LabCase,
+  ComprehensivePatientRecord,
+  CerecMillingCase,
+  PerioSiteData
 } from '../types'
 
 // ================= DYNAMIC DATE HELPERS =================
@@ -493,12 +496,424 @@ export const LAB_CASES: LabCase[] = [
     id: 'lab-986',
     patientName: 'Ronald Bouchard',
     chartNumber: 'KM-4902',
-    toothNumber: '#29 - #31',
+    toothNumber: '#29–31',
     type: '3-Unit Porcelain-Fused-to-Zirconia Bridge',
     labName: 'Aurum Ceramic Dental Lab',
     sentDate: formatShortDate(getDynamicDate(-10)),
     expectedDelivery: formatShortDate(getDynamicDate(2)),
     status: 'shipped',
     shade: 'Vita B2'
+  }
+]
+
+// ================= CLINICAL DENTISTS & HYGIENISTS =================
+// Dr. Ken Miller Clinic Team directly from drkenmiller.ca
+export const CLINIC_DOCTORS = [
+  { id: 'dr-ken', name: 'Dr. Ken Miller, DDS', role: 'Lead Dentist & CEREC Mentor', room: 'Operatory 1', activePatients: 6, avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=250' },
+  { id: 'dr-julie', name: 'Dr. Julie Miller, DDS', role: 'Associate General Dentist', room: 'Operatory 2', activePatients: 4, avatar: 'https://images.unsplash.com/photo-1594824813589-98ffb4b45564?auto=format&fit=crop&q=80&w=250' },
+  { id: 'dr-viktoria', name: 'Dr. Viktoria Kirsten, DDS', role: 'Associate General Dentist', room: 'Operatory 3', activePatients: 3, avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=250' },
+  { id: 'dr-austin', name: 'Dr. Austin Chomay, DDS', role: 'Associate General Dentist', room: 'Operatory 4', activePatients: 5, avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=250' },
+  { id: 'rdh-lisa', name: 'Lisa (RDH)', role: 'Senior Dental Hygienist', room: 'Hygiene Bay A', activePatients: 7, avatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&q=80&w=250' },
+  { id: 'rdh-elena', name: 'Elena (RDH)', role: 'Registered Dental Hygienist', room: 'Hygiene Bay B', activePatients: 6, avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=250' }
+]
+
+// ================= CEREC IN-HOUSE CAD/CAM MILLING PIPELINE =================
+export const CEREC_MILLING_CASES: CerecMillingCase[] = [
+  {
+    id: 'cerec-101',
+    patientName: 'Marcus Vance',
+    chartNumber: 'KM-5819',
+    toothNumber: '#14',
+    material: 'e.max CAD Lithium Disilicate',
+    stage: 'milling',
+    shade: 'Vita A3',
+    estimatedMinutesLeft: 7,
+    millingUnit: 'CEREC Primemill Unit 1',
+    prepTime: '10:45 AM',
+    provider: 'Dr. Ken Miller, DDS'
+  },
+  {
+    id: 'cerec-102',
+    patientName: 'Sarah Tremblay',
+    chartNumber: 'KM-6421',
+    toothNumber: '#19',
+    material: 'Katana Zirconia Block',
+    stage: 'ready_to_seat',
+    shade: 'Vita A2',
+    estimatedMinutesLeft: 0,
+    millingUnit: 'CEREC MC XL Unit 2',
+    prepTime: '9:30 AM',
+    provider: 'Dr. Ken Miller, DDS'
+  },
+  {
+    id: 'cerec-103',
+    patientName: 'David Chen',
+    chartNumber: 'KM-7244',
+    toothNumber: '#30',
+    material: 'CEREC Tessera Advanced Lithium',
+    stage: 'cad_design',
+    shade: 'Vita A1',
+    estimatedMinutesLeft: 14,
+    millingUnit: 'CAD Station A',
+    prepTime: '11:15 AM',
+    provider: 'Dr. Julie Miller, DDS'
+  },
+  {
+    id: 'cerec-104',
+    patientName: 'Bernice Campbell',
+    chartNumber: 'KM-4190',
+    toothNumber: '#31',
+    material: 'e.max CAD Lithium Disilicate',
+    stage: 'crystallization',
+    shade: 'Vita A3.5',
+    estimatedMinutesLeft: 3,
+    millingUnit: 'SpeedFire Sintering Furnace',
+    prepTime: '11:00 AM',
+    provider: 'Dr. Viktoria Kirsten, DDS'
+  }
+]
+
+// ================= MASTER PATIENT DIRECTORY & 360° EHR DOSSIERS =================
+export const COMPREHENSIVE_PATIENTS: ComprehensivePatientRecord[] = [
+  {
+    id: 'pt-001',
+    name: 'Sarah Tremblay',
+    chartNumber: '#KM-6421',
+    since: 2018,
+    dob: 'May 14, 1990',
+    age: 34,
+    gender: 'Female',
+    email: 'sarah.tremblay@gmail.com',
+    phone: '(780) 645-8821',
+    address: '4922 – 51 Ave, St. Paul, AB T0A 3A1',
+    primaryDentist: 'Dr. Ken Miller, DDS',
+    insurancePlan: 'Alberta Blue Cross',
+    coverage: '80% Basic / 50% Major ($2,000 Annual Cap)',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=250',
+    status: 'in_treatment',
+    medicalAlerts: ['Penicillin Allergy (Mild Hives)', 'Nitrous Oxide Tolerant', 'Latex Safe'],
+    familyHeadId: 'pt-001',
+    familyName: 'Tremblay Household (2 Members)',
+    pharmacyPreference: 'Shoppers Drug Mart St. Paul (Ph: 780-645-3341)',
+    lastVisitDate: formatShortDate(getDynamicDate(-14)),
+    nextAppointmentDate: TODAY_APPOINTMENT_DATE,
+    vitals: {
+      bloodPressure: '118/76 mmHg',
+      pulse: 72,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [
+      {
+        id: 'soap-101',
+        date: formatShortDate(TODAY),
+        provider: 'Dr. Ken Miller, DDS',
+        subjective: 'Patient presents for scheduled Stage 2 abutment seating on site #19. Reports no chewing pain on left quadrant. Salt water rinses compliant.',
+        objective: 'Tissues well-keratinized around 4.5mm healing collar. No bleeding upon gentle probing. Torque wrench calibrated to 35 Ncm achieved with zero micro-rotation. Bitewing radiograph confirms flush seat to implant platform.',
+        assessment: 'Successful Stage 2 implant osseointegration #19 lower left first molar.',
+        plan: 'Deliver monolithic custom zirconia crown. Schedule 6-month hygiene recall recall with Lisa RDH.'
+      },
+      {
+        id: 'soap-100',
+        date: formatShortDate(getDynamicDate(-14)),
+        provider: 'Dr. Ken Miller, DDS',
+        subjective: 'Patient returns for 2-week post-op check after stage 1 titanium fixture placement.',
+        objective: 'Sutures resorbed cleanly. Healthy gingival pink cuffs. Bone density mapped via CBCT slice.',
+        assessment: 'Uncomplicated post-op healing.',
+        plan: 'Maintain contralateral soft diet. Review in 14 days.'
+      }
+    ],
+    perioSites: [
+      { toothNumber: 18, facialDepths: [3, 2, 3], lingualDepths: [3, 2, 3], bleedingOnProbing: false },
+      { toothNumber: 19, facialDepths: [3, 3, 3], lingualDepths: [3, 2, 3], bleedingOnProbing: false },
+      { toothNumber: 20, facialDepths: [2, 2, 2], lingualDepths: [2, 2, 3], bleedingOnProbing: false },
+      { toothNumber: 30, facialDepths: [3, 2, 3], lingualDepths: [3, 3, 3], bleedingOnProbing: false },
+      { toothNumber: 31, facialDepths: [4, 3, 3], lingualDepths: [4, 3, 4], bleedingOnProbing: true, recessionMm: 1 }
+    ],
+    digitalScans: [
+      {
+        id: 'scan-1',
+        title: '3D CBCT Surgical Volume - Lower Left Mandible',
+        type: 'CBCT 3D',
+        date: formatShortDate(getDynamicDate(-45)),
+        image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=600',
+        notes: 'Adequate cortical bone height (11.2mm above inferior alveolar nerve canal). Guided surgical stent fabricated.',
+        tooth: '#19'
+      },
+      {
+        id: 'scan-2',
+        title: 'Periapical Radiograph - Abutment Seat Check',
+        type: 'Bitewing X-Ray',
+        date: formatShortDate(TODAY),
+        image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=600',
+        notes: 'Platform switch verified. Screw-retained access hole aligned through central groove.',
+        tooth: '#19'
+      },
+      {
+        id: 'scan-3',
+        title: 'High-Res Intraoral Camera Macro',
+        type: 'Intraoral Photo',
+        date: formatShortDate(TODAY),
+        image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600',
+        notes: 'Marginal gingiva shade Vita A2 match verified with spectrophotometer.',
+        tooth: '#19'
+      }
+    ],
+    prescriptions: [
+      {
+        id: 'rx-201',
+        medication: 'Clindamycin HCl 300mg',
+        dosage: '1 capsule QID (every 6 hrs) x 7 days',
+        instructions: 'Take with full glass of water. Selected due to Penicillin Allergy.',
+        datePrescribed: formatShortDate(getDynamicDate(-14)),
+        prescribingDDS: 'Dr. Ken Miller, DDS',
+        status: 'completed'
+      },
+      {
+        id: 'rx-202',
+        medication: 'Ibuprofen 600mg',
+        dosage: '1 tab TID PRN pain with meals',
+        instructions: 'Take with food for mild-to-moderate inflammatory soreness.',
+        datePrescribed: formatShortDate(getDynamicDate(-14)),
+        prescribingDDS: 'Dr. Ken Miller, DDS',
+        status: 'active'
+      }
+    ],
+    eConsents: [
+      {
+        id: 'cst-301',
+        title: 'Informed Consent - Dental Implant Surgical Placement',
+        signedDate: formatShortDate(getDynamicDate(-45)),
+        status: 'verified',
+        procedure: 'Guided Implant Placement #19'
+      },
+      {
+        id: 'cst-302',
+        title: 'Crown & Fixed Prosthodontic Cementation Consent',
+        signedDate: formatShortDate(TODAY),
+        status: 'verified',
+        procedure: 'Permanent Zirconia Crown Seating'
+      }
+    ]
+  },
+  {
+    id: 'pt-002',
+    name: 'Marcus Vance',
+    chartNumber: '#KM-5819',
+    since: 2021,
+    dob: 'Nov 3, 1976',
+    age: 48,
+    gender: 'Male',
+    email: 'marcus.vance@yahoo.ca',
+    phone: '(780) 645-9120',
+    address: '5012 – 47 St, St. Paul, AB T0A 3A2',
+    primaryDentist: 'Dr. Ken Miller, DDS',
+    insurancePlan: 'Sun Life Financial',
+    coverage: '80% Basic / 50% Major ($2,500 Cap)',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250',
+    status: 'in_treatment',
+    medicalAlerts: ['Hypertension (Lisinopril 10mg daily)', 'No Known Drug Allergies'],
+    familyHeadId: 'pt-002',
+    familyName: 'Vance Family',
+    pharmacyPreference: 'Rexall St. Paul',
+    lastVisitDate: formatShortDate(getDynamicDate(-5)),
+    nextAppointmentDate: TODAY_APPOINTMENT_DATE,
+    vitals: {
+      bloodPressure: '128/82 mmHg',
+      pulse: 76,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [
+      {
+        id: 'soap-102',
+        date: formatShortDate(TODAY),
+        provider: 'Dr. Ken Miller, DDS',
+        subjective: 'Marcus seated in Operatory 2 for CEREC CAD/CAM crown seating #14. Tooth was prepped and scanned today.',
+        objective: 'e.max lithium disilicate crown milled in CEREC Primemill. Contacts floss-tight, occlusion checked with 40-micron paper.',
+        assessment: 'Satisfactory single-visit monolithic crown #14.',
+        plan: 'Post-op oral hygiene instructions given. Routine 6-month recall.'
+      }
+    ],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: [
+      {
+        id: 'cst-303',
+        title: 'CEREC Single-Visit Ceramic Restoration Consent',
+        signedDate: formatShortDate(TODAY),
+        status: 'verified',
+        procedure: 'Crown Prep & Immediate Mill #14'
+      }
+    ]
+  },
+  {
+    id: 'pt-003',
+    name: 'David Chen',
+    chartNumber: '#KM-7244',
+    since: 2022,
+    dob: 'Aug 19, 1995',
+    age: 29,
+    gender: 'Male',
+    email: 'david.chen@outlook.com',
+    phone: '(780) 645-1288',
+    address: '4610 – 52 Ave, St. Paul, AB',
+    primaryDentist: 'Dr. Julie Miller, DDS',
+    insurancePlan: 'Canada Life',
+    coverage: '100% Preventive / 80% Basic',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=250',
+    status: 'active',
+    medicalAlerts: ['No Known Allergies (NKDA)', 'Healthy Patient'],
+    pharmacyPreference: 'Guardian Pharmacy St. Paul',
+    lastVisitDate: formatShortDate(TODAY),
+    vitals: {
+      bloodPressure: '114/72 mmHg',
+      pulse: 68,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [
+      {
+        id: 'soap-103',
+        date: formatShortDate(TODAY),
+        provider: 'Lisa (RDH) & Dr. Julie Miller, DDS',
+        subjective: 'Patient arrives for regular 6-month hygiene maintenance.',
+        objective: 'Generalized 2-3mm pocketing. Mild supragingival calculus lower lingual anteriors. Ultrasonic cavitron scaling and prophy paste polish completed.',
+        assessment: 'Healthy gingival tissues. Low caries risk.',
+        plan: 'Recall scheduled in 6 months.'
+      }
+    ],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: []
+  },
+  {
+    id: 'pt-004',
+    name: "Liam O'Connor",
+    chartNumber: '#KM-8109',
+    since: 2024,
+    dob: 'Feb 12, 2008',
+    age: 16,
+    gender: 'Male',
+    email: 'm.oconnor@yahoo.ca',
+    phone: '(780) 645-3921',
+    address: '5318 – 48 Ave, St. Paul, AB',
+    primaryDentist: 'Dr. Austin Chomay, DDS',
+    insurancePlan: 'Alberta Child Health Benefit',
+    coverage: '100% Emergency & Basic',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=250',
+    status: 'emergency',
+    medicalAlerts: ['Asthma (Ventolin Inhaler on Person)', 'Severe Dental Trauma'],
+    pharmacyPreference: 'Shoppers Drug Mart St. Paul',
+    lastVisitDate: formatShortDate(TODAY),
+    vitals: {
+      bloodPressure: '122/78 mmHg',
+      pulse: 92,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [
+      {
+        id: 'soap-104',
+        date: formatShortDate(TODAY),
+        provider: 'Dr. Austin Chomay, DDS',
+        subjective: '16yo male struck in face with hockey puck at St. Paul arena. Upper central incisor #8 knocked out into ice (stored in cold milk carton).',
+        objective: 'Socket cleaned with sterile saline. Intact tooth #8 reimplanted within 32 min window. Flexible wire-composite splint bonded from #7 to #9. Tetanus status up to date.',
+        assessment: 'Dental Avulsion #8 with successful immediate replantation.',
+        plan: 'Soft diet. Prescribe Amoxicillin + Chlorhexidine rinse. Splint removal in 14 days. Endodontic assessment in 7-10 days.'
+      }
+    ],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: []
+  },
+  {
+    id: 'pt-005',
+    name: 'Bernice Campbell',
+    chartNumber: '#KM-4190',
+    since: 2012,
+    dob: 'Jul 28, 1957',
+    age: 67,
+    gender: 'Female',
+    email: 'bernice.campbell@telus.net',
+    phone: '(780) 645-7740',
+    address: '4802 – 49 St, St. Paul, AB',
+    primaryDentist: 'Dr. Viktoria Kirsten, DDS',
+    insurancePlan: 'Alberta Dental for Seniors',
+    coverage: '100% up to $5,000 Schedule',
+    avatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=250',
+    status: 'in_treatment',
+    medicalAlerts: ['Osteoporosis (Oral Alendronate / Fosamax 5 yrs)', 'Sulfa Drug Allergy'],
+    pharmacyPreference: 'Rexall St. Paul',
+    lastVisitDate: formatShortDate(getDynamicDate(-8)),
+    vitals: {
+      bloodPressure: '134/84 mmHg',
+      pulse: 74,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: []
+  },
+  {
+    id: 'pt-006',
+    name: 'Ronald Bouchard',
+    chartNumber: '#KM-4902',
+    since: 2016,
+    dob: 'Sep 11, 1969',
+    age: 55,
+    gender: 'Male',
+    email: 'ron.bouchard@albertaenergy.ca',
+    phone: '(780) 645-2234',
+    address: '5109 – 50 Ave, St. Paul, AB',
+    primaryDentist: 'Dr. Ken Miller, DDS',
+    insurancePlan: 'Great-West Life',
+    coverage: '80% Basic / 60% Major',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=250',
+    status: 'in_treatment',
+    medicalAlerts: ['Smoker (1/2 pack/day)', 'Type 2 Diabetes (A1C 6.8 controlled)'],
+    pharmacyPreference: 'Shoppers Drug Mart St. Paul',
+    lastVisitDate: formatShortDate(getDynamicDate(-10)),
+    vitals: {
+      bloodPressure: '126/80 mmHg',
+      pulse: 70,
+      lastUpdated: formatShortDate(TODAY)
+    },
+    soapNotesHistory: [],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: []
+  },
+  {
+    id: 'pt-007',
+    name: 'Grace Miller',
+    chartNumber: '#KM-6912',
+    since: 2022,
+    dob: 'Mar 22, 2016',
+    age: 8,
+    gender: 'Female',
+    email: 'miller.family@gmail.com',
+    phone: '(780) 645-6677',
+    address: '5201 – 46 St, St. Paul, AB',
+    primaryDentist: 'Dr. Julie Miller, DDS',
+    insurancePlan: 'Alberta Blue Cross',
+    coverage: '100% Basic Pediatric',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250',
+    status: 'recall_due',
+    medicalAlerts: ['Mild Eczema', 'Latex Sensitivity (Use Nitrile)'],
+    pharmacyPreference: 'Guardian Pharmacy St. Paul',
+    lastVisitDate: formatShortDate(getDynamicDate(-190)),
+    vitals: {
+      bloodPressure: '102/66 mmHg',
+      pulse: 84,
+      lastUpdated: formatShortDate(getDynamicDate(-190))
+    },
+    soapNotesHistory: [],
+    perioSites: [],
+    digitalScans: [],
+    prescriptions: [],
+    eConsents: []
   }
 ]

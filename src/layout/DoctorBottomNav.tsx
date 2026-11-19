@@ -1,5 +1,5 @@
 import React from 'react'
-import { LayoutDashboard, Activity, CalendarDays, AlertOctagon, PackageCheck } from 'lucide-react'
+import { LayoutDashboard, Users, Activity, CalendarDays, PackageCheck } from 'lucide-react'
 import { DoctorTab } from '@/types'
 
 interface DoctorBottomNavProps {
@@ -8,17 +8,25 @@ interface DoctorBottomNavProps {
   unreadTriageCount?: number
 }
 
+interface TabItem {
+  id: DoctorTab
+  label: string
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
+  badge?: number
+  urgent?: boolean
+}
+
 export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
   activeTab,
   onSelectTab,
   unreadTriageCount = 1
 }) => {
-  const tabs = [
-    { id: 'overview' as DoctorTab, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'charting' as DoctorTab, label: 'Charting', icon: Activity },
-    { id: 'schedule' as DoctorTab, label: 'Schedule', icon: CalendarDays },
-    { id: 'triage' as DoctorTab, label: 'Triage Desk', icon: AlertOctagon, badge: unreadTriageCount, urgent: true },
-    { id: 'lab' as DoctorTab, label: 'Lab & Post-Op', icon: PackageCheck }
+  const tabs: TabItem[] = [
+    { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'patients', label: 'Patients', icon: Users },
+    { id: 'schedule', label: 'Schedule', icon: CalendarDays },
+    { id: 'charting', label: 'Charting', icon: Activity },
+    { id: 'lab', label: 'CEREC & Labs', icon: PackageCheck }
   ]
 
   return (

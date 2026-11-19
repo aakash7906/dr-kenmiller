@@ -1,7 +1,7 @@
 export type UserRole = 'patient' | 'doctor'
 
 export type PatientTab = 'home' | 'appointments' | 'services' | 'mycare' | 'emergency'
-export type DoctorTab = 'overview' | 'charting' | 'schedule' | 'triage' | 'lab'
+export type DoctorTab = 'overview' | 'patients' | 'charting' | 'schedule' | 'triage' | 'lab'
 
 export interface PatientProfile {
   id: string
@@ -137,4 +137,90 @@ export interface LabCase {
   expectedDelivery: string
   status: 'in_fabrication' | 'shipped' | 'delivered_at_clinic' | 'seated'
   shade: string
+}
+
+// CEREC In-House Single-Visit CAD/CAM Milling Pipeline
+export interface CerecMillingCase {
+  id: string
+  patientName: string
+  chartNumber: string
+  toothNumber: string
+  material: 'e.max CAD Lithium Disilicate' | 'CEREC Tessera Advanced Lithium' | 'Katana Zirconia Block' | 'Telio CAD Temp'
+  stage: 'digital_scan' | 'cad_design' | 'milling' | 'crystallization' | 'ready_to_seat' | 'seated'
+  shade: string
+  estimatedMinutesLeft: number
+  millingUnit: string
+  prepTime: string
+  provider: string
+}
+
+// Periodontal Probing Record
+export interface PerioSiteData {
+  toothNumber: number
+  facialDepths: [number, number, number] // Disto-facial, Facial, Mesio-facial
+  lingualDepths: [number, number, number] // Disto-lingual, Lingual, Mesio-lingual
+  bleedingOnProbing: boolean
+  furcationGrade?: 1 | 2 | 3
+  mobilityGrade?: 0 | 1 | 2 | 3
+  recessionMm?: number
+}
+
+// Comprehensive Electronic Health Record (EHR)
+export interface ComprehensivePatientRecord extends PatientProfile {
+  dob: string
+  age: number
+  email: string
+  address: string
+  gender: string
+  emergencyContact?: {
+    name: string
+    relationship: string
+    phone: string
+  }
+  pharmacyPreference: string
+  lastVisitDate: string
+  nextAppointmentDate?: string
+  status: 'active' | 'recall_due' | 'in_treatment' | 'emergency'
+  familyHeadId?: string
+  familyName?: string
+  vitals: {
+    bloodPressure: string
+    pulse: number
+    lastUpdated: string
+  }
+  soapNotesHistory: {
+    id: string
+    date: string
+    provider: string
+    subjective: string
+    objective: string
+    assessment: string
+    plan: string
+  }[]
+  perioSites: PerioSiteData[]
+  digitalScans: {
+    id: string
+    title: string
+    type: 'CBCT 3D' | 'Bitewing X-Ray' | 'Panoramic' | 'Intraoral Photo'
+    date: string
+    image: string
+    notes: string
+    tooth?: string
+  }[]
+  prescriptions: {
+    id: string
+    medication: string
+    dosage: string
+    instructions: string
+    datePrescribed: string
+    prescribingDDS: string
+    status: 'active' | 'completed'
+  }[]
+  eConsents: {
+    id: string
+    title: string
+    signedDate: string
+    status: 'verified' | 'pending'
+    procedure: string
+  }[]
 }

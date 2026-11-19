@@ -50,70 +50,95 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
   const urgentTicket = LIVE_TRIAGE_TICKETS[0]
 
   return (
-    <div className="space-y-6 pb-28 pt-2">
+    <div className="space-y-6 pb-28">
       {/* Top Clinical Header & Date */}
       <div className="flex items-center justify-between pt-1">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-            Doctor Clinical Hub
-          </span>
           <h2 className="text-xl sm:text-2xl font-black text-doctor-primary tracking-tight">
             Clinical Floor Overview
           </h2>
         </div>
         <Badge variant="navy" size="sm" className="font-bold py-1 px-2.5">
-          {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} • Active
+          {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
         </Badge>
       </div>
 
-      {/* KPI Stats Grid - Visual cards with clear icon boxes */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
+      {/* KPI Stats Grid - Interactive Compact Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        {/* 1. PATIENTS */}
+        <button
+          type="button"
+          onClick={() => onNavigateTab('patients')}
+          className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1.5 text-left transition-all hover:border-blue-400 hover:shadow-xs hover:bg-blue-50/20 active:scale-98 cursor-pointer group"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Patients</span>
-            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-doctor-primary transition-colors">
+              Patients
+            </span>
+            <div className="w-6 h-6 rounded-md bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
               <Users className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-doctor-primary">14</div>
-          <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            2 Completed
+          <div className="text-xl sm:text-2xl font-black text-doctor-primary leading-tight">14</div>
+          <div className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1 truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+            <span>2 Completed</span>
           </div>
-        </div>
+        </button>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
+        {/* 2. OPERATORIES */}
+        <button
+          type="button"
+          onClick={() => onNavigateTab('schedule')}
+          className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1.5 text-left transition-all hover:border-teal-400 hover:shadow-xs hover:bg-teal-50/20 active:scale-98 cursor-pointer group"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Operatories</span>
-            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-teal-700 transition-colors">
+              Operatories
+            </span>
+            <div className="w-6 h-6 rounded-md bg-teal-50 text-teal-700 flex items-center justify-center group-hover:bg-teal-100 transition-colors">
               <Activity className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-teal-700">3 Seated</div>
-          <div className="text-[11px] text-slate-500">Chairs 1, 2 & Bay A</div>
-        </div>
+          <div className="text-xl sm:text-2xl font-black text-teal-700 leading-tight">3 Seated</div>
+          <div className="text-[10px] text-slate-500 truncate">Chairs 1, 2 & Bay A</div>
+        </button>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
+        {/* 3. TRIAGE */}
+        <button
+          type="button"
+          onClick={() => onNavigateTab('triage')}
+          className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1.5 text-left transition-all hover:border-red-400 hover:shadow-xs hover:bg-red-50/20 active:scale-98 cursor-pointer group"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Triage</span>
-            <div className="w-7 h-7 rounded-lg bg-rose-50 text-red-600 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-red-600 transition-colors">
+              Triage
+            </span>
+            <div className="w-6 h-6 rounded-md bg-rose-50 text-red-600 flex items-center justify-center group-hover:bg-rose-100 transition-colors">
               <AlertTriangle className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-red-600">1 Inbound</div>
-          <div className="text-[11px] text-red-600 font-bold">Trauma arriving</div>
-        </div>
+          <div className="text-xl sm:text-2xl font-black text-red-600 leading-tight">1 Inbound</div>
+          <div className="text-[10px] text-red-600 font-bold truncate">Trauma arriving</div>
+        </button>
 
-        <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-2xs space-y-2">
+        {/* 4. HYGIENISTS */}
+        <button
+          type="button"
+          onClick={() => onNavigateTab('schedule')}
+          className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/90 shadow-2xs space-y-1.5 text-left transition-all hover:border-indigo-400 hover:shadow-xs hover:bg-indigo-50/20 active:scale-98 cursor-pointer group"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Hygienists</span>
-            <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider group-hover:text-indigo-700 transition-colors">
+              Hygienists
+            </span>
+            <div className="w-6 h-6 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
               <Stethoscope className="w-3.5 h-3.5" />
             </div>
           </div>
-          <div className="text-2xl font-black text-indigo-700">2 Active</div>
-          <div className="text-[11px] text-slate-500">Lisa & Elena</div>
-        </div>
+          <div className="text-xl sm:text-2xl font-black text-indigo-700 leading-tight">2 Active</div>
+          <div className="text-[10px] text-slate-500 truncate">Lisa & Elena</div>
+        </button>
       </div>
 
       {/* HIGH PRIORITY INBOUND TRAUMA BANNER */}
@@ -123,7 +148,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping" />
               <span className="text-[10px] font-black uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-md">
-                Incoming Emergency Trauma • ETA {urgentTicket.etaMinutes} mins
+                Incoming Emergency Trauma
               </span>
             </div>
             <button
@@ -136,11 +161,9 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
 
           <div>
             <h3 className="text-base font-extrabold leading-snug">
-              {urgentTicket.patientName}: {urgentTicket.condition}
+              {urgentTicket.patientName} <br></br>{urgentTicket.condition}
             </h3>
-            <p className="text-xs text-rose-100 mt-1 line-clamp-2">
-              {urgentTicket.symptoms}
-            </p>
+           
           </div>
 
           <div className="pt-1 flex items-center gap-2.5 flex-wrap">
@@ -193,6 +216,9 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
               </span>
               <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
                 Direct Billing Verified
+              </span>
+              <span className="text-[10px] font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md flex items-center gap-1">
+                <span>🎧 NuCalm Active (Relaxed)</span>
               </span>
             </div>
           </div>
@@ -343,29 +369,37 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
           Dr. Ken Miller Chairside Shortcuts
         </h4>
 
-        <div className="grid grid-cols-3 gap-2.5 text-center text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center text-xs">
+          <button
+            onClick={() => onNavigateTab('patients')}
+            className="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-98"
+          >
+            <Users className="w-5 h-5 text-blue-400" />
+            <span className="font-bold">Patient EHR</span>
+          </button>
+
           <button
             onClick={() => onNavigateTab('charting')}
-            className="p-3.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer active:scale-98"
+            className="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-98"
           >
             <Activity className="w-5 h-5 text-cyan-400" />
             <span className="font-bold">Tooth Chart</span>
           </button>
 
           <button
-            onClick={() => onNavigateTab('triage')}
-            className="p-3.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer active:scale-98"
+            onClick={() => onNavigateTab('lab')}
+            className="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-98"
           >
-            <ShieldAlert className="w-5 h-5 text-red-400" />
-            <span className="font-bold">Triage Desk</span>
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+            <span className="font-bold">CEREC & Labs</span>
           </button>
 
           <button
-            onClick={() => onNavigateTab('lab')}
-            className="p-3.5 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-2 transition-colors cursor-pointer active:scale-98"
+            onClick={() => onNavigateTab('triage')}
+            className="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-98"
           >
-            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            <span className="font-bold">Lab Cases</span>
+            <ShieldAlert className="w-5 h-5 text-red-400" />
+            <span className="font-bold">Triage Desk</span>
           </button>
         </div>
       </div>

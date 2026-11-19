@@ -103,6 +103,36 @@ export const DoctorSchedule: React.FC = () => {
       operatory: 'Operatory 1',
       procedure: '3-Unit Bridge Try-In & Occlusal Balance',
       status: 'upcoming'
+    },
+    {
+      id: 'sc-8',
+      time: '11:15 AM – 12:00 PM',
+      patientName: 'David Chen',
+      chartNumber: 'KM-7244',
+      provider: 'Dr. Julie Miller',
+      operatory: 'Operatory 2',
+      procedure: 'CEREC Tessera CAD Onlay #30',
+      status: 'upcoming'
+    },
+    {
+      id: 'sc-9',
+      time: '1:00 PM – 1:45 PM',
+      patientName: 'Bernice Campbell',
+      chartNumber: 'KM-4190',
+      provider: 'Dr. Viktoria Kirsten',
+      operatory: 'Operatory 3',
+      procedure: 'Hard Tissue Laser Debridement & Thermal Check #31',
+      status: 'upcoming'
+    },
+    {
+      id: 'sc-10',
+      time: '11:30 AM – 12:30 PM',
+      patientName: "Liam O'Connor",
+      chartNumber: 'KM-8109',
+      provider: 'Dr. Austin Chomay',
+      operatory: 'Operatory 4',
+      procedure: 'Urgent Trauma Stabilization & Wire Splint #8',
+      status: 'seated'
     }
   ])
 
@@ -140,7 +170,7 @@ export const DoctorSchedule: React.FC = () => {
 
       {/* Provider Filter Chips */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 scrollbar-none">
-        {['All', 'Dr. Ken Miller', 'Lisa', 'Elena'].map((prov) => (
+        {['All', 'Dr. Ken Miller', 'Dr. Julie Miller', 'Dr. Viktoria Kirsten', 'Dr. Austin Chomay', 'Lisa (RDH)'].map((prov) => (
           <button
             key={prov}
             onClick={() => setProviderFilter(prov)}
@@ -150,7 +180,7 @@ export const DoctorSchedule: React.FC = () => {
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            {prov === 'All' ? 'All Providers' : prov}
+            {prov === 'All' ? 'All Providers (Clinic-Wide)' : prov}
           </button>
         ))}
       </div>

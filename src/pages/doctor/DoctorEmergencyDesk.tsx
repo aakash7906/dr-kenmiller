@@ -16,7 +16,11 @@ import { Button } from '@/components/ui/Button'
 import { LIVE_TRIAGE_TICKETS, CLINIC_INFO } from '@/data/mockData'
 import { TriageTicket } from '@/types'
 
-export const DoctorEmergencyDesk: React.FC = () => {
+interface DoctorEmergencyDeskProps {
+  onBack?: () => void
+}
+
+export const DoctorEmergencyDesk: React.FC<DoctorEmergencyDeskProps> = ({ onBack }) => {
   const [tickets, setTickets] = useState<TriageTicket[]>(LIVE_TRIAGE_TICKETS)
   const [selectedTicket, setSelectedTicket] = useState<TriageTicket | null>(LIVE_TRIAGE_TICKETS[0])
 
@@ -46,6 +50,14 @@ export const DoctorEmergencyDesk: React.FC = () => {
       {/* Desk Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
         <div>
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="text-xs font-bold text-doctor-primary hover:underline cursor-pointer mb-1 block"
+            >
+              ← Back to Dashboard
+            </button>
+          )}
           <span className="text-[11px] font-bold uppercase tracking-wider text-red-600">
             Emergency Dispatch System
           </span>

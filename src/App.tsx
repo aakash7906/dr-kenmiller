@@ -20,6 +20,7 @@ import { PatientEmergency } from '@/pages/patient/PatientEmergency'
 
 // Doctor Views
 import { DoctorDashboard } from '@/pages/doctor/DoctorDashboard'
+import { DoctorPatients } from '@/pages/doctor/DoctorPatients'
 import { DoctorCharting } from '@/pages/doctor/DoctorCharting'
 import { DoctorSchedule } from '@/pages/doctor/DoctorSchedule'
 import { DoctorEmergencyDesk } from '@/pages/doctor/DoctorEmergencyDesk'
@@ -118,9 +119,14 @@ function MobileDentalApp() {
               {doctorTab === 'overview' && (
                 <DoctorDashboard onNavigateTab={(t) => setDoctorTab(t)} />
               )}
+              {doctorTab === 'patients' && (
+                <DoctorPatients onNavigateTab={(t) => setDoctorTab(t)} />
+              )}
               {doctorTab === 'charting' && <DoctorCharting />}
               {doctorTab === 'schedule' && <DoctorSchedule />}
-              {doctorTab === 'triage' && <DoctorEmergencyDesk />}
+              {doctorTab === 'triage' && (
+                <DoctorEmergencyDesk onBack={() => setDoctorTab('overview')} />
+              )}
               {doctorTab === 'lab' && <DoctorLabAndPostOp />}
             </>
           )}

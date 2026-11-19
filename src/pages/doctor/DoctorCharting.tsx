@@ -24,7 +24,14 @@ export const DoctorCharting: React.FC = () => {
   const [selectedTooth, setSelectedTooth] = useState<ToothData>(
     DOCTOR_ODONTOGRAM_TEETH.find(t => t.number === 19)!
   )
-  const [activeTab, setActiveTab] = useState<'odontogram' | 'treatmentPlan' | 'soapNotes'>('odontogram')
+  const [activeTab, setActiveTab] = useState<'odontogram' | 'treatmentPlan' | 'soapNotes' | 'perio'>('odontogram')
+  const [perioSites, setPerioSites] = useState([
+    { tooth: 18, facial: [3, 2, 3], lingual: [3, 2, 3], bop: false },
+    { tooth: 19, facial: [3, 3, 3], lingual: [3, 2, 3], bop: false },
+    { tooth: 20, facial: [2, 2, 2], lingual: [2, 2, 3], bop: false },
+    { tooth: 30, facial: [3, 2, 3], lingual: [3, 3, 3], bop: false },
+    { tooth: 31, facial: [4, 3, 3], lingual: [4, 3, 4], bop: true }
+  ])
   const [soapSubjective, setSoapSubjective] = useState('Patient arrives for stage 2 check on implant 19. Reports no spontaneous pain or tenderness.')
   const [soapObjective, setSoapObjective] = useState('Healing abutment intact. Gingival tissue pink and well-keratinized with no erythema or exudate. Torque test 35 Ncm stable.')
   const [soapAssessment, setSoapAssessment] = useState('Osseointegrated lower left first molar implant fixture. Ready for custom monolithic zirconia crown delivery.')
@@ -37,7 +44,7 @@ export const DoctorCharting: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 pb-28 pt-2">
+    <div className="space-y-6 pb-28">
       {/* Charting Header & Patient Selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
         <div>
@@ -53,7 +60,7 @@ export const DoctorCharting: React.FC = () => {
             value={selectedPatientId}
             onChange={setSelectedPatientId}
             theme="doctor"
-            triggerClassName="bg-white border-slate-300 font-bold py-2 shadow-2xs"
+            triggerClassName="bg-white border-slate-200 hover:border-slate-300 font-semibold py-2 px-3 shadow-2xs"
             options={[
               { value: 'pt-001', label: 'Sarah Tremblay' },
               { value: 'pt-002', label: 'Marcus Vance' },
@@ -65,7 +72,7 @@ export const DoctorCharting: React.FC = () => {
       </div>
 
       {/* Patient Vital Info Strip */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-3.5">
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs flex flex-wrap items-center justify-between gap-5">
         <div className="flex items-center gap-3.5">
           <img
             src={CURRENT_PATIENT.avatar}
@@ -86,7 +93,7 @@ export const DoctorCharting: React.FC = () => {
         </div>
 
         {/* Medical alerts banner */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
           <span className="text-[11px] font-bold text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
             <AlertTriangle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
             <span>Penicillin Allergy</span>
@@ -98,18 +105,26 @@ export const DoctorCharting: React.FC = () => {
       </div>
 
       {/* Mode Subtabs */}
-      <div className="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 text-xs font-bold">
+      <div className="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 text-xs font-bold overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab('odontogram')}
-          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center whitespace-nowrap ${
             activeTab === 'odontogram' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
-          Odontogram (1–32)
+          Odontogram 
+        </button>
+        <button
+          onClick={() => setActiveTab('perio')}
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center whitespace-nowrap ${
+            activeTab === 'perio' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
+          }`}
+        >
+          Perio Probing
         </button>
         <button
           onClick={() => setActiveTab('treatmentPlan')}
-          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center whitespace-nowrap ${
             activeTab === 'treatmentPlan' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
@@ -117,7 +132,7 @@ export const DoctorCharting: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('soapNotes')}
-          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center ${
+          className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer text-center whitespace-nowrap ${
             activeTab === 'soapNotes' ? 'bg-doctor-primary text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
           }`}
         >
@@ -186,6 +201,117 @@ export const DoctorCharting: React.FC = () => {
                 className="p-2.5 rounded-xl border border-emerald-200 hover:border-emerald-400 bg-emerald-50/60 font-semibold text-emerald-800 hover:bg-emerald-100 text-center transition-all cursor-pointer active:scale-98 shadow-2xs"
               >
                 ✓ Mark Healthy
+              </button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* TAB: PERIODONTAL PROBING EXAMINATION (PSR & Full Mouth 6-Point Map) */}
+      {activeTab === 'perio' && (
+        <div className="space-y-4">
+          <Card className="p-4.5 sm:p-5 border-slate-200 shadow-2xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-doctor-primary" />
+                  <span>Periodontal Probing & Attachment Map</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  6-Point Pocket Depths (Distal • Mid • Mesial) & Bleeding on Probing (BOP)
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full border border-emerald-300">
+                  PSR Code: 1-2 (Mild Gingivitis)
+                </span>
+                <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2.5 py-1 rounded-full border border-blue-300">
+                  Recall: 6-Month
+                </span>
+              </div>
+            </div>
+
+            {/* Interactive Perio Grid */}
+            <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="p-2.5">Tooth #</th>
+                    <th className="p-2.5">Facial Depths (D-M-M)</th>
+                    <th className="p-2.5">Lingual Depths</th>
+                    <th className="p-2.5">BOP Bleeding</th>
+                    <th className="p-2.5">Pocket Status</th>
+                    <th className="p-2.5 text-right">Quick Probe</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {perioSites.map((site) => (
+                    <tr key={site.tooth} className="hover:bg-slate-50">
+                      <td className="p-2.5 font-bold text-doctor-primary">Tooth #{site.tooth}</td>
+                      <td className="p-2.5 font-mono font-bold text-slate-800">
+                        {site.facial.map((d, i) => (
+                          <span
+                            key={i}
+                            className={`inline-block px-1.5 py-0.5 rounded mx-0.5 ${
+                              d >= 5 ? 'bg-rose-100 text-rose-800 font-extrabold' : d >= 4 ? 'bg-amber-100 text-amber-900' : 'text-slate-700'
+                            }`}
+                          >
+                            {d}
+                          </span>
+                        ))}
+                        mm
+                      </td>
+                      <td className="p-2.5 font-mono text-slate-600">
+                        {site.lingual.join(' - ')} mm
+                      </td>
+                      <td className="p-2.5">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPerioSites(prev => prev.map(s => s.tooth === site.tooth ? { ...s, bop: !s.bop } : s))
+                          }}
+                          className={`text-xs font-bold px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
+                            site.bop
+                              ? 'bg-rose-100 text-rose-800 border-rose-300'
+                              : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
+                          }`}
+                        >
+                          {site.bop ? '⚠️ Bleeding' : 'No BOP'}
+                        </button>
+                      </td>
+                      <td className="p-2.5 text-slate-600">
+                        {site.facial.some(d => d >= 4) ? (
+                          <span className="text-amber-800 font-bold">Mild 4mm Pocket</span>
+                        ) : (
+                          <span className="text-emerald-700 font-semibold">Healthy Sulcus (≤3mm)</span>
+                        )}
+                      </td>
+                      <td className="p-2.5 text-right">
+                        <button
+                          type="button"
+                          onClick={() => alert(`Probed Tooth ${site.tooth} calibrated.`)}
+                          className="text-xs font-semibold text-doctor-primary hover:underline"
+                        >
+                          Calibrate
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600">
+              <div>
+                <strong>Ultrasonic Hygiene Protocol:</strong> Cavitron Piezo scaling with 0.12% Chlorhexidine subgingival irrigation.
+              </div>
+              <button
+                type="button"
+                onClick={() => alert('Perio measurement committed to permanent chart.')}
+                className="bg-doctor-primary text-white font-bold py-1.5 px-3 rounded-xl hover:bg-doctor-primary-hover transition-all cursor-pointer shrink-0"
+              >
+                Save Perio Record
               </button>
             </div>
           </Card>

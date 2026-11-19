@@ -25,47 +25,65 @@ interface ToothCoordinate {
   x: number
   y: number
   rot: number
+  labelX: number
+  labelY: number
   type: 'molar' | 'premolar' | 'canine' | 'incisor'
 }
 
-// Wider, larger arches maximizing full viewport width
-function getUpperArchCoordinates(centerX = 190, apexY = 46, width = 145, height = 115): ToothCoordinate[] {
-  return UPPER_TEETH_ORDER.map((num, i) => {
-    const k = i - 7.5
-    const u = k / 7.5 // -1 to 1
-    const x = centerX + u * (width * 0.82 + width * 0.18 * u * u)
-    const y = apexY + height * u * u - 8 * Math.pow(u, 4)
+// True anatomical U-shaped dental arch with deep Y-axis curvature and expanded anterior spacing
+function getDentalArchCoordinates(
+  isUpper: boolean,
+  centerX = 190,
+  apexY = 46,
+  width = 146,
+  height = 136
+): ToothCoordinate[] {
+  const UPPER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  const LOWER = [32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17]
+  const list = isUpper ? UPPER : LOWER
 
-    const dx = width * 0.82 + 3 * width * 0.18 * u * u
-    const dy = 2 * height * u - 32 * Math.pow(u, 3)
+  const T_max = (75 * Math.PI) / 180
+
+  return list.map((num, i) => {
+    const k = i - 7.5
+    const s = k / 7.5
+
+    // Warp parameter ensures anterior teeth (6 to 11 and 21 to 27) have generous, uniform spacing along the anatomical arch
+    const s_warped = Math.sign(s) * (0.85 * Math.abs(s) + 0.15 * Math.pow(Math.abs(s), 0.85))
+    const theta = s_warped * T_max
+
+    const x = centerX + width * Math.sin(theta)
+    const yCurve = height * (1 - Math.cos(theta)) + 12 * Math.pow(Math.abs(s), 3)
+    const y = isUpper ? apexY + yCurve : apexY - yCurve
+
+    const dx = width * Math.cos(theta)
+    const dy = (height * Math.sin(theta) + 36 * Math.pow(Math.abs(s), 2) * Math.sign(s)) * (isUpper ? 1 : -1)
     const rot = Math.round((Math.atan2(dy, dx) * 180) / Math.PI)
 
-    let type: ToothCoordinate['type'] = 'molar'
-    if (num === 8 || num === 9 || num === 7 || num === 10) type = 'incisor'
-    else if (num === 6 || num === 11) type = 'canine'
-    else if (num === 4 || num === 5 || num === 12 || num === 13) type = 'premolar'
-
-    return { number: num, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10, rot, type }
-  })
-}
-
-function getLowerArchCoordinates(centerX = 190, apexY = 328, width = 142, height = 115): ToothCoordinate[] {
-  return LOWER_TEETH_ORDER.map((num, i) => {
-    const k = i - 7.5
-    const u = k / 7.5 // -1 to 1
-    const x = centerX + u * (width * 0.82 + width * 0.18 * u * u)
-    const y = apexY - (height * u * u - 8 * Math.pow(u, 4))
-
-    const dx = width * 0.82 + 3 * width * 0.18 * u * u
-    const dy = -(2 * height * u - 32 * Math.pow(u, 3))
-    const rot = Math.round((Math.atan2(dy, dx) * 180) / Math.PI)
+    // Outward normal angle for placing tooth number cleanly outside the arch
+    const normalAngle = (isUpper ? rot - 90 : rot + 90) * (Math.PI / 180)
+    const labelDist = 20
+    const labelX = Math.round((x + labelDist * Math.cos(normalAngle)) * 10) / 10
+    const labelY = Math.round((y + labelDist * Math.sin(normalAngle)) * 10) / 10
 
     let type: ToothCoordinate['type'] = 'molar'
-    if (num === 24 || num === 25 || num === 23 || num === 26) type = 'incisor'
-    else if (num === 22 || num === 27) type = 'canine'
-    else if (num === 20 || num === 21 || num === 28 || num === 29) type = 'premolar'
+    if (num === 8 || num === 9 || num === 7 || num === 10 || num === 24 || num === 25 || num === 23 || num === 26) {
+      type = 'incisor'
+    } else if (num === 6 || num === 11 || num === 22 || num === 27) {
+      type = 'canine'
+    } else if (num === 4 || num === 5 || num === 12 || num === 13 || num === 20 || num === 21 || num === 28 || num === 29) {
+      type = 'premolar'
+    }
 
-    return { number: num, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10, rot, type }
+    return {
+      number: num,
+      x: Math.round(x * 10) / 10,
+      y: Math.round(y * 10) / 10,
+      rot,
+      labelX,
+      labelY,
+      type
+    }
   })
 }
 
@@ -97,22 +115,22 @@ export const Odontogram: React.FC<OdontogramProps> = ({
     }
   }
 
-  // Pre-calculated coordinates for views (wider & much larger)
-  const upperCoordsBoth = getUpperArchCoordinates(190, 48, 146, 115)
-  const lowerCoordsBoth = getLowerArchCoordinates(190, 332, 142, 115)
+  // Pre-calculated coordinates for views (wider & much deeper anatomical dental arch)
+  const upperCoordsBoth = getDentalArchCoordinates(true, 190, 46, 146, 134)
+  const lowerCoordsBoth = getDentalArchCoordinates(false, 190, 404, 142, 134)
 
   // Zoomed views when user clicks Upper or Lower arch
-  const upperCoordsSingle = getUpperArchCoordinates(190, 52, 158, 155)
-  const lowerCoordsSingle = getLowerArchCoordinates(190, 238, 158, 155)
+  const upperCoordsSingle = getDentalArchCoordinates(true, 190, 48, 155, 175)
+  const lowerCoordsSingle = getDentalArchCoordinates(false, 190, 240, 155, 175)
 
-  // Tooth vector rendering with ~50% larger dimensions & enhanced clarity
+  // Tooth vector rendering with anatomical dimensions & non-overlapping touch targets
   const renderToothVector = (
     coord: ToothCoordinate,
     tooth: ToothData,
     isSelected: boolean,
     isDimmed: boolean
   ) => {
-    const { number, x, y, rot, type } = coord
+    const { number, x, y, rot, labelX, labelY, type } = coord
     const isImplant = tooth.condition === 'implant'
     const isCrown = tooth.condition === 'crown'
     const isDecay = tooth.condition === 'decay'
@@ -158,25 +176,33 @@ export const Odontogram: React.FC<OdontogramProps> = ({
           isDimmed ? 'opacity-20' : 'opacity-100 hover:scale-108'
         }`}
       >
-        {/* Generous touch target */}
-        <circle cx={x} cy={y} r="20" fill="transparent" />
-
-        {/* Selected glowing halo ring (like in reference image 2) */}
+        {/* Selected glowing halo ring */}
         {isSelected && (
           <circle
             cx={x}
             cy={y}
-            r="20.5"
+            r="19"
             fill="none"
             stroke="#2563EB"
-            strokeWidth="3"
+            strokeWidth="2.8"
             strokeDasharray="5 3"
             className="animate-spin-slow opacity-95"
           />
         )}
 
-        {/* Tooth anatomical crown vector - Scaled up by 1.4x for high visibility */}
-        <g transform={`translate(${x}, ${y}) rotate(${rot}) scale(1.38)`}>
+        {/* Tooth anatomical crown vector - Scaled up and enlarged */}
+        <g transform={`translate(${x}, ${y}) rotate(${rot}) scale(1.42)`}>
+          {/* Non-overlapping oriented touch target pill along tooth's tangent & radial orientation */}
+          <rect
+            x="-11.5"
+            y="-15"
+            width="23"
+            height="30"
+            rx="9"
+            fill="transparent"
+            className="cursor-pointer"
+          />
+
           {type === 'molar' && (
             <>
               {/* Rounded 4-cusped molar occlusal anatomy */}
@@ -209,9 +235,9 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 
           {type === 'premolar' && (
             <>
-              {/* Rounded bicuspid oval crown */}
+              {/* Rounded bicuspid oval crown - Enriched and enlarged */}
               <path
-                d="M -7.5,-6 C -7.5,-8 0,-8.5 7.5,-6 C 9,-2 9,2 7.5,6 C 0,8.5 -7.5,8 -7.5,6 C -9,2 -9,-2 -7.5,-6 Z"
+                d="M -8.5,-6.5 C -8.5,-9 0,-9.5 8.5,-6.5 C 10,-2 10,2 8.5,6.5 C 0,9.5 -8.5,9 -8.5,6.5 C -10,2 -10,-2 -8.5,-6.5 Z"
                 fill={fill}
                 stroke={stroke}
                 strokeWidth={strokeWidth}
@@ -219,7 +245,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
               />
               {!isMissing && (
                 <path
-                  d="M -4.5,0 Q 0,0.6 4.5,0"
+                  d="M -5,0 Q 0,0.6 5,0"
                   fill="none"
                   stroke={fissureStroke}
                   strokeWidth="1.1"
@@ -231,9 +257,9 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 
           {type === 'canine' && (
             <>
-              {/* Pointed cusp canine contour */}
+              {/* Pointed cusp canine contour - Enlarged & robust */}
               <path
-                d="M 0,-7.5 C 3,-6 6.5,-3 6.5,1 C 6.5,5 3.5,7 0,7.5 C -3.5,7 -6.5,5 -6.5,1 C -6.5,-3 -3,-6 0,-7.5 Z"
+                d="M 0,-9 C 4,-7.5 8.5,-3.5 8.5,1.5 C 8.5,6.5 4.5,9 0,9.5 C -4.5,9 -8.5,6.5 -8.5,1.5 C -8.5,-3.5 -4,-7.5 0,-9 Z"
                 fill={fill}
                 stroke={stroke}
                 strokeWidth={strokeWidth}
@@ -241,10 +267,10 @@ export const Odontogram: React.FC<OdontogramProps> = ({
               />
               {!isMissing && (
                 <path
-                  d="M 0,-4.5 L 0,4.5"
+                  d="M 0,-5.5 L 0,5.5"
                   fill="none"
                   stroke={fissureStroke}
-                  strokeWidth="1"
+                  strokeWidth="1.1"
                   strokeLinecap="round"
                 />
               )}
@@ -253,9 +279,9 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 
           {type === 'incisor' && (
             <>
-              {/* Elegant curved incisor wedge */}
+              {/* Elegant curved incisor wedge - Substantially enlarged & wide */}
               <path
-                d="M -6.5,-5 C -6.5,-6.2 6.5,-6.2 6.5,-5 C 7,-1 6.5,3 5.5,5.5 C 2,6.5 -2,6.5 -5.5,5.5 C -6.5,3 -7,-1 -6.5,-5 Z"
+                d="M -8.5,-6 C -8.5,-8 8.5,-8 8.5,-6 C 9.5,-1.5 8.5,4 7,7 C 3,8.5 -3,8.5 -7,7 C -8.5,4 -9.5,-1.5 -8.5,-6 Z"
                 fill={fill}
                 stroke={stroke}
                 strokeWidth={strokeWidth}
@@ -263,20 +289,20 @@ export const Odontogram: React.FC<OdontogramProps> = ({
               />
               {!isMissing && (
                 <path
-                  d="M -4,2.5 Q 0,3 4,2.5"
+                  d="M -5.5,3.5 Q 0,4.5 5.5,3.5"
                   fill="none"
                   stroke={fissureStroke}
-                  strokeWidth="0.9"
+                  strokeWidth="1"
                 />
               )}
             </>
           )}
         </g>
 
-        {/* Tooth number label directly along outer perimeter - Bigger & clearer */}
+        {/* Tooth number label directly along outer perimeter */}
         <text
-          x={x}
-          y={coord.number <= 16 ? y - 16 : y + 20}
+          x={labelX}
+          y={labelY}
           textAnchor="middle"
           dominantBaseline="central"
           className={`select-none transition-colors ${
@@ -284,7 +310,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
               ? 'fill-blue-600 font-black text-[12px]'
               : isMissing
               ? 'fill-slate-300 font-bold text-[9px]'
-              : 'fill-slate-600 font-bold text-[10px]'
+              : 'fill-slate-600 font-bold text-[10.5px]'
           }`}
         >
           {number}
@@ -296,16 +322,15 @@ export const Odontogram: React.FC<OdontogramProps> = ({
   return (
     <div className="space-y-4">
       {/* 1. Header with View Controls & Treatment Mode - Outside of Card */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1 pb-2">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse" />
             <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-slate-900">
               Anatomical Dental Arch Odontogram
             </h3>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Universal 1–32 • Tap any tooth to inspect surfaces & records
+            Tap any tooth to inspect surfaces & records
           </p>
         </div>
 
@@ -397,30 +422,30 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 
       {/* 3. Main Anatomical Dental Arch - Displayed Out of Card taking Full Viewport Width */}
       <div className="w-full flex flex-col items-center justify-center py-2 relative select-none">
-        {/* VIEW 1: BOTH ARCHES (Full Mouth View matching Reference Image 3) */}
+        {/* VIEW 1: BOTH ARCHES (Full Mouth Anatomical U-Arch View) */}
         {archView === 'both' && (
-          <div className="w-full max-w-[460px] aspect-[380/380] relative">
+          <div className="w-full max-w-[460px] aspect-[380/450] relative">
             <svg
-              viewBox="0 0 380 380"
+              viewBox="0 0 380 450"
               className="w-full h-full drop-shadow-sm overflow-visible"
             >
-              {/* Subtle Dental Crosshair / Midline Axis (from Reference Image 3) */}
-              <line x1="190" y1="18" x2="190" y2="362" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
-              <line x1="20" y1="190" x2="360" y2="190" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+              {/* Subtle Dental Crosshair / Midline Axis */}
+              <line x1="190" y1="18" x2="190" y2="432" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+              <line x1="20" y1="225" x2="360" y2="225" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
 
               {/* Arch Headings */}
               <text x="190" y="16" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
                 Upper Dental Arch (Maxillary)
               </text>
-              <text x="24" y="112" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
+              <text x="24" y="130" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
                 RIGHT
               </text>
-              <text x="356" y="112" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
+              <text x="356" y="130" textAnchor="middle" className="text-[9px] font-bold fill-slate-400">
                 LEFT
               </text>
 
               {/* Center Occlusal Plane Badge */}
-              <g transform="translate(190, 190)">
+              <g transform="translate(190, 225)">
                 <rect x="-46" y="-10" width="92" height="20" rx="10" fill="#F1F5F9" stroke="#E2E8F0" />
                 <text x="0" y="1" textAnchor="middle" dominantBaseline="central" className="text-[9px] font-black fill-slate-500 uppercase tracking-wider">
                   Occlusal Plane
@@ -428,7 +453,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
               </g>
 
               {/* Lower Arch Heading */}
-              <text x="190" y="370" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
+              <text x="190" y="440" textAnchor="middle" className="text-[10px] font-bold fill-slate-400 uppercase tracking-widest">
                 Lower Dental Arch (Mandibular)
               </text>
 
@@ -451,11 +476,11 @@ export const Odontogram: React.FC<OdontogramProps> = ({
           </div>
         )}
 
-        {/* VIEW 2: UPPER ARCH (Zoomed High Detail matching Reference Image 2) */}
+        {/* VIEW 2: UPPER ARCH (Zoomed High Detail) */}
         {archView === 'upper' && (
-          <div className="w-full max-w-[460px] aspect-[380/280] relative">
-            <svg viewBox="0 0 380 275" className="w-full h-full drop-shadow-sm overflow-visible">
-              <line x1="190" y1="20" x2="190" y2="260" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+          <div className="w-full max-w-[460px] aspect-[380/290] relative">
+            <svg viewBox="0 0 380 290" className="w-full h-full drop-shadow-sm overflow-visible">
+              <line x1="190" y1="20" x2="190" y2="275" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
               <text x="190" y="18" textAnchor="middle" className="text-[11px] font-bold fill-slate-400 uppercase tracking-widest">
                 Upper Maxillary Arch (1–16)
               </text>
@@ -478,9 +503,9 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 
         {/* VIEW 3: LOWER ARCH (Zoomed High Detail with Tooth 19) */}
         {archView === 'lower' && (
-          <div className="w-full max-w-[460px] aspect-[380/280] relative">
-            <svg viewBox="0 0 380 275" className="w-full h-full drop-shadow-sm overflow-visible">
-              <line x1="190" y1="15" x2="190" y2="255" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
+          <div className="w-full max-w-[460px] aspect-[380/290] relative">
+            <svg viewBox="0 0 380 290" className="w-full h-full drop-shadow-sm overflow-visible">
+              <line x1="190" y1="15" x2="190" y2="275" stroke="#E2E8F0" strokeWidth="1" strokeDasharray="3 3" />
               <text x="190" y="18" textAnchor="middle" className="text-[11px] font-bold fill-slate-400 uppercase tracking-widest">
                 Lower Mandibular Arch (17–32)
               </text>

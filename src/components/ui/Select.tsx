@@ -77,8 +77,8 @@ export const Select: React.FC<SelectProps> = ({
 
   const activeFocusRing =
     theme === 'doctor'
-      ? 'focus:ring-2 focus:ring-doctor-primary focus:border-doctor-primary'
-      : 'focus:ring-2 focus:ring-patient-primary focus:border-patient-primary'
+      ? 'focus:outline-none focus-visible:outline-none focus:ring-1.5 focus:ring-doctor-primary focus:border-doctor-primary'
+      : 'focus:outline-none focus-visible:outline-none focus:ring-1.5 focus:ring-patient-primary focus:border-patient-primary'
 
   const activeOptionBg =
     theme === 'doctor'
@@ -91,14 +91,14 @@ export const Select: React.FC<SelectProps> = ({
         <label className="text-xs font-bold text-slate-700 block mb-1.5">{label}</label>
       )}
 
-      {/* Trigger Button (Shadcn style) */}
+      {/* Trigger Button (Shadcn style with standard thickness) */}
       <button
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         className={cn(
-          'w-full bg-slate-50/80 hover:bg-slate-100/70 border border-slate-200/90 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 transition-all flex items-center justify-between gap-2 shadow-2xs cursor-pointer',
-          isOpen && 'border-slate-300 ring-2 ring-slate-200/60 bg-white',
+          'w-full bg-slate-50/80 hover:bg-slate-100/70 border border-slate-200/90 rounded-xl px-3 py-2 text-xs text-slate-800 transition-all flex items-center justify-between gap-2 shadow-2xs cursor-pointer outline-none focus:outline-none focus-visible:outline-none',
+          isOpen && 'border-slate-400 ring-1 ring-slate-200 bg-white',
           disabled && 'opacity-60 cursor-not-allowed',
           activeFocusRing,
           triggerClassName

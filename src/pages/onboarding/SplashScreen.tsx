@@ -25,7 +25,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
   }, [onComplete])
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-gradient-to-b from-[#68A7E8] via-[#7BB3F0] to-[#8EC5F8] text-white p-6 sm:p-10 select-none overflow-hidden animate-in fade-in duration-300">
+    <div className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] z-50 flex flex-col items-center justify-between bg-gradient-to-b from-[#68A7E8] via-[#7BB3F0] to-[#8EC5F8] text-white p-6 sm:p-10 select-none overflow-hidden touch-none animate-in fade-in duration-300">
       {/* Ambient background glow elements matching Onboarding studio lighting */}
       <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-white/20 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-sky-200/30 blur-3xl pointer-events-none" />

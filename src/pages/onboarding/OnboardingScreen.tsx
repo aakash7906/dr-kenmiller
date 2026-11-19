@@ -15,9 +15,9 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 sm:py-6 flex items-center justify-center p-0 sm:p-4 select-none">
+    <div className="fixed inset-0 w-full h-[100dvh] max-h-[100dvh] overflow-hidden bg-slate-950 sm:relative sm:inset-auto sm:min-h-dvh sm:py-6 flex items-center justify-center p-0 sm:p-4 select-none touch-none">
       {/* Mobile Frame Container */}
-      <div className="w-full sm:max-w-[390px] h-screen sm:h-[844px] sm:rounded-[48px] shadow-2xl sm:border-[8px] sm:border-slate-850 relative overflow-hidden flex flex-col justify-between">
+      <div className="w-full h-full sm:max-w-[390px] sm:h-[844px] sm:rounded-[48px] shadow-2xl sm:border-[8px] sm:border-slate-850 relative overflow-hidden flex flex-col justify-between">
         
         {/* 1. Full-Bleed Onboarding Background Image */}
         <img
@@ -27,25 +27,25 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
         />
 
         {/* 2. Top Content: Logo, Headline, and Subtitle (Overlay on Sky) */}
-        <div className="relative z-10 pt-10 sm:pt-12 px-7 sm:px-8">
+        <div className="relative z-10 pt-8 sm:pt-12 px-6 sm:px-8">
 
           {/* Headline */}
-          <h1 className="text-[34px] sm:text-[38px] font-bold text-white tracking-tight leading-[1.14] drop-shadow-xs">
+          <h1 className="text-[30px] sm:text-[38px] font-bold text-white tracking-tight leading-[1.14] drop-shadow-xs">
             Confident Smile<br />
             Smarter Care.
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[13px] sm:text-[14px] text-white/95 leading-relaxed font-normal mt-3.5 max-w-[275px] sm:max-w-[290px] drop-shadow-xs">
+          <p className="text-[12.5px] sm:text-[14px] text-white/95 leading-relaxed font-normal mt-2.5 sm:mt-3.5 max-w-[275px] sm:max-w-[290px] drop-shadow-xs">
             At Dr. Ken Miller clinic, every patient receives thoughtful care built on their goals, lifestyle, and comfort.
           </p>
         </div>
 
         {/* 3. Bottom Action: "Get Started" Capsule Button */}
-        <div className="relative z-10 px-7 sm:px-8 pb-10 sm:pb-12 pt-4">
+        <div className="relative z-10 px-6 sm:px-8 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:pb-12 pt-2">
           <button
             onClick={handleGetStarted}
-            className="w-full bg-onboarding-btn hover:bg-onboarding-btn-hover text-onboarding-btn-text text-base font-semibold py-4 px-6 rounded-full shadow-lg shadow-blue-500/30 transition-all duration-200 cursor-pointer active:scale-98 flex items-center justify-center tracking-wide"
+            className="w-full bg-onboarding-btn hover:bg-onboarding-btn-hover text-onboarding-btn-text text-base font-semibold py-3.5 sm:py-4 px-6 rounded-full shadow-lg shadow-blue-500/30 transition-all duration-200 cursor-pointer active:scale-98 flex items-center justify-center tracking-wide"
           >
             Get Started
           </button>

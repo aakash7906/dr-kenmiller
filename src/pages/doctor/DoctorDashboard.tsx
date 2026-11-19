@@ -353,7 +353,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
                 </Badge>
                 <button
                   onClick={() => onNavigateTab('schedule')}
-                  className="text-xs font-semibold text-blue-900 hover:underline p-1.5 cursor-pointer"
+                  className="text-xs font-semibold text-blue-900 hover:underline p-1.5 cursor-pointer absolute right-10"
                 >
                   Manage →
                 </button>

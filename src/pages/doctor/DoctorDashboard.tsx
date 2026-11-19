@@ -62,7 +62,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
           </h2>
         </div>
         <Badge variant="navy" size="sm" className="font-bold py-1 px-2.5">
-          Wed, Nov 15 • Active
+          {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} • Active
         </Badge>
       </div>
 

@@ -1,8 +1,9 @@
-import React, { useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import {
   Search,
   X,
   ChevronRight,
+  ChevronLeft,
   Clock,
   Box,
   Users,
@@ -24,7 +25,6 @@ import {
   BellRing,
   ExternalLink
 } from 'lucide-react'
-import { Dialog } from '@/components/ui/Dialog'
 import { CLINIC_INFO } from '@/data/mockData'
 import { PatientTab } from '@/types'
 
@@ -337,6 +337,37 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory>('All')
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null)
 
+  // Scroll to top immediately when a service is opened or closed
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    if (typeof document !== 'undefined') {
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+      const el = document.getElementById('service-page-anchor')
+      if (el) {
+        el.scrollIntoView({ behavior: 'instant', block: 'start' })
+      }
+    }
+  }, [selectedService])
+
+  const handleOpenService = (service: ServiceItem) => {
+    setSelectedService(service)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    if (typeof document !== 'undefined') {
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+  }
+
+  const handleBackToServices = () => {
+    setSelectedService(null)
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    if (typeof document !== 'undefined') {
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+  }
+
   // Drag-to-scroll / Swipe gesture handler (Mouse + Touch)
   const categoriesRef = useRef<HTMLDivElement>(null)
   const isDraggingRef = useRef(false)
@@ -446,6 +477,206 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
       default:
         return <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
     }
+  }
+
+  // --------------------------------------------------------------------------
+  // DEDICATED FULL SEPARATE SERVICE PAGE (Rendered when a service is selected)
+  // --------------------------------------------------------------------------
+  if (selectedService) {
+    return (
+      <div className="space-y-5 pb-32 pt-1 animate-in fade-in duration-200">
+        <div id="service-page-anchor" className="h-0 w-0 opacity-0 pointer-events-none" />
+
+        {/* Top Sticky/Header Back Navigation Bar */}
+        <div className="flex items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={handleBackToServices}
+            className="inline-flex items-center gap-1.5 py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-98"
+          >
+            <ChevronLeft className="w-4 h-4 text-patient-primary" />
+            <span>Back to All Services</span>
+          </button>
+
+          <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-patient-primary-light text-patient-primary border border-patient-primary-border">
+            {selectedService.tag}
+          </span>
+        </div>
+
+        {/* Hero Image Container */}
+        <div className="w-full h-52 sm:h-64 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 relative shadow-sm">
+          <img
+            src={selectedService.image}
+            alt={selectedService.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+          <div className="absolute bottom-4 left-4 right-4 text-white">
+            <span className="text-[10px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-white/30 text-white inline-block mb-1.5">
+              {selectedService.categories.join(' • ')}
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-white leading-tight drop-shadow-xs">
+              {selectedService.name}
+            </h1>
+          </div>
+        </div>
+
+        {/* Overview & Clinical Narrative Card */}
+        <div className="bg-white rounded-2xl p-4.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+              Treatment Overview
+            </h2>
+            <div className="flex items-center gap-1 text-xs text-slate-500 font-semibold">
+              <Clock className="w-3.5 h-3.5 text-patient-primary" />
+              <span>{selectedService.duration}</span>
+            </div>
+          </div>
+
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            {selectedService.description}
+          </p>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 flex items-start gap-2.5">
+            <Shield className="w-4 h-4 text-patient-primary shrink-0 mt-0.5" />
+            <span>
+              <strong>Direct Insurance Billing:</strong> We bill directly to Alberta Blue Cross, Sun Life, Canada Life, and all standard providers following the Alberta Dental Fee Guide.
+            </span>
+          </div>
+        </div>
+
+        {/* Treatment Highlights & Clinical Protocol Card */}
+        <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-2xl p-4.5 sm:p-5 shadow-2xs space-y-3">
+          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-patient-primary" />
+            <span>Treatment Highlights & Protocol</span>
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+            {selectedService.features.map((feature, i) => (
+              <div
+                key={i}
+                className="bg-white/90 p-3 rounded-xl border border-patient-primary-border/60 flex items-center gap-2.5 text-xs text-slate-800"
+              >
+                <div className="w-6 h-6 rounded-lg bg-patient-primary-light text-patient-primary flex items-center justify-center shrink-0">
+                  {renderFeatureIcon(feature)}
+                </div>
+                {feature.isPhone ? (
+                  <a
+                    href="tel:7806454122"
+                    className="font-bold text-slate-900 hover:text-patient-emergency"
+                  >
+                    {feature.text}
+                  </a>
+                ) : (
+                  <span className="font-semibold">{feature.text}</span>
+                )}
+              </div>
+            ))}
+
+            <div className="bg-white/90 p-3 rounded-xl border border-patient-primary-border/60 flex items-center gap-2.5 text-xs text-slate-800">
+              <div className="w-6 h-6 rounded-lg bg-patient-primary-light text-patient-primary flex items-center justify-center shrink-0">
+                <Clock className="w-3.5 h-3.5" />
+              </div>
+              <span className="font-semibold">Estimated Time: {selectedService.duration}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Clinical Care Steps */}
+        <div className="bg-white rounded-2xl p-4.5 sm:p-5 border border-slate-200/90 shadow-2xs space-y-3">
+          <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 uppercase tracking-wider">
+            What to Expect During Your Visit
+          </h3>
+
+          <div className="space-y-3 text-xs text-slate-600">
+            <div className="flex items-start gap-3">
+              <span className="w-5 h-5 rounded-full bg-patient-primary text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                1
+              </span>
+              <div>
+                <strong className="text-slate-900 block mb-0.5">Comprehensive Examination & 3D Imaging</strong>
+                Dr. Ken Miller and clinical staff evaluate oral health, dentition arches, and take digital radiographs when indicated.
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="w-5 h-5 rounded-full bg-patient-primary text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                2
+              </span>
+              <div>
+                <strong className="text-slate-900 block mb-0.5">Transparent Clinical Consultation</strong>
+                We review treatment alternatives, discuss procedure timing, and print a clear copay breakdown prior to care.
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <span className="w-5 h-5 rounded-full bg-patient-primary text-white flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                3
+              </span>
+              <div>
+                <strong className="text-slate-900 block mb-0.5">Comfortable Treatment & Follow-Up</strong>
+                Gentle, modern dentistry in our St. Paul operatory with post-care instructions and easy recall scheduling.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions / CTA Buttons */}
+        <div className="space-y-2.5 pt-2">
+          {selectedService.isEmergency ? (
+            <a
+              href="tel:7806454122"
+              className="w-full py-3.5 px-4 bg-patient-emergency hover:bg-patient-emergency-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-98"
+            >
+              <Phone className="w-4 h-4 text-white" />
+              <span>Call Emergency Line: (780) 645-4122</span>
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedService(null)
+                onNavigate('appointments')
+              }}
+              className="w-full py-3.5 px-4 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer active:scale-98"
+            >
+              <Calendar className="w-4 h-4" />
+              <span>Book Appointment for this Treatment</span>
+            </button>
+          )}
+
+          <a
+            href="tel:7806454122"
+            className="w-full py-3 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          >
+            <Phone className="w-3.5 h-3.5 text-patient-primary" />
+            <span>Call Reception Directly: (780) 645-4122</span>
+          </a>
+
+          <a
+            href={selectedService.websiteLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-2 text-center text-xs font-semibold text-slate-500 hover:text-patient-primary flex items-center justify-center gap-1.5 transition-colors"
+          >
+            <span>Read Complete Clinical Details on DrKenMiller.ca</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* Bottom Back Button */}
+        <div className="pt-2 text-center">
+          <button
+            type="button"
+            onClick={handleBackToServices}
+            className="text-xs text-slate-500 hover:text-slate-800 font-semibold cursor-pointer underline underline-offset-4"
+          >
+            ← Back to All Services
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -578,7 +809,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
               >
                 {/* Real Website Service Image */}
                 <div
-                  onClick={() => setSelectedService(service)}
+                  onClick={() => handleOpenService(service)}
                   className="w-full h-40 sm:h-48 relative bg-slate-100 overflow-hidden cursor-pointer"
                 >
                   <img
@@ -622,7 +853,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                 <div className="p-4.5 sm:p-5.5 space-y-3.5">
                   {/* Header row: Icon & Title */}
                   <div
-                    onClick={() => setSelectedService(service)}
+                    onClick={() => handleOpenService(service)}
                     className="flex items-center justify-between cursor-pointer"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -680,7 +911,7 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
                       </a>
                     ) : (
                       <button
-                        onClick={() => setSelectedService(service)}
+                        onClick={() => handleOpenService(service)}
                         className="w-full py-3 px-4 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all shadow-2xs cursor-pointer active:scale-[0.99]"
                       >
                         <span>Learn More & Book</span>
@@ -726,83 +957,6 @@ export const PatientServices: React.FC<PatientServicesProps> = ({ onNavigate }) 
           <span className="text-slate-500">Mon–Fri: 8am – 4:30pm</span>
         </div>
       </div>
-
-      {/* 8. Service Details & Booking Dialog */}
-      <Dialog
-        isOpen={!!selectedService}
-        onClose={() => setSelectedService(null)}
-        title={selectedService?.name || 'Service Details'}
-        subtitle={selectedService?.tag || 'Clinical Service Directory'}
-      >
-        {selectedService && (
-          <div className="space-y-4 text-xs sm:text-sm text-slate-700">
-            {/* Header Image in Modal */}
-            <div className="w-full h-40 sm:h-48 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 relative shadow-2xs">
-              <img
-                src={selectedService.image}
-                alt={selectedService.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2.5 right-2.5">
-                <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-900/80 text-white backdrop-blur-md">
-                  {selectedService.tag}
-                </span>
-              </div>
-            </div>
-
-            <p className="leading-relaxed text-slate-600">{selectedService.description}</p>
-
-            <div className="bg-patient-primary-subtle p-3.5 rounded-xl border border-patient-primary-border/80 space-y-2">
-              <strong className="text-slate-900 block font-bold text-xs uppercase tracking-wide">
-                Treatment Highlights & Protocol:
-              </strong>
-              <div className="space-y-2">
-                {selectedService.features.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-2 text-slate-800 text-xs">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-patient-primary shrink-0" />
-                    <span className="font-medium">{feature.text}</span>
-                  </div>
-                ))}
-                <div className="flex items-center gap-2 text-slate-800 text-xs">
-                  <Clock className="w-3.5 h-3.5 text-patient-primary shrink-0" />
-                  <span className="font-medium">Estimated Time: {selectedService.duration}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-2 pt-1">
-              <button
-                onClick={() => {
-                  setSelectedService(null)
-                  onNavigate('appointments')
-                }}
-                className="w-full py-2.5 px-4 bg-patient-primary hover:bg-patient-primary-hover text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
-              >
-                <Calendar className="w-4 h-4" />
-                <span>Book Appointment for this Treatment</span>
-              </button>
-
-              <a
-                href="tel:7806454122"
-                className="w-full py-2 px-4 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/90 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-              >
-                <Phone className="w-3.5 h-3.5 text-slate-500" />
-                <span>Call Clinic Directly: (780) 645-4122</span>
-              </a>
-
-              <a
-                href={selectedService.websiteLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-1.5 text-center text-[11px] font-semibold text-slate-400 hover:text-patient-primary flex items-center justify-center gap-1 transition-colors"
-              >
-                <span>Read Full Article on DrKenMiller.ca</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </div>
-        )}
-      </Dialog>
     </div>
   )
 }

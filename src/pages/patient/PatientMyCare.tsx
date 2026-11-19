@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
-import { CURRENT_PATIENT, ACTIVE_CARE_PLAN, CLINIC_INFO } from '@/data/mockData'
+import { CURRENT_PATIENT, ACTIVE_CARE_PLAN, CLINIC_INFO, TODAY, formatMonthDay } from '@/data/mockData'
 import { ToothIcon } from '@/components/ui/ToothIcon'
 
 export const PatientMyCare: React.FC = () => {
@@ -142,7 +142,7 @@ export const PatientMyCare: React.FC = () => {
             </div>
             <div>
               <span className="text-xs font-bold block leading-tight text-slate-900">Crown</span>
-              <span className="text-[9px] text-patient-secondary font-bold">Nov 15 Visit</span>
+              <span className="text-[9px] text-patient-secondary font-bold">{formatMonthDay(TODAY)} Visit</span>
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ export const PatientMyCare: React.FC = () => {
         <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-100">
           <div className="bg-slate-50 py-2.5 px-3 rounded-xl flex flex-col justify-center">
             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Final Visit</span>
-            <span className="text-xs font-bold text-slate-900 mt-0.5">Nov 15 • 10:30 AM</span>
+            <span className="text-xs font-bold text-slate-900 mt-0.5">{formatMonthDay(TODAY)} • 10:30 AM</span>
           </div>
           <div className="bg-patient-primary-subtle border border-patient-primary-border/60 py-2.5 px-3 rounded-xl flex flex-col justify-center">
             <span className="text-[10px] text-patient-primary/80 font-bold uppercase tracking-wider">Est. Patient Copay</span>

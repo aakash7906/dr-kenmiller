@@ -15,8 +15,9 @@ import { Odontogram } from '@/components/ui/Odontogram'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { Select } from '@/components/ui/Select'
 import { ToothData } from '@/types'
-import { CURRENT_PATIENT, DOCTOR_ODONTOGRAM_TEETH, ACTIVE_CARE_PLAN } from '@/data/mockData'
+import { CURRENT_PATIENT, DOCTOR_ODONTOGRAM_TEETH, ACTIVE_CARE_PLAN, TODAY, formatMonthDay } from '@/data/mockData'
 
 export const DoctorCharting: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState('pt-001')
@@ -27,7 +28,7 @@ export const DoctorCharting: React.FC = () => {
   const [soapSubjective, setSoapSubjective] = useState('Patient arrives for stage 2 check on implant 19. Reports no spontaneous pain or tenderness.')
   const [soapObjective, setSoapObjective] = useState('Healing abutment intact. Gingival tissue pink and well-keratinized with no erythema or exudate. Torque test 35 Ncm stable.')
   const [soapAssessment, setSoapAssessment] = useState('Osseointegrated lower left first molar implant fixture. Ready for custom monolithic zirconia crown delivery.')
-  const [soapPlan, setSoapPlan] = useState('Crown seating appointment confirmed for Nov 15. Aurum lab case verified shade A2.')
+  const [soapPlan, setSoapPlan] = useState(`Crown seating appointment confirmed for ${formatMonthDay(TODAY)}. Aurum lab case verified shade A2.`)
   const [savedSuccess, setSavedSuccess] = useState(false)
 
   const handleSaveNotes = () => {
@@ -47,17 +48,19 @@ export const DoctorCharting: React.FC = () => {
         </div>
 
         {/* Search / Patient Switcher */}
-        <div className="flex items-center gap-2">
-          <select
+        <div className="flex items-center gap-2 min-w-[200px]">
+          <Select
             value={selectedPatientId}
-            onChange={(e) => setSelectedPatientId(e.target.value)}
-            className="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-800 shadow-2xs focus:ring-2 focus:ring-doctor-primary focus:outline-none cursor-pointer"
-          >
-            <option value="pt-001">Sarah Tremblay</option>
-            <option value="pt-002">Marcus Vance</option>
-            <option value="pt-003">David Chen</option>
-            <option value="pt-004">Liam O'Connor (Emergency Triage)</option>
-          </select>
+            onChange={setSelectedPatientId}
+            theme="doctor"
+            triggerClassName="bg-white border-slate-300 font-bold py-2 shadow-2xs"
+            options={[
+              { value: 'pt-001', label: 'Sarah Tremblay' },
+              { value: 'pt-002', label: 'Marcus Vance' },
+              { value: 'pt-003', label: 'David Chen' },
+              { value: 'pt-004', label: "Liam O'Connor (Emergency Triage)" }
+            ]}
+          />
         </div>
       </div>
 
@@ -245,7 +248,7 @@ export const DoctorCharting: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className="font-mono text-[10px] font-bold text-blue-900 bg-blue-100 border border-blue-300 px-2 py-0.5 rounded">Code 27301</span>
                     <span className="font-bold text-xs text-slate-800">Tooth 19</span>
-                    <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">Nov 15 Visit</span>
+                    <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">{formatMonthDay(TODAY)} Visit</span>
                   </div>
                   <h4 className="text-xs sm:text-sm font-bold text-slate-900">Custom Monolithic Zirconia Crown</h4>
                 </div>

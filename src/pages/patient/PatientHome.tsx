@@ -20,8 +20,18 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
+import { AlertDialog } from '@/components/ui/AlertDialog'
 import { Calendar } from '@/components/ui/Calendar'
-import { CURRENT_PATIENT, PATIENT_APPOINTMENTS, ACTIVE_CARE_PLAN, CLINIC_INFO } from '@/data/mockData'
+import {
+  CURRENT_PATIENT,
+  PATIENT_APPOINTMENTS,
+  ACTIVE_CARE_PLAN,
+  CLINIC_INFO,
+  TODAY,
+  formatMonthDay,
+  formatShortDate,
+  getDynamicDate
+} from '@/data/mockData'
 import { PatientTab } from '@/types'
 
 interface PatientHomeProps {
@@ -53,7 +63,8 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
   const [showCheckInModal, setShowCheckInModal] = useState(false)
   const [showRescheduleModal, setShowRescheduleModal] = useState(false)
   const [showCalendarModal, setShowCalendarModal] = useState(false)
-  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(new Date(2024, 10, 15))
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(() => new Date())
+  const [showSyncSuccessAlert, setShowSyncSuccessAlert] = useState(false)
   const [showProtocolModal, setShowProtocolModal] = useState(false)
   const [showPreVisitModal, setShowPreVisitModal] = useState(false)
   const [checkInDone, setCheckInDone] = useState(false)
@@ -574,7 +585,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <Calendar
             selectedDate={selectedCalendarDate}
             onSelectDate={(d) => setSelectedCalendarDate(d)}
-            highlightDates={[new Date(2024, 10, 15)]}
+            highlightDates={[selectedCalendarDate]}
           />
 
           <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-xl p-3.5 space-y-2">
@@ -606,8 +617,8 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             <button
               type="button"
               onClick={() => {
-                alert(`Appointment confirmed for ${selectedCalendarDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}! Synced to device calendar.`)
                 setShowCalendarModal(false)
+                setShowSyncSuccessAlert(true)
               }}
               className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
             >
@@ -628,6 +639,26 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           </div>
         </div>
       </Dialog>
+
+      {/* In-App Success Alert Dialog for Calendar Sync */}
+      <AlertDialog
+        isOpen={showSyncSuccessAlert}
+        onClose={() => setShowSyncSuccessAlert(false)}
+        icon={<Check className="w-6 h-6 text-emerald-600 stroke-[2.5]" />}
+        iconVariant="success"
+        maxWidth="xs"
+        position="center"
+        title="Calendar Synced!"
+        description={`Your appointment on ${selectedCalendarDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at 10:00 AM has been successfully synced to your device calendar.`}
+      >
+        <button
+          type="button"
+          onClick={() => setShowSyncSuccessAlert(false)}
+          className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-2.5 rounded-xl font-bold text-xs shadow-xs mt-3 cursor-pointer transition-all active:scale-98"
+        >
+          Done
+        </button>
+      </AlertDialog>
 
       {/* Reschedule Modal */}
       <Dialog
@@ -675,7 +706,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="bg-amber-50 p-3 rounded-xl border border-amber-200 text-amber-900">
             <strong>Clinical Guidance from Dr. Ken Miller:</strong>
             <p className="mt-1 text-xs">
-              "Your titanium implant post is fully osseointegrated into healthy alveolar bone. Keep following these steps until final crown delivery on Nov 15."
+              "Your titanium implant post is fully osseointegrated into healthy alveolar bone. Keep following these steps until final crown delivery on {formatMonthDay(TODAY)}."
             </p>
           </div>
           <div className="space-y-2">
@@ -709,7 +740,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
             <div>
               <div className="font-bold text-slate-900">Medical History Questionnaire</div>
-              <div className="text-[11px] text-slate-500">Updated Oct 2024 • Penicillin allergy noted</div>
+              <div className="text-[11px] text-slate-500">Updated {formatMonthDay(getDynamicDate(-30))} • Penicillin allergy noted</div>
             </div>
             <span className="text-emerald-600 font-bold text-xs">✓ Verified</span>
           </div>
@@ -723,7 +754,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
             <div>
               <div className="font-bold text-slate-900">Informed Consent - Crown Seating</div>
-              <div className="text-[11px] text-slate-500">E-Signed Nov 1, 2024</div>
+              <div className="text-[11px] text-slate-500">E-Signed {formatShortDate(getDynamicDate(-14))}</div>
             </div>
             <span className="text-emerald-600 font-bold text-xs">✓ On File</span>
           </div>

@@ -11,6 +11,44 @@ import {
   LabCase
 } from '../types'
 
+// ================= DYNAMIC DATE HELPERS =================
+// Automatically detects current date & computes relative dates dynamically
+export const TODAY = new Date()
+
+export const getDynamicDate = (daysOffset: number = 0): Date => {
+  const d = new Date()
+  d.setDate(d.getDate() + daysOffset)
+  return d
+}
+
+export const formatAptDate = (date: Date): string => {
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
+
+export const formatShortDate = (date: Date): string => {
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })
+}
+
+export const formatMonthDay = (date: Date): string => {
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
+export const TODAY_APPOINTMENT_DATE = formatAptDate(TODAY)
+export const TODAY_MONTH_SHORT = TODAY.toLocaleDateString('en-US', { month: 'short' }).toUpperCase()
+export const TODAY_DAY = TODAY.getDate()
+
 export const CLINIC_INFO = {
   name: 'DR. KEN MILLER DENTAL CLINIC',
   location: 'St. Paul, AB',
@@ -41,7 +79,7 @@ export const PATIENT_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-01',
     type: 'Routine Hygiene, Fluoride & Exam',
-    date: 'Wed, Nov 15, 2024',
+    date: formatAptDate(TODAY),
     time: '10:00 AM – 10:45 AM',
     duration: '45 Min',
     provider: 'Dr. Ken Miller & Lisa (Dental Hygienist)',
@@ -54,7 +92,7 @@ export const PATIENT_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-02',
     type: 'Crown Seating & Occlusal Verification',
-    date: 'Wed, Nov 29, 2024',
+    date: formatAptDate(getDynamicDate(14)),
     time: '2:15 PM – 2:45 PM',
     duration: '30 Min',
     provider: 'Dr. Ken Miller, DDS',
@@ -70,7 +108,7 @@ export const PAST_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-past-1',
     type: 'Implant Post Placement (Surgery Stage 1)',
-    date: 'Nov 1, 2024',
+    date: formatShortDate(getDynamicDate(-14)),
     time: '9:00 AM – 10:15 AM',
     duration: '75 Min',
     provider: 'Dr. Ken Miller, DDS',
@@ -82,7 +120,7 @@ export const PAST_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-past-2',
     type: '3D CBCT Cone Beam Scan & Bone Mapping',
-    date: 'Oct 4, 2024',
+    date: formatShortDate(getDynamicDate(-45)),
     time: '11:00 AM – 11:30 AM',
     duration: '30 Min',
     provider: 'Dr. Ken Miller, DDS',
@@ -94,7 +132,7 @@ export const PAST_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-past-3',
     type: 'Comprehensive Oral Exam & Scaling',
-    date: 'May 10, 2024',
+    date: formatShortDate(getDynamicDate(-180)),
     time: '1:30 PM – 2:15 PM',
     duration: '45 Min',
     provider: 'Lisa (RDH)',
@@ -106,7 +144,7 @@ export const PAST_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt-past-4',
     type: 'Occlusal Night Guard Delivery & Adjustment',
-    date: 'Jan 18, 2024',
+    date: formatShortDate(getDynamicDate(-300)),
     time: '3:00 PM – 3:30 PM',
     duration: '30 Min',
     provider: 'Dr. Ken Miller, DDS',
@@ -118,7 +156,7 @@ export const PAST_APPOINTMENTS: Appointment[] = [
 ]
 
 export const ACTIVE_CARE_PLAN: CarePlan = {
-  id: 'D-2024-88',
+  id: `D-${TODAY.getFullYear()}-88`,
   title: 'Lower Molar Implant Journey',
   tooth: 'Tooth #19 (Lower Left First Molar)',
   currentStep: 2,
@@ -129,21 +167,21 @@ export const ACTIVE_CARE_PLAN: CarePlan = {
       stepNumber: 1,
       title: 'Phase 1: 3D Cone Beam Imaging',
       status: 'completed',
-      date: 'Oct 4',
+      date: formatMonthDay(getDynamicDate(-45)),
       description: 'Full bone density scan & surgical template verified.'
     },
     {
       stepNumber: 2,
       title: 'Phase 2: Implant Post Placement',
       status: 'current',
-      date: 'Nov 1',
+      date: formatMonthDay(getDynamicDate(-14)),
       description: 'Titanium fixture placed with sterile tissue stitch. Healing well.'
     },
     {
       stepNumber: 3,
       title: 'Phase 3: Custom Porcelain Crown',
       status: 'upcoming',
-      date: 'Nov 15, 10:30 AM',
+      date: `${formatMonthDay(TODAY)}, 10:30 AM`,
       description: 'Permanent abutment seating and natural shade matching.'
     }
   ],
@@ -384,7 +422,7 @@ export const DOCTOR_ODONTOGRAM_TEETH: ToothData[] = [
   // Lower Arch (Teeth 17-32)
   { number: 17, name: 'Lower Left 3rd Molar', condition: 'missing' },
   { number: 18, name: 'Lower Left 2nd Molar', condition: 'healthy' },
-  { number: 19, name: 'Lower Left 1st Molar', condition: 'implant', notes: 'Titanium fixture placed Nov 1. Abutment torque 35 Ncm. Zirconia crown delivery Nov 15.', plannedProcedure: 'Final Crown Seated' },
+  { number: 19, name: 'Lower Left 1st Molar', condition: 'implant', notes: `Titanium fixture placed ${formatMonthDay(getDynamicDate(-14))}. Abutment torque 35 Ncm. Zirconia crown delivery ${formatMonthDay(TODAY)}.`, plannedProcedure: 'Final Crown Seated' },
   { number: 20, name: 'Lower Left 2nd Premolar', condition: 'healthy' },
   { number: 21, name: 'Lower Left 1st Premolar', condition: 'healthy' },
   { number: 22, name: 'Lower Left Canine', condition: 'healthy' },
@@ -434,8 +472,8 @@ export const LAB_CASES: LabCase[] = [
     toothNumber: '#19',
     type: 'Screw-Retained Monolithic Zirconia Crown',
     labName: 'Aurum Ceramic Dental Lab (Calgary)',
-    sentDate: 'Nov 3, 2024',
-    expectedDelivery: 'Nov 13, 2024',
+    sentDate: formatShortDate(getDynamicDate(-12)),
+    expectedDelivery: formatShortDate(getDynamicDate(-2)),
     status: 'delivered_at_clinic',
     shade: 'Vita A2 (Incisal Translucency High)'
   },
@@ -446,8 +484,8 @@ export const LAB_CASES: LabCase[] = [
     toothNumber: '#14',
     type: 'EMax Lithium Disilicate Crown',
     labName: 'Precision Craft Dental Studios (Edmonton)',
-    sentDate: 'Nov 10, 2024',
-    expectedDelivery: 'Nov 20, 2024',
+    sentDate: formatShortDate(getDynamicDate(-5)),
+    expectedDelivery: formatShortDate(getDynamicDate(5)),
     status: 'in_fabrication',
     shade: 'Vita A3'
   },
@@ -458,8 +496,8 @@ export const LAB_CASES: LabCase[] = [
     toothNumber: '#29 - #31',
     type: '3-Unit Porcelain-Fused-to-Zirconia Bridge',
     labName: 'Aurum Ceramic Dental Lab',
-    sentDate: 'Nov 5, 2024',
-    expectedDelivery: 'Nov 17, 2024',
+    sentDate: formatShortDate(getDynamicDate(-10)),
+    expectedDelivery: formatShortDate(getDynamicDate(2)),
     status: 'shipped',
     shade: 'Vita B2'
   }

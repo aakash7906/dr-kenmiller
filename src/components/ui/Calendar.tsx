@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Check } from 'lucide-react'
 
 export interface CalendarProps {
@@ -27,16 +27,27 @@ const MONTH_NAMES = [
 ]
 
 export const Calendar: React.FC<CalendarProps> = ({
-  selectedDate: initialSelected = new Date(2024, 10, 15), // Nov 15, 2024
+  selectedDate: initialSelected,
   onSelectDate,
   minDate,
   maxDate,
-  highlightDates = [new Date(2024, 10, 15)],
+  highlightDates,
   className = ''
 }) => {
-  const [selectedDate, setSelectedDate] = useState<Date>(initialSelected)
-  const [viewMonth, setViewMonth] = useState<number>(initialSelected.getMonth())
-  const [viewYear, setViewYear] = useState<number>(initialSelected.getFullYear())
+  const today = new Date()
+  const effectiveInitial = initialSelected || today
+  const [selectedDate, setSelectedDate] = useState<Date>(effectiveInitial)
+  const [viewMonth, setViewMonth] = useState<number>(effectiveInitial.getMonth())
+  const [viewYear, setViewYear] = useState<number>(effectiveInitial.getFullYear())
+  const effectiveHighlights = highlightDates || [effectiveInitial]
+
+  useEffect(() => {
+    if (initialSelected) {
+      setSelectedDate(initialSelected)
+      setViewMonth(initialSelected.getMonth())
+      setViewYear(initialSelected.getFullYear())
+    }
+  }, [initialSelected])
 
   const handlePrevMonth = () => {
     if (viewMonth === 0) {
@@ -78,17 +89,17 @@ export const Calendar: React.FC<CalendarProps> = ({
   }
 
   const isToday = (day: number) => {
-    const today = new Date(2024, 10, 15) // sync with mock today
+    const now = new Date()
     return (
-      today.getFullYear() === viewYear &&
-      today.getMonth() === viewMonth &&
-      today.getDate() === day
+      now.getFullYear() === viewYear &&
+      now.getMonth() === viewMonth &&
+      now.getDate() === day
     )
   }
 
   const isHighlighted = (day: number) => {
     const d = new Date(viewYear, viewMonth, day)
-    return highlightDates.some((h) => isSameDay(h, d))
+    return effectiveHighlights.some((h) => isSameDay(h, d))
   }
 
   return (
@@ -152,8 +163,8 @@ export const Calendar: React.FC<CalendarProps> = ({
           const day = index + 1
           const thisDate = new Date(viewYear, viewMonth, day)
           const isSelected = isSameDay(selectedDate, thisDate)
-          const isClinicClosed = thisDate.getDay() === 0 // Sunday closed
           const hasVisit = isHighlighted(day)
+          const isClinicClosed = thisDate.getDay() === 0 && !hasVisit && !isSelected
 
           return (
             <button

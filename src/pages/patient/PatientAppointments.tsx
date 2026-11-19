@@ -17,16 +17,31 @@ import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Dialog } from '@/components/ui/Dialog'
+import { AlertDialog } from '@/components/ui/AlertDialog'
 import { Calendar } from '@/components/ui/Calendar'
-import { PATIENT_APPOINTMENTS, PAST_APPOINTMENTS, CLINIC_INFO, CURRENT_PATIENT } from '@/data/mockData'
+import { Select } from '@/components/ui/Select'
+import {
+  PATIENT_APPOINTMENTS,
+  PAST_APPOINTMENTS,
+  CLINIC_INFO,
+  CURRENT_PATIENT,
+  TODAY,
+  TODAY_MONTH_SHORT,
+  TODAY_DAY,
+  formatShortDate,
+  formatMonthDay,
+  formatAptDate,
+  getDynamicDate
+} from '@/data/mockData'
 
 export const PatientAppointments: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'upcoming' | 'request' | 'history'>('upcoming')
   const [showDirectionsModal, setShowDirectionsModal] = useState(false)
   const [showModifyModal, setShowModifyModal] = useState(false)
   const [showCalendarModal, setShowCalendarModal] = useState(false)
-  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(new Date(2024, 10, 15))
-  const [requestDate, setRequestDate] = useState<Date>(new Date(2024, 10, 20))
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<Date>(() => new Date())
+  const [showSyncSuccessAlert, setShowSyncSuccessAlert] = useState(false)
+  const [requestDate, setRequestDate] = useState<Date>(() => new Date(Date.now() + 5 * 86400000))
   const [showRequestCalendarModal, setShowRequestCalendarModal] = useState(false)
   const [requestSubmitted, setRequestSubmitted] = useState(false)
 
@@ -70,7 +85,7 @@ export const PatientAppointments: React.FC = () => {
           }`}
         >
           <PlusCircle className="w-3.5 h-3.5" />
-          <span>Request</span>
+          <span>New</span>
         </button>
 
         <button
@@ -108,10 +123,10 @@ export const PatientAppointments: React.FC = () => {
                 title="View Calendar"
               >
                 <span className="text-[10px] font-bold text-patient-secondary-text uppercase tracking-wider">
-                  NOV
+                  {TODAY_MONTH_SHORT}
                 </span>
                 <span className="text-xl font-extrabold text-slate-900 leading-tight">
-                  15
+                  {TODAY_DAY}
                 </span>
               </button>
 
@@ -220,45 +235,42 @@ export const PatientAppointments: React.FC = () => {
             <form onSubmit={handleRequestSubmit} className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-slate-900">Request New Appointment</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Select your treatment reason and preferred time.
-                </p>
               </div>
 
               {/* Service Selection */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  Treatment / Reason:
+                  Treatment:
                 </label>
-                <select
+                <Select
                   value={selectedService}
-                  onChange={(e) => setSelectedService(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-patient-primary"
-                >
-                  <option>Routine Hygiene & Cleaning</option>
-                  <option>Dental Implant Consultation</option>
-                  <option>Toothache / Emergency Assessment</option>
-                  <option>Cosmetic Whitening</option>
-                  <option>Night Guard Fitting / Occlusion</option>
-                  <option>Pediatric Checkup</option>
-                </select>
+                  onChange={setSelectedService}
+                  options={[
+                    'Routine Hygiene & Cleaning',
+                    'Dental Implant Consultation',
+                    'Toothache / Emergency Assessment',
+                    'Cosmetic Whitening',
+                    'Night Guard Fitting / Occlusion',
+                    'Pediatric Checkup'
+                  ]}
+                />
               </div>
 
               {/* Provider Selection */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  Preferred Provider:
+                  Doctor:
                 </label>
-                <select
+                <Select
                   value={selectedProvider}
-                  onChange={(e) => setSelectedProvider(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-patient-primary"
-                >
-                  <option>Dr. Ken Miller, DDS (Lead Dental Surgeon)</option>
-                  <option>Lisa (Senior Registered Dental Hygienist)</option>
-                  <option>Elena (Registered Dental Hygienist)</option>
-                  <option>First Available Provider</option>
-                </select>
+                  onChange={setSelectedProvider}
+                  options={[
+                    'Dr. Ken Miller, DDS (Lead Dental Surgeon)',
+                    'Lisa (Senior Registered Dental Hygienist)',
+                    'Elena (Registered Dental Hygienist)',
+                    'First Available Provider'
+                  ]}
+                />
               </div>
 
               {/* Preferred Date with Shadcn Calendar trigger */}
@@ -269,7 +281,7 @@ export const PatientAppointments: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowRequestCalendarModal(true)}
-                  className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 flex items-center justify-between transition-colors cursor-pointer active:scale-98"
+                  className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-md px-3 py-2.5 text-xs text-slate-800 flex items-center justify-between transition-colors cursor-pointer active:scale-98"
                 >
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-4 h-4 text-patient-primary shrink-0" />
@@ -289,7 +301,7 @@ export const PatientAppointments: React.FC = () => {
               {/* Timing */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                  Preferred Time Window:
+                  Preferred Time
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {['Morning (8:30 AM – 12:00 PM)', 'Afternoon (1:00 PM – 4:30 PM)'].map((time) => (
@@ -423,7 +435,7 @@ export const PatientAppointments: React.FC = () => {
       >
         <div className="space-y-3 text-xs sm:text-sm text-slate-700">
           <p>
-            To reschedule or modify your confirmed time on <strong>Wed, Nov 15</strong>, please call our clinic coordinator or leave a direct modification note:
+            To reschedule or modify your confirmed time on <strong>{upcomingApt.date}</strong>, please call our clinic coordinator or leave a direct modification note:
           </p>
           <a
             href="tel:7806454122"
@@ -445,7 +457,7 @@ export const PatientAppointments: React.FC = () => {
           <Calendar
             selectedDate={selectedCalendarDate}
             onSelectDate={(d) => setSelectedCalendarDate(d)}
-            highlightDates={[new Date(2024, 10, 15)]}
+            highlightDates={[selectedCalendarDate]}
           />
 
           <div className="bg-patient-primary-subtle border border-patient-primary-border/80 rounded-xl p-3.5 space-y-2">
@@ -477,8 +489,8 @@ export const PatientAppointments: React.FC = () => {
             <button
               type="button"
               onClick={() => {
-                alert(`Appointment confirmed for ${selectedCalendarDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}! Synced to device calendar.`)
                 setShowCalendarModal(false)
+                setShowSyncSuccessAlert(true)
               }}
               className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer active:scale-98"
             >
@@ -499,6 +511,26 @@ export const PatientAppointments: React.FC = () => {
           </div>
         </div>
       </Dialog>
+
+      {/* In-App Success Alert Dialog for Calendar Sync */}
+      <AlertDialog
+        isOpen={showSyncSuccessAlert}
+        onClose={() => setShowSyncSuccessAlert(false)}
+        icon={<Check className="w-6 h-6 text-emerald-600 stroke-[2.5]" />}
+        iconVariant="success"
+        maxWidth="xs"
+        position="center"
+        title="Calendar Synced!"
+        description={`Your appointment on ${selectedCalendarDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at 10:00 AM has been successfully synced to your device calendar.`}
+      >
+        <button
+          type="button"
+          onClick={() => setShowSyncSuccessAlert(false)}
+          className="w-full bg-patient-primary hover:bg-patient-primary-hover text-white py-2.5 rounded-xl font-bold text-xs shadow-xs mt-3 cursor-pointer transition-all active:scale-98"
+        >
+          Done
+        </button>
+      </AlertDialog>
 
       {/* Date Picker Modal for Request Form */}
       <Dialog

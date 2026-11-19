@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Dialog } from '@/components/ui/Dialog'
+import { Select } from '@/components/ui/Select'
 
 interface ScheduleSlot {
   id: string
@@ -30,6 +31,7 @@ interface ScheduleSlot {
 export const DoctorSchedule: React.FC = () => {
   const [providerFilter, setProviderFilter] = useState<string>('All')
   const [showAddBufferModal, setShowAddBufferModal] = useState(false)
+  const [selectedOperatory, setSelectedOperatory] = useState('Operatory 1 (Dr. Ken Miller)')
   const [scheduleList, setScheduleList] = useState<ScheduleSlot[]>([
     {
       id: 'sc-1',
@@ -259,11 +261,16 @@ export const DoctorSchedule: React.FC = () => {
         <div className="space-y-3 text-xs sm:text-sm">
           <div>
             <label className="text-xs font-bold text-slate-800 block mb-1">Select Operatory:</label>
-            <select className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800">
-              <option>Operatory 1 (Dr. Ken Miller)</option>
-              <option>Operatory 2 (Dr. Ken Miller)</option>
-              <option>Hygiene Bay B (Elena RDH)</option>
-            </select>
+            <Select
+              value={selectedOperatory}
+              onChange={setSelectedOperatory}
+              theme="doctor"
+              options={[
+                'Operatory 1 (Dr. Ken Miller)',
+                'Operatory 2 (Dr. Ken Miller)',
+                'Hygiene Bay B (Elena RDH)'
+              ]}
+            />
           </div>
 
           <div>

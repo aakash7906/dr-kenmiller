@@ -23,7 +23,7 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/85 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] text-slate-600">
-      <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto flex items-center justify-around px-2 py-1.5 sm:py-2">
+      <div className="max-w-md sm:max-w-xl md:max-w-2xl mx-auto grid grid-cols-5 items-center h-16 px-1 sm:px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -32,7 +32,7 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
             <button
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all duration-150 cursor-pointer ${
+              className={`w-full h-14 flex flex-col items-center justify-center rounded-xl transition-all duration-150 cursor-pointer ${
                 isActive
                   ? tab.urgent
                     ? 'text-red-600 font-bold'
@@ -53,14 +53,7 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-0.5 tracking-tight font-semibold">{tab.label}</span>
-              {isActive && (
-                <span
-                  className={`w-1 h-1 rounded-full mt-0.5 ${
-                    tab.urgent ? 'bg-red-600' : 'bg-doctor-primary'
-                  }`}
-                />
-              )}
+              <span className="text-[10px] mt-1 tracking-tight font-semibold">{tab.label}</span>
             </button>
           )
         })}

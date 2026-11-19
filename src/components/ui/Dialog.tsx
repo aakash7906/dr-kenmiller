@@ -53,7 +53,7 @@ export const Dialog: React.FC<DialogProps> = ({
       {/* Modal / Bottom sheet on mobile */}
       <div
         className={cn(
-          'relative z-10 w-full bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden transition-all transform animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200',
+          'relative z-10 w-full bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden transition-all transform animate-in slide-in-from-bottom sm:slide-in-from-bottom-2 duration-200 pb-[2px]',
           widthStyles[maxWidth]
         )}
       >
@@ -78,7 +78,7 @@ export const Dialog: React.FC<DialogProps> = ({
         </div>
 
         {/* Content body */}
-        <div className="px-5 py-4 overflow-y-auto max-h-[calc(85vh-80px)]">
+        <div className="px-5 pt-4 pb-[18px] sm:pb-4 overflow-y-auto max-h-[calc(85vh-80px)]">
           {children}
         </div>
       </div>

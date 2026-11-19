@@ -447,7 +447,7 @@ export const LIVE_TRIAGE_TICKETS: TriageTicket[] = [
     patientName: 'Liam O’Connor',
     phone: '(780) 645-3921',
     urgency: 'high',
-    condition: 'Traumatic Sports Injury - Knocked out Upper Incisor #8',
+    condition: 'Traumatic Sports Injury - Knocked out Upper Incisor 8',
     reportedTime: '10:12 AM (12 min ago)',
     etaMinutes: 14,
     symptoms: 'Tooth stored in cold milk carton. Moderate gingival sulcus bleeding.',

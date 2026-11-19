@@ -74,7 +74,7 @@ export const PatientMyCare: React.FC = () => {
               
             </div>
             <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-              {CURRENT_PATIENT.primaryDentist} • St. Paul
+              {CURRENT_PATIENT.primaryDentist}
             </p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export const PatientMyCare: React.FC = () => {
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">
-                Tooth #19 Implant Journey
+                Tooth 19 Implant Journey
               </h3>
               <span className="text-[11px] text-slate-500 font-medium block mt-0.5">
                 Step 2 of 3 • Healing Well
@@ -247,7 +247,7 @@ export const PatientMyCare: React.FC = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HeartPulse className="w-4 h-4 text-patient-primary" />
-                <span className="text-xs font-bold text-slate-900">How does #19 feel right now?</span>
+                <span className="text-xs font-bold text-slate-900">How does 19 feel right now?</span>
               </div>
               <span className="text-[10px] text-slate-400 font-medium">Tap to log</span>
             </div>
@@ -333,7 +333,7 @@ export const PatientMyCare: React.FC = () => {
             </div>
             <div>
               <span className="text-[11px] font-bold text-slate-900 block leading-tight truncate">Blue Cross</span>
-              <span className="text-[10px] text-slate-500 font-medium block mt-0.5">#ABC-7761</span>
+              <span className="text-[10px] text-slate-500 font-medium block mt-0.5">ABC-7761</span>
             </div>
           </div>
 

@@ -79,9 +79,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
 
         <div className="relative z-10 flex items-start justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/80 bg-white/20 px-2 py-0.5 rounded-md">
-              PRIORITY WALK-IN LINE
-            </span>
+          
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">
               Urgent Dental Emergency?
             </h2>
@@ -95,7 +93,7 @@ export const PatientEmergency: React.FC<PatientEmergencyProps> = ({
         <div className="relative z-10 space-y-2 pt-0.5">
           <a
             href="tel:7806454122"
-            className="w-full bg-white hover:bg-red-50 text-patient-emergency font-extrabold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-99 cursor-pointer"
+            className="w-full h-9 bg-white hover:bg-red-50 text-patient-emergency font-extrabold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-99 cursor-pointer"
           >
             <PhoneCall className="w-4 h-4 text-patient-emergency" />
             <span>Call Clinic Direct: (780) 645-4122</span>

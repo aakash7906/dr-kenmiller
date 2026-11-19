@@ -144,7 +144,6 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-bold text-sm leading-tight text-white">{CLINIC_INFO.name}</h4>
-                <p className="text-[11px] text-white/80 mt-0.5">Gentle, modern dentistry in St. Paul, AB</p>
               </div>
             </div>
           </div>
@@ -329,12 +328,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
-                      Dr. Ken Miller Care
-                    </span>
-                  </div>
+                  />                
                 </div>
               ))}
             </div>
@@ -433,9 +427,7 @@ export const PatientHome: React.FC<PatientHomeProps> = ({ onNavigate }) => {
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="text-base">📄</span>
             <div className="min-w-0">
-              <div className="text-xs font-bold text-slate-900 truncate">Post-Op & Healing Protocol</div>
-              <div className="text-[10px] text-slate-500 truncate">includes soft diet & salt rinse guide</div>
-            </div>
+              <div className="text-xs font-bold text-slate-900 truncate">Post-Op & Healing Protocol</div>            </div>
           </div>
           <button
             onClick={() => setShowProtocolModal(true)}
